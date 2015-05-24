@@ -46,15 +46,6 @@ Package.onUse(function(api) {
 	], 'server');
 
 	api.addFiles([
-		'client/scripts/helpers/auth.coffee',
-		'client/scripts/helpers/forms.coffee',
-		'client/scripts/helpers/loader.coffee',
-		'client/scripts/helpers/meteor.coffee',
-		'client/scripts/helpers/session.coffee',
-		'client/scripts/helpers/storage.coffee',
-		'client/scripts/lib/amplify.js',
-		'client/scripts/loaders/adaptive-label.js',
-		'client/scripts/start.coffee',
 		'collections/base/basecollection.coffee',
 		'collections/currentusersession.coffee',
 		'lib/components/datatables.coffee',
@@ -66,6 +57,22 @@ Package.onUse(function(api) {
 		'lib/helpers/common/token.coffee',
 		'lib/helpers/application.js',
 		'lib/environment.js',
+		'scss.json'
+	]);
+
+	api.addFiles([
+		'client/scripts/helpers/auth.coffee',
+		'client/scripts/helpers/forms.coffee',
+		'client/scripts/helpers/loader.coffee',
+		'client/scripts/helpers/meteor.coffee',
+		'client/scripts/helpers/session.coffee',
+		'client/scripts/helpers/storage.coffee',
+		'client/scripts/lib/amplify.js',
+		'client/scripts/loaders/adaptive-label.js',
+		'client/scripts/start.coffee'
+	], 'client');
+
+	api.addFiles([
 		'private/templates/email/base/foot.template',
 		'private/templates/email/base/head.template',
 		'private/templates/email/alert.template',
@@ -75,9 +82,8 @@ Package.onUse(function(api) {
 		'server/helpers/session.coffee',
 		'server/methods/auth/session.coffee',
 		'server/kadira.coffee',
-		'server/smtp.coffee',
-		'scss.json'
-	]);
+		'server/smtp.coffee'
+	], 'server');
 });
 
 Package.onTest(function(api) {
