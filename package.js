@@ -13,43 +13,45 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.1.0.2');
 	api.use([
-		'meteor-platform',
-		'iron:router',
-		'underscore',
-		'houston:admin',
-		'reactive-var',
-		'meteorhacks:kadira',
-		'coffeescript',
-		'kaptron:minimongoid',
-		'aldeed:collection2',
-		'aldeed:autoform',
-		'aldeed:tabular',
-		'minimongo',
-		'mongo-livedata',
-		'templating',
-		'meteor-platform'
+		'meteor-platform@1.2.2',
+		'iron:router@1.0.7',
+		'underscore@1.0.3',
+		'houston:admin@2.0.3',
+		'reactive-var@1.0.5',
+		'meteorhacks:kadira@2.21.0',
+		'coffeescript@1.0.6',
+		'kaptron:minimongoid@0.9.5',
+		'aldeed:collection2@2.3.3',
+		'aldeed:autoform@5.2.0',
+		'aldeed:tabular@1.2.0',
+		'minimongo@1.0.8',
+		'mongo-livedata@1.0.8',
+		'templating@1.1.1'
 	]);
 
 
 	api.use([
-		'fortawesome:fontawesome',
-		'francocatena:compass',
-		'kevohagan:sweetalert',
-		'fourseven:scss'
+		'fortawesome:fontawesome@4.3.0',
+		'francocatena:compass@0.5.1',
+		'kevohagan:sweetalert@0.5.0',
+		'fourseven:scss@3.1.1'
 	], 'client');
 
 	api.use([
-		'email',
-		'gfk:mailgun-api'
+		'email@1.0.6',
+		'http@1.1.0',
+		'gfk:mailgun-api@1.1.0',
+		'meteorhacks:ssr@2.1.2',
+		'meteorhacks:async@1.0.0'
 	], 'server');
 
 	api.addFiles([
-		'client/helpers/auth.coffee',
-		'client/helpers/auth.forms',
-		'client/helpers/auth.loader',
-		'client/helpers/auth.meteor',
-		'client/helpers/auth.session',
-		'client/helpers/auth.storage',
+		'client/scripts/helpers/auth.coffee',
+		'client/scripts/helpers/forms.coffee',
+		'client/scripts/helpers/loader.coffee',
+		'client/scripts/helpers/meteor.coffee',
+		'client/scripts/helpers/session.coffee',
+		'client/scripts/helpers/storage.coffee',
 		'client/scripts/lib/amplify.js',
 		'client/scripts/loaders/adaptive-label.js',
 		'client/scripts/start.coffee',
@@ -59,14 +61,14 @@ Package.onUse(function(api) {
 		'lib/extensions/array.coffee',
 		'lib/extensions/date.coffee',
 		'lib/extensions/strings.coffee',
-		'lib/extensions/helpers/_core/core.coffee',
-		'lib/extensions/helpers/common/conversion.coffee',
-		'lib/extensions/helpers/common/token.coffee',
-		'lib/extensions/helpers/application.js',
-		'lib/extensions/environment.js',
-		'private/templates/email/base/foot.html',
-		'private/templates/email/base/head.html',
-		'private/templates/email/alert.html',
+		'lib/helpers/_core/core.coffee',
+		'lib/helpers/common/conversions.coffee',
+		'lib/helpers/common/token.coffee',
+		'lib/helpers/application.js',
+		'lib/environment.js',
+		'private/templates/email/base/foot.template',
+		'private/templates/email/base/head.template',
+		'private/templates/email/alert.template',
 		'server/helpers/auth.coffee',
 		'server/helpers/communication.coffee',
 		'server/helpers/email.coffee',
