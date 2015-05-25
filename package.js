@@ -29,6 +29,7 @@ Package.onUse(function(api) {
 	api.use([
 		'fortawesome:fontawesome@4.3.0',
 		'less@1.0.14',
+		'twbs:bootstrap@3.3.4',
 		'kevohagan:sweetalert@0.5.0'
 	], 'client');
 
