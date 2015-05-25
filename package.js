@@ -1,6 +1,6 @@
 Package.describe({
   name: 'enricofoschi:crater.js',
-  version: '0.0.1',
+  version: '0.0.2',
   // Brief, one-line summary of the package.
   summary: 'Meteor Micro Framework For Highly Effective Projects',
   // URL to the Git repository containing the source code for this package.
@@ -13,7 +13,6 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.1.0.2');
 	api.use([
-		'meteor-platform@1.2.2',
 		'iron:router@1.0.7',
 		'underscore@1.0.3',
 		'houston:admin@2.0.3',
@@ -23,18 +22,14 @@ Package.onUse(function(api) {
 		'kaptron:minimongoid@0.9.5',
 		'aldeed:collection2@2.3.3',
 		'aldeed:autoform@5.2.0',
-		'aldeed:tabular@1.2.0',
-		'minimongo@1.0.8',
-		'mongo-livedata@1.0.8',
-		'templating@1.1.1'
+		'aldeed:tabular@1.2.0'
 	]);
 
 
 	api.use([
 		'fortawesome:fontawesome@4.3.0',
-		'francocatena:compass@0.5.1',
-		'kevohagan:sweetalert@0.5.0',
-		'fourseven:scss@3.1.1'
+		'less@1.0.14',
+		'kevohagan:sweetalert@0.5.0'
 	], 'client');
 
 	api.use([
