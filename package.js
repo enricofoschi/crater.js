@@ -22,9 +22,14 @@ Package.onUse(function(api) {
 		'kaptron:minimongoid@0.9.5',
 		'aldeed:collection2@2.3.3',
 		'aldeed:autoform@5.2.0',
-		'aldeed:tabular@1.2.0'
+		'aldeed:tabular@1.2.0',
+		'meteor-platform@1.2.2',
+		'accounts-base@1.2.0',
+		'accounts-password@1.1.1',
+		'pauli:accounts-linkedin@1.1.2',
+		'useraccounts:bootstrap@1.10.0',
+		'accounts-ui@1.1.5'
 	]);
-
 
 	api.use([
 		'fortawesome:fontawesome@4.3.0',
@@ -38,7 +43,8 @@ Package.onUse(function(api) {
 		'http@1.1.0',
 		'gfk:mailgun-api@1.1.0',
 		'meteorhacks:ssr@2.1.2',
-		'meteorhacks:async@1.0.0'
+		'meteorhacks:async@1.0.0',
+		'base64@1.0.3'
 	], 'server');
 
 	api.addFiles([
@@ -72,6 +78,7 @@ Package.onUse(function(api) {
 		'private/templates/email/base/foot.template',
 		'private/templates/email/base/head.template',
 		'private/templates/email/alert.template',
+		'server/api/_base.coffee',
 		'server/helpers/auth.coffee',
 		'server/helpers/communication.coffee',
 		'server/helpers/email.coffee',

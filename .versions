@@ -17,7 +17,7 @@ ddp@1.1.0
 deps@1.0.7
 ejson@1.0.6
 email@1.0.6
-enricofoschi:crater.js@0.0.2
+enricofoschi:crater.js@0.0.3
 fortawesome:fontawesome@4.3.0
 geojson-utils@1.0.3
 gfk:mailgun-api@1.1.0
@@ -40,7 +40,7 @@ kaptron:minimongoid@0.9.5
 kevohagan:sweetalert@0.5.0
 less@1.0.14
 livedata@1.0.13
-local-test:enricofoschi:crater.js@0.0.2
+local-test:enricofoschi:crater.js@0.0.3
 localstorage@1.0.3
 logging@1.0.7
 meteor@1.1.6
