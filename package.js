@@ -15,7 +15,6 @@ Package.onUse(function(api) {
 	api.use([
 		'iron:router@1.0.7',
 		'underscore@1.0.3',
-		'houston:admin@2.0.3',
 		'reactive-var@1.0.5',
 		'meteorhacks:kadira@2.21.0',
 		'coffeescript@1.0.6',
@@ -28,7 +27,8 @@ Package.onUse(function(api) {
 		'accounts-password@1.1.1',
 		'pauli:accounts-linkedin@1.1.2',
 		'useraccounts:bootstrap@1.10.0',
-		'accounts-ui@1.1.5'
+		'accounts-ui@1.1.5',
+		'alanning:roles@1.2.13'
 	]);
 
 	api.use([
@@ -79,6 +79,7 @@ Package.onUse(function(api) {
 		'private/templates/email/base/head.template',
 		'private/templates/email/alert.template',
 		'server/api/_base.coffee',
+		'server/fixtures/_base.coffee',
 		'server/helpers/auth.coffee',
 		'server/helpers/communication.coffee',
 		'server/helpers/email.coffee',
