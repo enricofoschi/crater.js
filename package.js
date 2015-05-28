@@ -22,13 +22,15 @@ Package.onUse(function(api) {
 		'aldeed:collection2@2.3.3',
 		'aldeed:autoform@5.2.0',
 		'aldeed:tabular@1.2.0',
+		'yogiben:autoform-modals@0.3.5',
 		'meteor-platform@1.2.2',
 		'accounts-base@1.2.0',
 		'accounts-password@1.1.1',
 		'pauli:accounts-linkedin@1.1.2',
 		'useraccounts:bootstrap@1.10.0',
 		'accounts-ui@1.1.5',
-		'alanning:roles@1.2.13'
+		'alanning:roles@1.2.13',
+		'aldeed:tabular@1.2.0'
 	]);
 
 	api.use([
