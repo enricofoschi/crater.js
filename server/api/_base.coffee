@@ -34,7 +34,7 @@ class @Crater.Api.Base
             if @Callback
                 @Callback callback, e, r
             else
-                a = callback(e, r)
+                a = callback e, r
 
     @All: (callback) ->
         @Call 'get', @_baseUrl, callback
