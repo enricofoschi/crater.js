@@ -60,7 +60,8 @@ Package.onUse(function(api) {
 		'lib/helpers/common/conversions.coffee',
 		'lib/helpers/common/token.coffee',
 		'lib/helpers/application.js',
-		'lib/environment.js'
+		'lib/environment.js',
+		'lib/router.coffee'
 	]);
 
 	api.addFiles([
@@ -87,6 +88,7 @@ Package.onUse(function(api) {
 		'server/helpers/email.coffee',
 		'server/helpers/session.coffee',
 		'server/methods/auth/session.coffee',
+		'server/publications/roles.coffee',
 		'server/kadira.coffee',
 		'server/smtp.coffee'
 	], 'server');
