@@ -105,13 +105,10 @@ class @BaseCollection extends Minimongoid
 
     @create: (attr) ->
         attr ||= {}
-        attr.createdAt ||= (new Date()).UTCFromLocal()
-        attr.updatedAt = attr.createdAt
         super attr
 
     update: (attr) ->
         attr ||= attr
-        attr.updatedAt = (new Date()).UTCFromLocal()
         super attr
 
     @firstOrDefault: (selector = {}, options = {}, defaults = {}) ->
@@ -168,21 +165,35 @@ class @BaseCollection extends Minimongoid
                 msg += "<strong>#{key}:</strong> #{value}"
             msg
 
+    @ExtraSchema: {
+        _id:
+            type: String
+            optional: true
+        createdAt:
+            type: Date
+            autoValue: ->
+                if @isInsert
+                    new Date
+                else if @isUpsert
+                    {
+                    $setOnInsert: new Date
+                    }
+                else
+                    @unset();
+        updatedAt:
+            type: Date
+            autoValue: ->
+                if @isUpdate
+                    new Date
+    }
+
 Meteor.startup(->
 
     for obj of @
 
         if obj and obj.indexOf('webkit') is -1 and @[obj] and @[obj].prototype instanceof BaseCollection
 
-            @[obj].schema = _.extend @[obj].schema, {
-                _id:
-                    type: String
-                    optional: true
-                createdAt:
-                    type: Date
-                updatedAt:
-                    type: Date
-            }
+            @[obj].schema = _.extend @[obj].schema, BaseCollection.ExtraSchema
 
             @[obj].simpleSchema = new SimpleSchema @[obj].schema
 
