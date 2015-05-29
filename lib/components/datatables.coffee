@@ -24,6 +24,7 @@ class @TabularTables
             options.columns.push {
                 title: 'Actions'
                 width: 100
+                data: '_id'
                 render: ->
                     ret = ''
                 render: (data) =>
@@ -31,7 +32,7 @@ class @TabularTables
                     ret = ''
 
                     for action in options.actions
-                        ret += "<a href='#{option.prefix}#{data._id}/edit' class='action-#{action.type}'><i class='fa fa-#{action.icon}'></i> #{action.text}</a>"
+                        ret += "<a href='#{options.prefix}#{data}/edit' class='action-#{action.type}'><i class='fa fa-#{action.icon}'></i> #{action.text}</a>"
 
                     ret
             }
@@ -43,6 +44,4 @@ class @TabularTables
         helper = {}
 
         helper[table] = @[table]
-
-        console.log helper
         template.helpers helper
