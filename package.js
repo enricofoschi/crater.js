@@ -1,6 +1,6 @@
 Package.describe({
   name: 'enricofoschi:crater.js',
-  version: '0.0.3',
+  version: '0.0.4',
   // Brief, one-line summary of the package.
   summary: 'Meteor Micro Framework For Highly Effective Projects',
   // URL to the Git repository containing the source code for this package.
@@ -60,8 +60,7 @@ Package.onUse(function(api) {
 		'lib/helpers/common/conversions.coffee',
 		'lib/helpers/common/token.coffee',
 		'lib/helpers/application.js',
-		'lib/environment.js',
-		'scss.json'
+		'lib/environment.js'
 	]);
 
 	api.addFiles([
