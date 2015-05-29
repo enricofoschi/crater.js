@@ -69,6 +69,7 @@ Package.onUse(function(api) {
 		'client/scripts/helpers/forms.coffee',
 		'client/scripts/helpers/loader.coffee',
 		'client/scripts/helpers/meteor.coffee',
+		'client/scripts/helpers/notifications.coffee',
 		'client/scripts/helpers/session.coffee',
 		'client/scripts/helpers/storage.coffee',
 		'client/scripts/lib/amplify.js',
