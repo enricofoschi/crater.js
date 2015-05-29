@@ -111,7 +111,16 @@ class @BaseCollection extends Minimongoid
         attr ||= attr
         super attr
 
+    @first: (selector = {}, options = {}, defaults = {}) ->
+        if typeof(selector) is 'string'
+            selector = {
+                '_id': selector
+            }
+
+        super selector, options
+
     @firstOrDefault: (selector = {}, options = {}, defaults = {}) ->
+
         doc = @first selector, options
 
         if not doc
@@ -166,9 +175,6 @@ class @BaseCollection extends Minimongoid
             msg
 
     @ExtraSchema: {
-        _id:
-            type: String
-            optional: true
         createdAt:
             type: Date
             autoValue: ->
@@ -183,19 +189,25 @@ class @BaseCollection extends Minimongoid
         updatedAt:
             type: Date
             autoValue: ->
-                if @isUpdate
+                if @isUpdate or @isInsert
                     new Date
     }
 
+@BaseCollectionHolders = [
+    @
+]
+
 Meteor.startup(->
 
-    for obj of @
+    for holder in @BaseCollectionHolders
 
-        if obj and obj.indexOf('webkit') is -1 and @[obj] and @[obj].prototype instanceof BaseCollection
+        for obj of holder
 
-            @[obj].schema = _.extend @[obj].schema, BaseCollection.ExtraSchema
+            if obj and obj.indexOf('webkit') is -1 and holder[obj] and holder[obj].prototype instanceof BaseCollection
 
-            @[obj].simpleSchema = new SimpleSchema @[obj].schema
+                holder[obj].schema = _.extend holder[obj].schema, BaseCollection.ExtraSchema
 
-            @[obj]._collection.attachSchema @[obj].simpleSchema
+                holder[obj].simpleSchema = new SimpleSchema holder[obj].schema
+
+                holder[obj]._collection.attachSchema holder[obj].simpleSchema
 )
