@@ -21,7 +21,10 @@ class @Fixture.Base
 
 
 Meteor.startup =>
+    BaseCollection.InitCollections()
+
     for own key, value of @Fixture
         if key is 'Base'
             continue
         @Fixture[key].Ensure()
+

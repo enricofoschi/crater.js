@@ -2,6 +2,8 @@
 
 class @TabularTables
 
+    @_options = {}
+
     @Create = (name, options) ->
 
         options.actions ||= []
@@ -13,11 +15,14 @@ class @TabularTables
                 type: 'edit'
             }
 
-        if options.removable
+        if options.deletable
             options.actions.push {
-                text: 'Remove'
+                text: 'Delete'
                 icon: 'times-circle'
-                type: 'remove'
+                type: 'delete'
+                event: (_id) ->
+                    console.log _id
+                class: 'text-danger'
             }
 
         if options.actions
@@ -25,18 +30,24 @@ class @TabularTables
                 title: 'Actions'
                 width: 100
                 data: '_id'
-                render: ->
-                    ret = ''
-                render: (data) =>
+                createdCell: (cell, data) =>
 
-                    ret = ''
+                    $cell = $ cell
+                    $cell.empty()
 
                     for action in options.actions
-                        ret += "<a href='#{options.prefix}#{data}/edit' class='action-#{action.type}'><i class='fa fa-#{action.icon}'></i> #{action.text}</a>"
+                        a = $ "<a href='#{options.prefix}#{data}/#{action.type}' class='left5 right5 #{action.class} action-#{action.type}'><i class='fa fa-#{action.icon}'></i> #{action.text}</a>"
+                        $cell.append a
 
-                    ret
+                        if action.event
+                            a.click (e) ->
+                                e.preventDefault()
+                                Helpers.Client.Notifications.Confirm 'Do you really want to delete this record?', ->
+                                    options.collection.remove(data)
             }
 
+
+        @_options[name] = options
         @[name] = new Tabular.Table options
 
     @InitTemplate: (template, table) ->

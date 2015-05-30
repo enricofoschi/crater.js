@@ -193,21 +193,21 @@ class @BaseCollection extends Minimongoid
                     new Date
     }
 
+    @InitCollections: ->
+
+        for holder in BaseCollectionHolders
+
+            for obj of holder
+
+                if obj and obj.indexOf('webkit') is -1 and holder[obj] and holder[obj].prototype instanceof BaseCollection
+                    holder[obj].schema = _.extend holder[obj].schema, BaseCollection.ExtraSchema
+
+                    holder[obj].simpleSchema = new SimpleSchema holder[obj].schema
+
+                    holder[obj]._collection.attachSchema holder[obj].simpleSchema
+
+
 @BaseCollectionHolders = [
     @
 ]
 
-Meteor.startup(->
-
-    for holder in @BaseCollectionHolders
-
-        for obj of holder
-
-            if obj and obj.indexOf('webkit') is -1 and holder[obj] and holder[obj].prototype instanceof BaseCollection
-
-                holder[obj].schema = _.extend holder[obj].schema, BaseCollection.ExtraSchema
-
-                holder[obj].simpleSchema = new SimpleSchema holder[obj].schema
-
-                holder[obj]._collection.attachSchema holder[obj].simpleSchema
-)
