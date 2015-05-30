@@ -105,10 +105,14 @@ class @BaseCollection extends Minimongoid
 
     @create: (attr) ->
         attr ||= {}
+        attr.updatedAt = new Date
+        attr.createdAt = new Date
+
         super attr
 
     update: (attr) ->
         attr ||= attr
+        attr.updatedAt = new Date
         super attr
 
     @first: (selector = {}, options = {}, defaults = {}) ->
@@ -148,6 +152,9 @@ class @BaseCollection extends Minimongoid
 
     getValidationContext: (name) ->
         @constructor._collection.simpleSchema().namedContext name
+
+    getBaseObject: ->
+        @constructor.getBaseObject @
 
     @getBaseObject: (obj) ->
         attr = {}
@@ -189,8 +196,7 @@ class @BaseCollection extends Minimongoid
         updatedAt:
             type: Date
             autoValue: ->
-                if @isUpdate or @isInsert
-                    new Date
+                new Date
     }
 
     @InitCollections: ->
