@@ -5,12 +5,15 @@ class @Helpers.Client.Form
         $(input).trigger('checkval') for input in form.find('input,textarea,select').not('[type="hidden"]')
 
     @GetFormHooks: (options) ->
+
+        origBefore = options.before
+
         _.extend options, {
             before: {
                 insert: (attr) ->
                     attr.createdAt ||= (new Date()).UTCFromLocal()
                     attr.updatedAt = attr.createdAt
 
-                    attr
+                    if origBefore then origBefore(attr) else attr
             }
         }

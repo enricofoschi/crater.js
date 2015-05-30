@@ -141,13 +141,19 @@ class @BaseCollection extends Minimongoid
         doc
 
     push: (data) ->
+
+        updateData = {}
+
         for type, list of data
-            data[type] = {
+            console.log list
+            updateData[type] = {
                 $each: (@constructor.getBaseObject(value) for value in list)
             }
 
+        console.log updateData
+
         @constructor._collection.update @id, {
-            $addToSet: data
+            $addToSet: updateData
         }
 
     getValidationContext: (name) ->
@@ -157,6 +163,9 @@ class @BaseCollection extends Minimongoid
         @constructor.getBaseObject @
 
     @getBaseObject: (obj) ->
+        if typeof(obj) is 'string'
+            return obj
+
         attr = {}
 
         for own key, value of obj when key not in ['errors', 'id', '_id']
