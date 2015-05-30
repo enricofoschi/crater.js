@@ -21,11 +21,13 @@ class @Crater.Api.Base
 
     '''
 
-    @Call: (method, url, callback) ->
+    @Call: (method, url, callback, options) ->
 
-        options = {
-            content: @_contentType
-        }
+        options = _.extend(options || {}, {
+            headers: {
+                'content-type': @_contentType
+            }
+        })
 
         if @_authentication and @_authentication.username
             options.auth = @_authentication.username + ':' + @_authentication.password

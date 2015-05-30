@@ -145,12 +145,9 @@ class @BaseCollection extends Minimongoid
         updateData = {}
 
         for type, list of data
-            console.log list
             updateData[type] = {
                 $each: (@constructor.getBaseObject(value) for value in list)
             }
-
-        console.log updateData
 
         @constructor._collection.update @id, {
             $addToSet: updateData
