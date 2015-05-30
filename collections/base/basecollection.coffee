@@ -159,7 +159,7 @@ class @BaseCollection extends Minimongoid
     @getBaseObject: (obj) ->
         attr = {}
 
-        for own key, value of obj when key not in ['errors', 'id']
+        for own key, value of obj when key not in ['errors', 'id', '_id']
             attr[key] = value
 
         attr
