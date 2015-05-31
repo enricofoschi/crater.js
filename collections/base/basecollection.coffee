@@ -146,7 +146,7 @@ class @BaseCollection extends Minimongoid
 
         for type, list of data
             updateData[type] = {
-                $each: (@constructor.getBaseObject(value) for value in list)
+                $each: (@constructor.getBaseObject(value) for value in list when value)
             }
 
         @constructor._collection.update @id, {
