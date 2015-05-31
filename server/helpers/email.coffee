@@ -1,3 +1,5 @@
+fs = Npm.require 'fs'
+
 class @Helpers.Server.Email
 
     templates = {}
@@ -12,11 +14,13 @@ class @Helpers.Server.Email
     styleTd = styleTable + 'padding: 0 0 20px;'
     styleParagraph = styleMain14 + ' margin: 0 0 10px; padding: 0;'
 
+    @SetTemplates: (_head, _foot) ->
+        head = _head
+        foot = _foot
 
-    @Init: (template, helpers) ->
+    @Init: (template, html, helpers) ->
 
         if not templates[template]
-            html = Assets.getText "templates/email/#{template}.html"
             SSR.compileTemplate template, html
 
             helpers = _.extend {
@@ -31,13 +35,9 @@ class @Helpers.Server.Email
 
             templates[template] = true
 
-        if not head or not foot
-            head = Assets.getText 'templates/email/base/head.html'
-            foot = Assets.getText 'templates/email/base/foot.html'
-
     @GetBody: (properties) ->
 
-        @Init properties.template, properties.helpers
+        @Init properties.template, properties.html, properties.helpers
 
         html = head.format {
             title: properties.title
@@ -51,17 +51,13 @@ class @Helpers.Server.Email
 
         html = @GetBody {
             template:   options.template
+            html:       options.html
             title:      options.subject
             data:       options.data
             helpers:    options.helpers
         }
 
-        sender = new Mailgun {
-            apiKey: Meteor.settings.mailgun.apiKey
-            domain: Meteor.settings.mailgun.domain
-        }
-
-        sender.send {
+        Meteor.Mailgun.send {
             from:       Meteor.settings.mailgun.from
             to:         options.to
             subject:    options.subject

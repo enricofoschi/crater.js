@@ -44,6 +44,7 @@ Package.onUse(function(api) {
 		'email@1.0.6',
 		'http@1.1.0',
 		'gfk:mailgun-api@1.1.0',
+		'cunneen:mailgun@0.9.1',
 		'meteorhacks:ssr@2.1.2',
 		'meteorhacks:async@1.0.0',
 		'base64@1.0.3'
@@ -78,9 +79,6 @@ Package.onUse(function(api) {
 	], 'client');
 
 	api.addFiles([
-		'private/templates/email/base/foot.template',
-		'private/templates/email/base/head.template',
-		'private/templates/email/alert.template',
 		'server/api/_base.coffee',
 		'server/fixtures/_base.coffee',
 		'server/helpers/auth.coffee',
