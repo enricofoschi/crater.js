@@ -14,6 +14,8 @@ class @Helpers.Client.Meteor
                     finished errors, results
             else
                 params.push callback
+                callback = ->
+                    Helpers.Client.Loader.Hide()
         else
             callback = ->
                 Helpers.Client.Loader.Hide()
