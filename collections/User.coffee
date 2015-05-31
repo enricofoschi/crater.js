@@ -1,5 +1,6 @@
 class @MeteorUser
 
+    
     _user = null
     _profile = null
 
