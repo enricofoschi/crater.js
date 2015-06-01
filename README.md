@@ -1,6 +1,6 @@
 # crater.js
 
-Simple meteor microframework.
+Extremely opinionated meteor boilerplate.
  
 It includes a number of client + server packages, helpers and common features.
 
