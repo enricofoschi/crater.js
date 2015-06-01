@@ -20,7 +20,7 @@ Package.onUse(function(api) {
 		'coffeescript@1.0.6',
 		'kaptron:minimongoid@0.9.5',
 		'aldeed:collection2@2.3.3',
-		'aldeed:autoform@5.2.0',
+		'aldeed:autoform@5.3.0',
 		'aldeed:tabular@1.2.0',
 		'yogiben:autoform-modals@0.3.5',
 		'meteor-platform@1.2.2',
@@ -53,7 +53,7 @@ Package.onUse(function(api) {
 	api.addFiles([
 		'collections/base/basecollection.coffee',
 		'collections/currentusersession.coffee',
-		'collections/User.coffee',
+		'collections/meteoruser.coffee',
 		'lib/components/datatables.coffee',
 		'lib/extensions/array.coffee',
 		'lib/extensions/date.coffee',
@@ -74,6 +74,7 @@ Package.onUse(function(api) {
 		'client/scripts/helpers/notifications.coffee',
 		'client/scripts/helpers/session.coffee',
 		'client/scripts/helpers/storage.coffee',
+		'client/scripts/helpers/template.coffee',
 		'client/scripts/lib/amplify.js',
 		'client/scripts/loaders/adaptive-label.js',
 		'client/scripts/start.coffee'
@@ -82,6 +83,7 @@ Package.onUse(function(api) {
 	api.addFiles([
 		'server/api/_base.coffee',
 		'server/fixtures/_base.coffee',
+		'server/fixtures/user.coffee',
 		'server/helpers/auth.coffee',
 		'server/helpers/communication.coffee',
 		'server/helpers/email.coffee',
