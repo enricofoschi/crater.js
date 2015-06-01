@@ -4,11 +4,15 @@ class @MeteorUser
     _user = null
     _profile = null
 
+    email: null
+    anonymous: true
     profile: null
 
     constructor: (user) ->
         _user = user
-        @profile = user.profile
+        @profile = user?.profile
+        @email = @getEmail()
+        @anonymous = (user?._id || '').length
 
     getEmail: ->
 
