@@ -51,12 +51,6 @@ class @CurrentUserSession extends BaseCollection
             clientData: @clientData
         }
 
-    @_collection.allow {
-        insert: -> false
-        update: -> false
-        remove: -> false
-    }
-
 Meteor.startup( ->
 
     if Meteor.isServer
