@@ -21,7 +21,7 @@ class @Crater.Api.Google.Calendar extends Crater.Api.Google.Base
             else
                 callback null, response.data
 
-    @UpdateFreeBusy: (config, callback) ->
+    @UpdateFreeBusy: (config, timesToCheck, callback) ->
 
         startDate = config.startDate
         endDate = config.endDate

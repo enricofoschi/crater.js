@@ -30,7 +30,8 @@ Package.onUse(function(api) {
 		'useraccounts:bootstrap@1.10.0',
 		'accounts-ui@1.1.5',
 		'alanning:roles@1.2.13',
-		'aldeed:tabular@1.2.0'
+		'aldeed:tabular@1.2.0',
+		'service-configuration@1.0.4'
 	]);
 
 	api.use([
@@ -81,13 +82,16 @@ Package.onUse(function(api) {
 	], 'client');
 
 	api.addFiles([
-		'server/api/_base.coffee',
+		'server/api/_base/_base.coffee',
+		'server/api/Google/_base.coffee',
+		'server/api/Google/calendar.coffee',
 		'server/fixtures/_base.coffee',
 		'server/fixtures/user.coffee',
 		'server/helpers/auth.coffee',
 		'server/helpers/communication.coffee',
 		'server/helpers/email.coffee',
 		'server/helpers/session.coffee',
+		'server/helpers/time.coffee',
 		'server/methods/auth/session.coffee',
 		'server/publications/roles.coffee',
 		'server/kadira.coffee',
