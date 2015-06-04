@@ -153,6 +153,18 @@ class @BaseCollection extends Minimongoid
             $addToSet: updateData
         }
 
+    pull: (key, value) ->
+
+        updateObj = {}
+
+        updateObj[key] = value
+
+        updateObj = {
+            $pull: updateObj
+        }
+
+        @constructor._collection.update @id, updateObj
+
     getValidationContext: (name) ->
         @constructor._collection.simpleSchema().namedContext name
 
