@@ -5,7 +5,10 @@ class @Helpers.Client.TemplatesHelper
         template = Template[name]
 
         template.created = ->
-            template.instance = template.instance || Template.instance()
+            template.currentInstance = Template.instance()
+
+            if template.onCustomCreated
+                template.onCustomCreated()
 
         template.helpers {
             'currentUser': ->
