@@ -8,7 +8,8 @@
 
 		$(".adaptive-field-wrapper").find("input,textarea,select").bind("checkval", function () {
 			var label = $(this).prev("label");
-			if (this.value !== "") {
+
+			if (this.value !== "" || this.tagName === 'SELECT') {
 				label.addClass(showClass);
 			} else {
 				label.removeClass(showClass);
