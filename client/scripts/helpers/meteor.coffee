@@ -1,6 +1,6 @@
 Global = @
 
-class @Helpers.Client.Meteor
+class @Helpers.Client.MeteorHelper
 
     @CallMethod: (method, params..., callback) ->
 
