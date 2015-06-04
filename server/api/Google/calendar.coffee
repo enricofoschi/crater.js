@@ -21,28 +21,45 @@ class @Crater.Api.Google.Calendar extends Crater.Api.Google.Base
             else
                 callback null, response.data
 
-    @UpdateFreeBusy: (config, timesToCheck, callback) ->
+    @UpdateFreeBusy: (interview, calendars, config, callback) =>
 
-        startDate = config.startDate
-        endDate = config.endDate
+        userId = Meteor.userId()
 
-        Crater.Api.Google.Calendar.FreeBusy startDate, endDate, [
-            'enrico.foschi@rocket-internet.de'
-        ], (error, data) ->
+        InterviewScheduler.Collections.TimeSlot.destroyAll {
+            user_id: userId
+        }
 
-            userId = Meteor.userId()
+        @List (error, list) =>
 
-            for own key, calendar of data.calendars
-                for slot in calendar.busy
+            if error
+                throw error
 
-                    start = new Date(slot.start)
-                    end = new Date(slot.end)
+            calendars = {}
 
-                    InterviewScheduler.Collections.TimeSlot.create {
-                        user_id: userId
-                        calendar_id: key
-                        start_int: start.getTime() / 1000 / 60
-                        end_int: start.getTime() / 1000 / 60
-                    }
+            for calendar in list
+                calendars[calendar.id] = InterviewScheduler.Collections.Calendar.first({
+                    calendar_id: calendar.id
+                }).id
 
-            callback()
+            @FreeBusy config.startDate, config.endDate, _.map(list, (l) -> l.id), (error, data) =>
+
+                if error
+                    throw error
+
+                for own key, calendar of data.calendars
+
+                    for slot in calendar.busy
+
+                        start = new Date(slot.start)
+                        end = new Date(slot.end)
+
+                        InterviewScheduler.Collections.TimeSlot.create {
+                            user_id: userId
+                            calendar_id: calendars[key]
+                            start: start
+                            end: end
+                            start_int: start.getTime() / GlobalSettings.timeslotDivider
+                            end_int: end.getTime() / GlobalSettings.timeslotDivider
+                        }
+
+                callback()
