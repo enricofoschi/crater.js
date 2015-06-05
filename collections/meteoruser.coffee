@@ -12,7 +12,12 @@ class @MeteorUser
     services: null
 
     constructor: (user) ->
+
+        if typeof(user) is 'string'
+            user = Meteor.users.findOne user
+
         _user = user
+
         @profile = user?.profile
         @services = user?.services
         @_id = user?._id
@@ -20,7 +25,7 @@ class @MeteorUser
         @anonymous = (user?._id || '').length is 0
         @registered = not @anonymous
 
-    getEmail: ->
+    getEmail: =>
 
         email = _user?.services?.linkedin?.emailAddress
 
@@ -32,6 +37,11 @@ class @MeteorUser
 
         email
 
-    getName: ->
-        'CIAO'
+    getGoogleAccessToken: =>
+        @services?.google?.accessToken
 
+    getRefreshToken: =>
+        @services?.google?.refreshToken
+
+    update: (attr) =>
+        Meteor.users.update _user._id, attr
