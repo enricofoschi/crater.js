@@ -1,6 +1,4 @@
-@Crater = {
-    Api: {}
-}
+@Crater.Api = {}
 
 class @Crater.Api.Base
 

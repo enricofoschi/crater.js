@@ -35,8 +35,7 @@ Package.onUse(function(api) {
 	api.use([
 		'fortawesome:fontawesome@4.3.0',
 		'less@1.0.14',
-		'twbs:bootstrap@3.3.4',
-		'kevohagan:sweetalert@0.5.0'
+		'twbs:bootstrap@3.3.4'
 	], 'client');
 
 	api.use([
@@ -50,9 +49,7 @@ Package.onUse(function(api) {
 	], 'server');
 
 	api.addFiles([
-		'collections/base/basecollection.coffee',
-		'collections/currentusersession.coffee',
-		'collections/meteoruser.coffee',
+		'lib/_base/_base.coffee',
 		'lib/components/datatables.coffee',
 		'lib/extensions/array.coffee',
 		'lib/extensions/date.coffee',
@@ -62,7 +59,12 @@ Package.onUse(function(api) {
 		'lib/helpers/common/token.coffee',
 		'lib/helpers/application.js',
 		'lib/environment.js',
-		'lib/router.coffee'
+		'lib/router.coffee',
+		'collections/_base/_base.coffee',
+		'collections/_base/basecollection.coffee',
+		'collections/time/_base.coffee',
+		'collections/currentusersession.coffee',
+		'collections/meteoruser.coffee'
 	]);
 
 	api.addFiles([
@@ -75,8 +77,12 @@ Package.onUse(function(api) {
 		'client/scripts/helpers/storage.coffee',
 		'client/scripts/helpers/template.coffee',
 		'client/scripts/lib/amplify.js',
+		'client/scripts/lib/sweetalert.min.js',
+		'client/scripts/lib/bootbox.min.js',
 		'client/scripts/loaders/adaptive-label.js',
-		'client/scripts/start.coffee'
+		'client/scripts/start.coffee',
+		'client/styles/lib/datatables.fixes.css',
+		'client/styles/lib/sweetalert.css'
 	], 'client');
 
 	api.addFiles([

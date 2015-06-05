@@ -4,7 +4,7 @@ class @CurrentUserSession extends BaseCollection
 
     @before_create: (attr) ->
         attr ||= attr
-        attr.updatedAt = (new Date()).UTCFromLocal()
+        attr.updatedAt = new Date
         attr.token ||= (Helpers.Token.GetGuid() + Helpers.Token.GetGuid())
         attr.serverData ||= {}
         attr.clientData ||= {}
@@ -12,7 +12,7 @@ class @CurrentUserSession extends BaseCollection
 
     @before_save: (attr) ->
         attr ||= attr
-        attr.updatedAt = (new Date()).UTCFromLocal()
+        attr.updatedAt = new Date
         attr
 
     @schema: {
