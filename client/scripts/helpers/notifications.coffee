@@ -1,13 +1,19 @@
 class @Helpers.Client.Notifications
 
     @Success: (msg, title = 'Success') ->
-        sweetAlert title, msg, "success"
+        swal title, msg, "success"
 
     @Error: (msg, title = 'Damn') ->
-        sweetAlert title, msg, "error"
+        swal title, msg, "error"
 
     @Confirm: (msg, callback) ->
-        sweetAlert {
+
+        originalCallback = callback
+
+        callback = ->
+            window.setTimeout originalCallback, 300
+
+        swal {
             title: "Are you sure?"
             text: msg
             type: "warning"
@@ -16,3 +22,8 @@ class @Helpers.Client.Notifications
             confirmButtonText: "Yes"
             closeOnConfirm: true
         }, callback
+
+    @Prompt: (msg, callback) ->
+        bootbox.prompt msg, (result) ->
+            if result
+                callback result
