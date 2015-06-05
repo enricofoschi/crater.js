@@ -1,15 +1,20 @@
 class @Crater.Api.Google.Calendar extends Crater.Api.Google.Base
 
-    @List: (callback) =>
-        @Call 'get', 'calendar/v3/users/me/calendarList', {}, (error, result) ->
+    @List: (userId, callback) =>
+        @Call 'get', 'calendar/v3/users/me/calendarList', {
+            custom:
+                user: userId
+        }, (error, result) ->
             if error
                 throw error
             else
                 callback null, result.data.items
 
-    @FreeBusy: (from, to, calendars, callback) =>
+    @FreeBusy: (userId, from, to, calendars, callback) =>
 
         @Call 'post', 'calendar/v3/freeBusy', {
+            custom:
+                user: userId
             data:
                 timeMin: from.toISOString()
                 timeMax: to.toISOString()
@@ -23,13 +28,13 @@ class @Crater.Api.Google.Calendar extends Crater.Api.Google.Base
 
     @UpdateFreeBusy: (interview, calendars, config, callback) =>
 
-        userId = Meteor.userId()
+        userId = interview.user_id
 
         InterviewScheduler.Collections.TimeSlot.destroyAll {
             user_id: userId
         }
 
-        @List (error, list) =>
+        @List userId, (error, list) =>
 
             if error
                 throw error
@@ -41,7 +46,7 @@ class @Crater.Api.Google.Calendar extends Crater.Api.Google.Base
                     calendar_id: calendar.id
                 }).id
 
-            @FreeBusy config.startDate, config.endDate, _.map(list, (l) -> l.id), (error, data) =>
+            @FreeBusy userId, config.startDate, config.endDate, _.map(list, (l) -> l.id), (error, data) =>
 
                 if error
                     throw error
