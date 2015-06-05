@@ -26,45 +26,51 @@ class @Crater.Api.Google.Calendar extends Crater.Api.Google.Base
             else
                 callback null, response.data
 
-    @UpdateFreeBusy: (interview, calendars, config, callback) =>
+    @GetFreeBusy: (userId, calendars, config, callback) =>
 
-        userId = interview.user_id
-
-        InterviewScheduler.Collections.TimeSlot.destroyAll {
-            user_id: userId
-        }
-
-        @List userId, (error, list) =>
+        @FreeBusy userId, config.startDate, config.endDate, Object.keys(calendars), (error, data) =>
 
             if error
                 throw error
 
-            calendars = {}
+            timeSlots = []
 
-            for calendar in list
-                calendars[calendar.id] = InterviewScheduler.Collections.Calendar.first({
-                    calendar_id: calendar.id
-                }).id
+            for own key, calendar of data.calendars
 
-            @FreeBusy userId, config.startDate, config.endDate, _.map(list, (l) -> l.id), (error, data) =>
+                for slot in calendar.busy
 
-                if error
-                    throw error
+                    start = new Date(slot.start)
+                    end = new Date(slot.end)
 
-                for own key, calendar of data.calendars
+                    timeSlots.push {
+                        user_id: userId
+                        calendar_id: calendars[key]
+                        start_int: start.getTime() / GlobalSettings.timeslotDivider
+                        end_int: end.getTime() / GlobalSettings.timeslotDivider
+                    }
 
-                    for slot in calendar.busy
+            callback(null, timeSlots)
 
-                        start = new Date(slot.start)
-                        end = new Date(slot.end)
+    @CreateEvent: (userId, calendarId, options, callback) =>
 
-                        InterviewScheduler.Collections.TimeSlot.create {
-                            user_id: userId
-                            calendar_id: calendars[key]
-                            start: start
-                            end: end
-                            start_int: start.getTime() / GlobalSettings.timeslotDivider
-                            end_int: end.getTime() / GlobalSettings.timeslotDivider
-                        }
+        options.custom = {
+            user: userId
+        }
 
-                callback()
+        @Call 'post', 'calendar/v3/calendars/' + calendarId + '/events', options, (err, response) ->
+            if err
+                throw err
+            else
+                callback null, response.data
+
+    @DeleteEvent: (userId, calendarId, eventId, options, callback) =>
+
+        options.custom = {
+            user: userId
+        }
+
+        @Call 'delete', 'calendar/v3/calendars/' + calendarId + '/events/' + eventId, options, (err, response) ->
+            if err
+                throw err
+            else
+                callback null, response.data
