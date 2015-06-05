@@ -5,21 +5,36 @@ class @Crater.Api.Google.Base extends @Crater.Api.Base
     @_authenticationType = 'token'
     @_baseUrl = 'https://www.googleapis.com/'
 
-    @_getToken = ->
-        Meteor.user()?.services?.google?.accessToken
+    @_getToken = (options) =>
+
+        options.custom.user.getGoogleAccessToken()
 
     @Call: (method, url, options, callback) =>
+
+        user = null
+
+        if options?.custom?.user
+            if typeof(options.custom.user) is 'string'
+                user = new MeteorUser(options.custom.user)
+            else
+                user = new MeteorUser(options.custom.user)
+        else
+            user = new MeteorUser(Meteor.user())
+
+        options ||= {}
+        options.custom ||= {}
+        options.custom.user = user
 
         super method, url, options, (error, result) =>
             if error && error.response && error.response.statusCode is 401
                 console.log '401 - attempting token refresh'
-                refreshToken =>
+                refreshToken user, =>
                     @Call method, url, options, callback
             else
                 callback error, result
 
-    refreshToken = (callback) =>
-        refreshToken = Meteor.user()?.services?.google?.refreshToken
+    refreshToken = (user, callback) =>
+        refreshToken = user.getRefreshToken()
 
         if not refreshToken
             throw 'No refresh token available'
@@ -33,7 +48,7 @@ class @Crater.Api.Google.Base extends @Crater.Api.Base
         }
 
         if result.statusCode is 200
-            Meteor.users.update Meteor.userId(), {
+            user.update {
                 '$set':
                     'services.google.accessToken': result.data.access_token
                     'services.google.expiresAt': (+new Date) + (1000 * result.data.expires_in)

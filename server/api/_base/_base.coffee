@@ -33,7 +33,7 @@ class @Crater.Api.Base
             options.auth = @_authentication.username + ':' + @_authentication.password
 
         if @_authenticationType is 'token' and @_getToken
-            token = @_getToken()
+            token = @_getToken(options)
 
             if not token
                 console.log 'No access token found'
@@ -43,6 +43,7 @@ class @Crater.Api.Base
                 Authorization: 'Bearer ' + token
             }
 
+        delete(options.custom)
 
         HTTP.call method, @_baseUrl + url, options, (e, r) =>
             if @_callback
