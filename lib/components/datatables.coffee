@@ -13,15 +13,24 @@ class @TabularTables
                 text: 'Edit'
                 icon: 'edit'
                 type: 'edit'
+                url: 'edit'
+            }
+
+        if options.viewable
+            options.actions.push {
+                text: 'View'
+                icon: 'eye'
+                type: 'view'
+                url: ''
             }
 
         if options.deletable
             options.actions.push {
-                text: 'Delete'
+                text: options.deleteText || 'Delete'
                 icon: 'times-circle'
                 type: 'delete'
-                event: (_id) ->
-                    console.log _id
+                event: true
+                callback: options.deleteCallback
                 class: 'text-danger'
             }
 
@@ -36,14 +45,19 @@ class @TabularTables
                     $cell.empty()
 
                     for action in options.actions
-                        a = $ "<a href='#{options.prefix}#{data}/#{action.type}' class='left5 right5 #{action.class} action-#{action.type}'><i class='fa fa-#{action.icon}'></i> #{action.text}</a>"
+                        a = $ "<a href='#{options.prefix}#{data}/#{action.url}' class='inline left5 right5 #{action.class} action-#{action.type}'><i class='fa fa-#{action.icon}'></i> #{action.text}</a>"
                         $cell.append a
+
+                        deleteCallback = action.callback
 
                         if action.event
                             a.click (e) ->
                                 e.preventDefault()
                                 Helpers.Client.Notifications.Confirm 'Do you really want to delete this record?', ->
-                                    options.collection.remove(data)
+                                    if deleteCallback
+                                        deleteCallback(data)
+                                    else
+                                        options.collection.remove(data)
             }
 
 
