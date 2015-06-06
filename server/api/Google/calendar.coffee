@@ -57,20 +57,19 @@ class @Crater.Api.Google.Calendar extends Crater.Api.Google.Base
             user: userId
         }
 
-        @Call 'post', 'calendar/v3/calendars/' + calendarId + '/events', options, (err, response) ->
+        @Call 'post', 'calendar/v3/calendars/' + encodeURIComponent(calendarId) + '/events', options, (err, response) ->
             if err
                 throw err
             else
                 callback null, response.data
 
-    @DeleteEvent: (userId, calendarId, eventId, options, callback) =>
+    @DeleteEvent: (userId, calendarId, eventId, callback) =>
 
-        options.custom = {
-            user: userId
+        options = {
+            custom:
+                user: userId
         }
 
-        @Call 'delete', 'calendar/v3/calendars/' + calendarId + '/events/' + eventId, options, (err, response) ->
-            if err
-                throw err
-            else
-                callback null, response.data
+        url = 'calendar/v3/calendars/' + encodeURIComponent(calendarId) + '/events/' + encodeURIComponent(eventId) + '?sendNotifications=true'
+
+        @Call 'delete', url, options, callback
