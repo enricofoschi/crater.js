@@ -1,5 +1,4 @@
 .dataTable td
 {
-	text-align:center;
-	vertical-align:center;
+	vertical-align:middle !important;
 }
