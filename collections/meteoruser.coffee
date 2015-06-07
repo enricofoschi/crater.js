@@ -12,7 +12,6 @@ class @MeteorUser
     services: null
 
     constructor: (user) ->
-
         if typeof(user) is 'string'
             user = Meteor.users.findOne user
 
@@ -26,22 +25,33 @@ class @MeteorUser
         @registered = not @anonymous
 
     getEmail: =>
+        if google = getGoogle()
+            return google.email
+        else
+            return _user?.emails?[0]?.address
 
-        email = _user?.services?.linkedin?.emailAddress
-
-        if not email
-            email = _user?.services?.google?.email
-
-        if not email
-            email = _user?.emails?[0]?.address
-
-        email
+    getFirstName: =>
+        if google = getGoogle()
+            return google.given_name
+        else
+            return @profile.firstName
 
     getGoogleAccessToken: =>
-        @services?.google?.accessToken
+        if google = getGoogle()
+            return google.accessToken
+        return ''
 
     getRefreshToken: =>
-        @services?.google?.refreshToken
+        if google = getGoogle()
+            return google.refreshToken
+        return ''
 
     update: (attr) =>
         Meteor.users.update _user._id, attr
+
+    @getUser: (userId) =>
+        new MeteorUser(Meteor.users.findOne(userId))
+
+    # Third Parties Checker
+    getGoogle = =>
+        return _user?.services?.google
