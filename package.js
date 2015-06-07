@@ -97,6 +97,7 @@ Package.onUse(function(api) {
 		'server/helpers/session.coffee',
 		'server/helpers/time.coffee',
 		'server/methods/auth/session.coffee',
+		'server/services/_base.coffee',
 		'server/publications/roles.coffee',
 		'server/kadira.coffee',
 		'server/smtp.coffee'
