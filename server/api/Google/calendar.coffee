@@ -1,3 +1,5 @@
+# TODO Move event based apis into Crater.Api.Google.Event
+
 class @Crater.Api.Google.Calendar extends Crater.Api.Google.Base
 
     @List: (userId, callback) =>
@@ -62,6 +64,17 @@ class @Crater.Api.Google.Calendar extends Crater.Api.Google.Base
                 throw err
             else
                 callback null, response.data
+
+    @GetEvent: (userId, calendarId, eventId, callback) =>
+
+        options = {
+            custom:
+                user: userId
+        }
+
+        url = 'calendar/v3/calendars/' + encodeURIComponent(calendarId) + '/events/' + encodeURIComponent(eventId)
+
+        @Call 'get', url, options, callback
 
     @DeleteEvent: (userId, calendarId, eventId, callback) =>
 
