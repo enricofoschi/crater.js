@@ -59,7 +59,7 @@ class @Helpers.Server.Email
 
         Meteor.Mailgun.send {
             from:       options.from || Meteor.settings.mailgun.from
-            to:         'foschi.enrico@gmail.com' #options.to
+            to:         options.to
             subject:    options.subject
             html:       html
         }
