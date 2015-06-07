@@ -11,13 +11,13 @@ class @Helpers.Client.Loader
         @Init()
 
         if blocker
-            blocker.stop(true, false).fadeIn(500)
+            blocker.stop(true, false).fadeIn(250)
 
         return
 
     @Hide: ->
 
         if blocker
-            blocker.stop(true, false).fadeOut(500)
+            blocker.stop(true, false).fadeOut(250)
 
         return

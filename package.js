@@ -13,7 +13,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.1.0.2');
 	api.use([
-		'iron:router@1.0.7',
+		'iron:router@1.0.9',
 		'underscore@1.0.3',
 		'reactive-var@1.0.5',
 		'meteorhacks:kadira@2.21.0',
