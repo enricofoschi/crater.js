@@ -9,6 +9,10 @@ class @Helpers.Client.Form
         origBefore = options.before
 
         _.extend options, {
+            beginSubmit: ->
+                Helpers.Client.Loader.Show()
+            endSubmit: ->
+                Helpers.Client.Loader.Hide()
             before: {
                 insert: (attr) ->
                     attr.createdAt ||= (new Date()).UTCFromLocal()
