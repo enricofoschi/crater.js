@@ -20,3 +20,11 @@ Array::toMatrix = (max) ->
         index += max
 
     matrix
+
+Array::fromObj = (obj) ->
+
+    for own key,value of obj
+        @push {
+            key: key
+            value: value
+        }
