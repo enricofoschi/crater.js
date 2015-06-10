@@ -8,6 +8,9 @@ class @Helpers.Client.Loader
         if not blocker
             blocker = $ '.blocker-container'
 
+    @Reset: ->
+        activeLoaders = 0
+
     @Show:  ->
 
         @Init()
@@ -21,7 +24,8 @@ class @Helpers.Client.Loader
 
     @Hide: ->
 
-        activeLoaders--
+        if activeLoaders > 0
+            activeLoaders--
 
         if not activeLoaders and blocker
             blocker.stop(true, false).fadeOut(250)

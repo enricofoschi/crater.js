@@ -5,6 +5,9 @@ class @Helpers.Client.TemplatesHelper
         template = Template[name]
 
         template.created = ->
+
+            Helpers.Client.Loader.Reset()
+
             template.currentInstance = Template.instance()
 
             if template.onCustomCreated
