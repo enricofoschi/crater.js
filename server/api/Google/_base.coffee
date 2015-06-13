@@ -11,6 +11,8 @@ class @Crater.Api.Google.Base extends @Crater.Api.Base
 
     @Call: (method, url, options, callback) =>
 
+        originalOptions = _.extend {}, options
+
         user = null
 
         if options?.custom?.user
@@ -29,10 +31,11 @@ class @Crater.Api.Google.Base extends @Crater.Api.Base
             if error && error.response && error.response.statusCode is 401
                 console.log '401 - attempting token refresh'
                 refreshToken(user, =>
-                    @Call method, url, options, callback
+                    @Call method, url, originalOptions, callback
                 )
             else
-                callback error, result
+                if callback
+                    callback error, result
 
     refreshToken = (user, callback) =>
         userRefreshToken = user.getRefreshToken()
