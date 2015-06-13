@@ -39,7 +39,7 @@ class @Helpers.Server.Email
 
         @Init properties.template, properties.html, properties.helpers
 
-        html = head.format {
+        html = head.format _.extend properties.data || {}, {
             title: properties.title
         }
         html += SSR.render properties.template, properties.data
@@ -53,7 +53,9 @@ class @Helpers.Server.Email
             template:   options.template
             html:       options.html
             title:      options.subject
-            data:       options.data
+            data:       _.extend options.data || {}, {
+                imageUrl: Meteor.absoluteUrl() + 'img/'
+            }
             helpers:    options.helpers
         }
 
