@@ -7,8 +7,8 @@ class @Crater.Services.ThirdParties.LinkedIn extends @Crater.Services.ThirdParti
 
         @_profileApi = new Crater.Api.LinkedIn.Profile()
 
-    getProfileInfo: (userId) ->
-        Meteor.wrapAsync(@_profileApi.getProfileInfo) userId
+    getProfileInfo: (user) ->
+        Meteor.wrapAsync(@_profileApi.getProfileInfo) user
 
 
 

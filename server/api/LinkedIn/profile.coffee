@@ -1,10 +1,10 @@
 class @Crater.Api.LinkedIn.Profile extends @Crater.Api.LinkedIn.Base
 
-    getProfileInfo: (userId, callback) =>
+    getProfileInfo: (user, callback) =>
 
         options = {
             custom:
-                user: userId
+                user: user
         }
 
         fields = [
