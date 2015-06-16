@@ -1,6 +1,6 @@
 Package.describe({
   name: 'enricofoschi:crater.js',
-  version: '0.0.8',
+  version: '0.0.9',
   // Brief, one-line summary of the package.
   summary: 'Meteor Micro Framework For Highly Effective Projects',
   // URL to the Git repository containing the source code for this package.
@@ -29,7 +29,8 @@ Package.onUse(function(api) {
 		'accounts-ui@1.1.5',
 		'alanning:roles@1.2.13',
 		'aldeed:tabular@1.2.0',
-		'service-configuration@1.0.4'
+		'service-configuration@1.0.4',
+		'meteorhacks:npm@1.3.0'
 	]);
 
 	api.use([
@@ -68,7 +69,7 @@ Package.onUse(function(api) {
 	]);
 
 	api.addFiles([
-		'client/scripts/helpers/auth.coffee',
+        'client/scripts/helpers/auth.coffee',
 		'client/scripts/helpers/forms.coffee',
 		'client/scripts/helpers/loader.coffee',
 		'client/scripts/helpers/meteor.coffee',
@@ -81,14 +82,21 @@ Package.onUse(function(api) {
 		'client/scripts/lib/bootbox.min.js',
 		'client/scripts/loaders/adaptive-label.js',
 		'client/scripts/start.coffee',
-		'client/styles/lib/datatables.fixes.css',
-		'client/styles/lib/sweetalert.css'
+        'client/styles/lib/datatables.fixes.css',
+		'client/styles/lib/sweetalert.css',
 	], 'client');
 
 	api.addFiles([
 		'server/api/_base/_base.coffee',
+		'server/api/_base/basic_auth.coffee',
+		'server/api/_base/oauth1.coffee',
+		'server/api/_base/oauth2.coffee',
 		'server/api/Google/_base.coffee',
 		'server/api/Google/calendar.coffee',
+		'server/api/Xing/_base.coffee',
+		'server/api/Xing/authentication.coffee',
+        'server/api/LinkedIn/_base.coffee',
+        'server/api/LinkedIn/profile.coffee',
 		'server/fixtures/_base.coffee',
 		'server/fixtures/user.coffee',
 		'server/helpers/auth.coffee',
@@ -97,11 +105,24 @@ Package.onUse(function(api) {
 		'server/helpers/session.coffee',
 		'server/helpers/time.coffee',
 		'server/methods/auth/session.coffee',
-		'server/services/_base.coffee',
+        'server/methods/thirdparties/xing.coffee',
+        'server/methods/thirdparties/linkedin.coffee',
+		'server/services/_base/_base.coffee',
+		'server/services/core/_base.coffee',
+		'server/services/core/log.coffee',
+		'server/services/thirdparties/_base.coffee',
+		'server/services/thirdparties/xing.coffee',
+        'server/services/thirdparties/linkedin.coffee',
+		'server/services/config.coffee',
 		'server/publications/roles.coffee',
 		'server/kadira.coffee',
-		'server/smtp.coffee'
+		'server/smtp.coffee',
+        'server/users.coffee'
 	], 'server');
+
+	Npm.depends({
+		"oauth-signature": "1.3.0"
+	});
 });
 
 Package.onTest(function(api) {
