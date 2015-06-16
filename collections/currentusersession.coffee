@@ -29,6 +29,12 @@ class @CurrentUserSession extends BaseCollection
             label: 'Client Data'
     }
 
+    getData: (key) ->
+        {
+            client: @clientData[key]
+            server: @serverData[key]
+        }
+
     setData: (key, value, forClient, forServer) ->
         dataKeys = []
 

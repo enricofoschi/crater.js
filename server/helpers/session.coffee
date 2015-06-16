@@ -25,6 +25,22 @@ class @Helpers.Server.Session
 
             sessionData
 
+    @Get: (connection, key, fromClient=false) ->
+        if connections[connection.id]
+
+            sessionData = CurrentUserSession.first {
+                token: connections[connection.id]
+            }
+
+            values = sessionData.getData key
+
+            if fromClient
+                return values.client
+            else
+                return values.server
+
+
+
     Meteor.server.onConnection (connection) ->
         connection.onClose ->
             Helpers.Server.Session.RemoveToken connection
