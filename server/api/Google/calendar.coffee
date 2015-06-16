@@ -1,8 +1,6 @@
-# TODO Move event based apis into Crater.Api.Google.Event
-
 class @Crater.Api.Google.Calendar extends Crater.Api.Google.Base
 
-    @List: (userId, callback) =>
+    List: (userId, callback) =>
         @Call 'get', 'calendar/v3/users/me/calendarList', {
             custom:
                 user: userId
@@ -12,7 +10,7 @@ class @Crater.Api.Google.Calendar extends Crater.Api.Google.Base
             else
                 callback null, result.data.items
 
-    @FreeBusy: (userId, from, to, calendars, callback) =>
+    FreeBusy: (userId, from, to, calendars, callback) =>
 
         @Call 'post', 'calendar/v3/freeBusy', {
             custom:
@@ -28,7 +26,7 @@ class @Crater.Api.Google.Calendar extends Crater.Api.Google.Base
             else
                 callback null, response.data
 
-    @GetFreeBusy: (userId, calendars, config, callback) =>
+    GetFreeBusy: (userId, calendars, config, callback) =>
 
         @FreeBusy userId, config.startDate, config.endDate, Object.keys(calendars), (error, data) =>
 
@@ -52,37 +50,3 @@ class @Crater.Api.Google.Calendar extends Crater.Api.Google.Base
                     }
 
             callback(null, timeSlots)
-
-    @CreateEvent: (userId, calendarId, options, callback) =>
-
-        options.custom = {
-            user: userId
-        }
-
-        @Call 'post', 'calendar/v3/calendars/' + encodeURIComponent(calendarId) + '/events', options, (err, response) ->
-            if err
-                throw err
-            else
-                callback null, response.data
-
-    @GetEvent: (userId, calendarId, eventId, callback) =>
-
-        options = {
-            custom:
-                user: userId
-        }
-
-        url = 'calendar/v3/calendars/' + encodeURIComponent(calendarId) + '/events/' + encodeURIComponent(eventId)
-
-        @Call 'get', url, options, callback
-
-    @DeleteEvent: (userId, calendarId, eventId, callback) =>
-
-        options = {
-            custom:
-                user: userId
-        }
-
-        url = 'calendar/v3/calendars/' + encodeURIComponent(calendarId) + '/events/' + encodeURIComponent(eventId) + '?sendNotifications=true'
-
-        @Call 'delete', url, options, callback
