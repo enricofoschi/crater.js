@@ -4,53 +4,74 @@ class @Crater.Api.Base
 
     '''
     Authentication obj:
-    {
-        username: 'test'
-        password: 'test'
-    }
+
+    if _authenticationType is 'basic':
+        {
+            username: 'test'
+            password: 'test'
+        }
     '''
-    @_authenticationType = 'basic'
-    @_authentication = null
-    @_getToken = null
-    @_callback = null
+    _authenticationType: 'basic'
+    _authentication: null
+    _signatureMethod: ''
+    _getToken: null
+    _serviceName: null
+    _setAuthentication: null
 
-    @_baseUrl = ''
-    @_contentType = 'application/json'
+    _baseUrl: ''
+    _contentType: ''
+
+    _logService: null
+
+    constructor: (authentication) ->
+        @_authentication = authentication
+
+        @_logService = Crater.Services.Get Services.LOG
 
 
-    @Call: (method, url, options, callback) ->
+    Call: (method, url, options, callback) ->
 
-        options = _.extend(options || {}, {
-            headers: {
-                'content-type': @_contentType
-            }
-        })
+        # Getting User if hidden in options
+        user = null
 
+        url = @_baseUrl + url
 
-        if @_authenticationType is 'basic' and @_authentication.username
-            options.auth = @_authentication.username + ':' + @_authentication.password
+        if options?.custom?.user
+            if typeof(options.custom.user) is 'string'
+                user = new MeteorUser(options.custom.user)
+            else
+                user = new MeteorUser(options.custom.user)
 
-        if @_authenticationType is 'token' and @_getToken
-            token = @_getToken(options)
+        options ||= {}
+        options.custom ||= {}
+        options.custom.user = user
 
-            if not token
-                console.log 'No access token found'
-                throw 'No access token found'
+        # Extending specifying content type requested
+        if @_contentType
+            options = _.extend(options, {
+                headers: {
+                    'content-type': @_contentType
+                }
+            })
 
-            options.headers = _.extend options.headers || {}, {
-                Authorization: 'Bearer ' + token
-            }
+        @_setAuthentication(method, url, options)
 
+        # Deleting possible custom options
         delete(options.custom)
 
-        HTTP.call method, @_baseUrl + url, options, (e, r) =>
-            if @_callback
-                @_callback e, r, callback
-            else
-                callback e, r
+        # Making the actual call
 
-    @All: (callback) ->
+        HTTP.call method, url, options, (e, r) =>
+            callback e, r
+
+    All: (callback) ->
         @Call 'get', '', callback
 
-    @Get: (id, callback) ->
+    Get: (id, callback) ->
         @Call 'get', id, callback
+
+        # Getting User if hidden in options
+        user = null
+
+    _getSessionKey: (key) =>
+        @_serviceName + '_' + key
