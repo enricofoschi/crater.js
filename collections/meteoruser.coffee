@@ -17,6 +17,9 @@ class @MeteorUser
 
         _user = user
 
+        @init user
+
+    init: (user) =>
         @profile = user?.profile
         @services = user?.services
         @_id = user?._id
@@ -27,6 +30,10 @@ class @MeteorUser
     getEmail: =>
         if google = getGoogle()
             return google.email
+        else if xing = getXing()
+            return xing.active_email
+        else if linkedin = getLinkedIn()
+            return linkedin.emailAddress
         else
             return _user?.emails?[0]?.address
 
@@ -38,6 +45,12 @@ class @MeteorUser
 
     update: (attr) =>
         Meteor.users.update _user._id, attr
+        @init Meteor.users.findOne _user._id
+
+    attachServices: (services) =>
+        setAttr = {}
+        setAttr.services = _.extend @services || {}, services
+        @update setAttr
 
     @getUser: (userId) =>
         new MeteorUser(Meteor.users.findOne(userId))
