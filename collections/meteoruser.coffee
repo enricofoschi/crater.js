@@ -36,6 +36,28 @@ class @MeteorUser
         else
             return @profile.firstName
 
+    update: (attr) =>
+        Meteor.users.update _user._id, attr
+
+    @getUser: (userId) =>
+        new MeteorUser(Meteor.users.findOne(userId))
+
+    # Xing
+    getXing = =>
+        return _user?.services?.xing
+
+    getXingAccessToken: =>
+        if xing = getXing()
+            return xing.accessToken
+
+    getXingAccessTokenSecret: =>
+        if xing = getXing()
+            return xing.accessTokenSecret
+
+    # Google
+    getGoogle = =>
+        return _user?.services?.google
+
     getGoogleAccessToken: =>
         if google = getGoogle()
             return google.accessToken
@@ -46,12 +68,11 @@ class @MeteorUser
             return google.refreshToken
         return ''
 
-    update: (attr) =>
-        Meteor.users.update _user._id, attr
+    # LinkedIn
+    getLinkedIn = =>
+        return _user?.services?.linkedin
 
-    @getUser: (userId) =>
-        new MeteorUser(Meteor.users.findOne(userId))
-
-    # Third Parties Checker
-    getGoogle = =>
-        return _user?.services?.google
+    getLinkedInAccessToken: =>
+        if linkedin = getLinkedIn()
+            return linkedin.accessToken
+        return ''
