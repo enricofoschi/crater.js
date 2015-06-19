@@ -16,8 +16,8 @@ class @Helpers.Client.TemplatesHelper
         template
 
     @DecorateTemplates: =>
-        Template.registerHelper 'currentUser', ->
+        UI.registerHelper 'currentUser', ->
             new MeteorUser Meteor.user()
 
-        Template.registerHelper '_', (msg) ->
+        UI.registerHelper 't', (msg) ->
             Helpers.Translation.Translate msg
