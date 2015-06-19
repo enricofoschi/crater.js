@@ -8,3 +8,8 @@ class @Helpers.Server.Auth
     @SetAsLoggedOut: (connection) ->
         Helpers.Server.Session.Set connection, KEY_LOGGED_IN, null, true, true
 
+    @GetCurrentConnectionId: ->
+        if @connection
+            @connection.id
+        else
+            DDP._CurrentInvocation?.get()?.connection?.id

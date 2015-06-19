@@ -13,16 +13,16 @@ Meteor.methods {
         if sessionData.errors
             false
         else
-            Helpers.Server.Session.SetToken @connection, token
+            Helpers.Server.Session.SetToken token
             sessionData.forClient()
 
     'getNewSessionToken': ->
         sessionData = CurrentUserSession.create()
         token = sessionData
-        Helpers.Server.Session.SetToken @connection, token
+        Helpers.Server.Session.SetToken token
         sessionData.forClient()
 
     'setSessionValue': (key, value) ->
-        data = Helpers.Server.Session.Set @connection, key, value, true
+        data = Helpers.Server.Session.Set key, value, true
         data.forClient()
 }

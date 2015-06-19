@@ -4,32 +4,41 @@ class @Helpers.Server.Session
 
     connections = []
 
-    @RemoveToken: (connection) ->
+    @RemoveToken: ->
 
-        if connections[connection.id]
-            delete connections[connection.id]
+        connectionId = Helpers.Server.Auth.GetCurrentConnectionId.apply @
 
-    @SetToken: (connection, token) ->
-        connections[connection.id] = token
+        if connections[connectionId]
+            delete connections[connectionId]
 
-    @Set: (connection, key, value, forClient=false, forServer=true) ->
+    @SetToken: (token) ->
+        connectionId = Helpers.Server.Auth.GetCurrentConnectionId.apply @
 
-        if connections[connection.id]
+        connections[connectionId] = token
+
+    @Set: (key, value, forClient=false, forServer=true) ->
+
+        connectionId = Helpers.Server.Auth.GetCurrentConnectionId.apply @
+
+        if connections[connectionId]
             sessionData = null
 
             sessionData = CurrentUserSession.firstOrCreate {
-                token: connections[connection.id]
+                token: connections[connectionId]
             }
 
             sessionData.setData key, value, forClient, forServer
 
             sessionData
 
-    @Get: (connection, key, fromClient=false) ->
-        if connections[connection.id]
+    @Get: (key, fromClient=false) ->
+
+        connectionId = Helpers.Server.Auth.GetCurrentConnectionId.apply @
+
+        if connections[connectionId]
 
             sessionData = CurrentUserSession.first {
-                token: connections[connection.id]
+                token: connections[connectionId]
             }
 
             values = sessionData.getData key
@@ -43,4 +52,4 @@ class @Helpers.Server.Session
 
     Meteor.server.onConnection (connection) ->
         connection.onClose ->
-            Helpers.Server.Session.RemoveToken connection
+            Helpers.Server.Session.RemoveToken
