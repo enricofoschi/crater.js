@@ -13,9 +13,11 @@ class @Helpers.Client.TemplatesHelper
             if template.onCustomCreated
                 template.onCustomCreated()
 
-        template.helpers {
-            'currentUser': ->
-                new MeteorUser Meteor.user()
-        }
-
         template
+
+    @DecorateTemplates: =>
+        Template.registerHelper 'currentUser', ->
+            new MeteorUser Meteor.user()
+
+        Template.registerHelper '_', (msg) ->
+            Helpers.Translation.Translate msg
