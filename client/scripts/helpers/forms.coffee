@@ -6,18 +6,18 @@ class @Helpers.Client.Form
 
     @GetFormHooks: (options) ->
 
-        origBefore = options.before
+        origBefore = _.extend {}, options.before
 
         _.extend options, {
             beginSubmit: ->
                 Helpers.Client.Loader.Show()
             endSubmit: ->
                 Helpers.Client.Loader.Hide()
-            before: {
+            before: _.extend options.before, {
                 insert: (attr) ->
                     attr.createdAt ||= (new Date()).UTCFromLocal()
                     attr.updatedAt = attr.createdAt
 
-                    if origBefore then origBefore(attr) else attr
+                    if origBefore.insert then origBefore.insert(attr) else attr
             }
         }
