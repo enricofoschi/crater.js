@@ -58,7 +58,7 @@ class @Crater.Api.OAuth1 extends @Crater.Api.Base
 
         options.params.oauth_signature = signature
 
-    getAuthenticationUrl: (connection, callback) =>
+    getAuthenticationUrl: (callback) =>
 
         options = {
             params:
@@ -75,8 +75,8 @@ class @Crater.Api.OAuth1 extends @Crater.Api.Base
                     valueProperties = valueStr.split '='
                     values[valueProperties[0]] = valueProperties[1]
 
-                Helpers.Server.Session.Set connection, @_getSessionKey(sessionKeyOAuthSecret), values.oauth_token_secret, false
-                Helpers.Server.Session.Set connection, @_getSessionKey(sessionKeyOAuthToken), values.oauth_token, false
+                Helpers.Server.Session.Set @_getSessionKey(sessionKeyOAuthSecret), values.oauth_token_secret, false
+                Helpers.Server.Session.Set @_getSessionKey(sessionKeyOAuthToken), values.oauth_token, false
 
                 callback null, @_baseUrl + 'v1/authorize?oauth_token=' + values.oauth_token
 
@@ -88,5 +88,4 @@ class @Crater.Api.OAuth1 extends @Crater.Api.Base
         }
 
         @Call 'get', 'v1/access_token', options, (e, r) ->
-            console.log arguments
             callback e, r
