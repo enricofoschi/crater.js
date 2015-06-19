@@ -1,6 +1,6 @@
 Package.describe({
   name: 'enricofoschi:crater.js',
-  version: '0.0.9',
+  version: '0.0.10',
   // Brief, one-line summary of the package.
   summary: 'Meteor Micro Framework For Highly Effective Projects',
   // URL to the Git repository containing the source code for this package.
@@ -55,17 +55,21 @@ Package.onUse(function(api) {
 		'lib/extensions/array.coffee',
 		'lib/extensions/date.coffee',
 		'lib/extensions/strings.coffee',
+        'collections/_base/_base.coffee',
+        'collections/_base/basecollection.coffee',
+        'collections/time/_base.coffee',
+        'collections/currentusersession.coffee',
+        'collections/translation.coffee',
+        'collections/meteoruser.coffee',
 		'lib/helpers/_core/core.coffee',
 		'lib/helpers/common/conversions.coffee',
 		'lib/helpers/common/token.coffee',
+        'lib/helpers/common/translation.coffee',
 		'lib/helpers/application.js',
+        'lib/schema/_base.coffee',
+        'lib/schema/account.coffee',
 		'lib/environment.js',
-		'lib/router.coffee',
-		'collections/_base/_base.coffee',
-		'collections/_base/basecollection.coffee',
-		'collections/time/_base.coffee',
-		'collections/currentusersession.coffee',
-		'collections/meteoruser.coffee'
+		'lib/router.coffee'
 	]);
 
 	api.addFiles([
@@ -73,6 +77,7 @@ Package.onUse(function(api) {
 		'client/scripts/helpers/forms.coffee',
 		'client/scripts/helpers/loader.coffee',
 		'client/scripts/helpers/meteor.coffee',
+        'client/scripts/helpers/modal.coffee',
 		'client/scripts/helpers/notifications.coffee',
 		'client/scripts/helpers/session.coffee',
 		'client/scripts/helpers/storage.coffee',
@@ -81,9 +86,9 @@ Package.onUse(function(api) {
 		'client/scripts/lib/sweetalert.min.js',
 		'client/scripts/lib/bootbox.min.js',
 		'client/scripts/loaders/adaptive-label.js',
-		'client/scripts/start.coffee',
-        'client/styles/lib/datatables.fixes.css',
+		'client/styles/lib/datatables.fixes.css',
 		'client/styles/lib/sweetalert.css',
+        'client/startup.coffee'
 	], 'client');
 
 	api.addFiles([
@@ -93,6 +98,7 @@ Package.onUse(function(api) {
 		'server/api/_base/oauth2.coffee',
 		'server/api/Google/_base.coffee',
 		'server/api/Google/calendar.coffee',
+		'server/api/Google/event.coffee',
 		'server/api/Xing/_base.coffee',
 		'server/api/Xing/authentication.coffee',
         'server/api/LinkedIn/_base.coffee',
@@ -105,16 +111,20 @@ Package.onUse(function(api) {
 		'server/helpers/session.coffee',
 		'server/helpers/time.coffee',
 		'server/methods/auth/session.coffee',
+        'server/methods/auth/account.coffee',
         'server/methods/thirdparties/xing.coffee',
         'server/methods/thirdparties/linkedin.coffee',
 		'server/services/_base/_base.coffee',
 		'server/services/core/_base.coffee',
+        'server/services/core/account.coffee',
 		'server/services/core/log.coffee',
+        'server/services/core/translation.coffee',
 		'server/services/thirdparties/_base.coffee',
 		'server/services/thirdparties/xing.coffee',
         'server/services/thirdparties/linkedin.coffee',
 		'server/services/config.coffee',
 		'server/publications/roles.coffee',
+        'server/publications/translations.coffee',
 		'server/kadira.coffee',
 		'server/smtp.coffee',
         'server/users.coffee'
