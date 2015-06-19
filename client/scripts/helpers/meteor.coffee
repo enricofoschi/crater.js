@@ -2,23 +2,13 @@ Global = @
 
 class @Helpers.Client.MeteorHelper
 
-    @CallMethod: (method, params..., callback) ->
+    @CallMethod: (properties) ->
 
-        if callback
-            if typeof callback is 'function'
-
-                finished = callback
-
-                callback = (errors, results) ->
-                    Helpers.Client.Loader.Hide()
-                    finished errors, results
-            else
-                params.push callback
-                callback = ->
-                    Helpers.Client.Loader.Hide()
-        else
-            callback = ->
-                Helpers.Client.Loader.Hide()
+        callback = (errors, results) ->
+            Helpers.Client.Loader.Hide()
+            if properties.callback
+                properties.callback errors, results
 
         Helpers.Client.Loader.Show()
-        Global.Meteor.apply method, params, callback
+
+        Global.Meteor.apply properties.method, properties.params || [], callback
