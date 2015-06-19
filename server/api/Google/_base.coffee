@@ -15,14 +15,15 @@ class @Crater.Api.Google.Base extends @Crater.Api.OAuth2
         super method, url, options, (error, result) =>
             if error && error.response && error.response.statusCode is 401
                 console.log '401 - attempting token refresh'
-                refreshToken(options.custom.user, =>
+                @refreshToken(originalOptions.custom.user, =>
                     @Call method, url, originalOptions, callback
                 )
             else
                 if callback
                     callback error, result
 
-    refreshToken = (user, callback) =>
+    refreshToken: (user, callback) =>
+
         userRefreshToken = user.getGoogleRefreshToken()
 
         if not userRefreshToken
@@ -30,8 +31,8 @@ class @Crater.Api.Google.Base extends @Crater.Api.OAuth2
 
         result = Meteor.http.call 'POST', 'https://accounts.google.com/o/oauth2/token', {
             params:
-                client_id: Meteor.settings.google.clientId
-                client_secret: Meteor.settings.google.secret
+                client_id: @_authentication.clientId
+                client_secret: @_authentication.secret
                 refresh_token: userRefreshToken
                 grant_type: 'refresh_token'
         }

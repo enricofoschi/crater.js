@@ -1,6 +1,6 @@
 class @Crater.Api.Google.Event extends Crater.Api.Google.Base
 
-    CreateEvent: (userId, calendarId, options, callback) =>
+    createEvent: (userId, calendarId, options, callback) =>
 
         options.custom = {
             user: userId
@@ -12,7 +12,7 @@ class @Crater.Api.Google.Event extends Crater.Api.Google.Base
             else
                 callback null, response.data
 
-    GetEvent: (userId, calendarId, eventId, callback) =>
+    getEvent: (userId, calendarId, eventId, callback) =>
 
         options = {
             custom:
@@ -23,7 +23,7 @@ class @Crater.Api.Google.Event extends Crater.Api.Google.Base
 
         @Call 'get', url, options, callback
 
-    DeleteEvent: (userId, calendarId, eventId, callback) =>
+    deleteEvent: (userId, calendarId, eventId, callback) =>
 
         options = {
             custom:
