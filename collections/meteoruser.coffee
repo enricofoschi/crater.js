@@ -76,7 +76,7 @@ class @MeteorUser
             return google.accessToken
         return ''
 
-    getRefreshToken: =>
+    getGoogleRefreshToken: =>
         if google = getGoogle()
             return google.refreshToken
         return ''
