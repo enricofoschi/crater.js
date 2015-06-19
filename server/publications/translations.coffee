@@ -2,12 +2,16 @@ Meteor.publish 'translations', (route) ->
     lang = 'en'
 
     Translation.find {
-        $or: [
+        $and: [
             {
-                common: true
-            },
-            {
-                route: route
+                $or: [
+                    {
+                        common: true
+                    },
+                    {
+                        route: route
+                    }
+                ]
             },
             {
                 language: lang

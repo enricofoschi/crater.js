@@ -3,11 +3,12 @@ globalContext = @
 class @Helpers.Translation
 
     translator = null
-    translations = []
+    translations = null
     LANGUAGE_KEY = 'session_lang'
 
     @Init: ->
-        if not translations.length and globalContext.Translation
+        if translations is null and globalContext.Translation
+            translations = []
             translationData = globalContext.Translation.all()
             for translation in translationData
                 translations[translation.key] = translation
@@ -16,21 +17,20 @@ class @Helpers.Translation
 
         @Init()
 
-        if Meteor.isClient
-            if not translations[key]
-                console.log key
-                try
-                    globalContext.Translation.create {
-                        key: key
-                        route: Router.current()?.route?.getName()
-                        common: key.indexOf 'commons.' is 0
-                        language: @GetUserLanguage()
-                        value: null
-                    }
-                catch e
-                    console.log e
 
-        translations[key] || '%key%'
+        if not translations[key]
+            if Meteor.isClient
+                Helpers.Client.MeteorHelper.CallMethod {
+                    method: 'addEmptyTranslation'
+                    params: [
+                        key
+                        Router.current()?.route?.getName()
+                    ]
+                }
+            else
+                translatorService.addEmptyTranslation key, Router.current()?.route?.getName()
+
+        translations[key]?.value || "%#{key}%"
 
     if Meteor.isServer
         Meteor.startup ->

@@ -12,7 +12,7 @@ class @Translation extends BaseCollection
             label: 'Translation Route'
             max: 100
             optional: true
-        language:
+        lang:
             type: String
             label: 'Language'
             max: 2
