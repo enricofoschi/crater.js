@@ -112,6 +112,7 @@ Package.onUse(function(api) {
 		'server/helpers/time.coffee',
 		'server/methods/auth/session.coffee',
         'server/methods/auth/account.coffee',
+        'server/methods/core/translation.coffee',
         'server/methods/thirdparties/xing.coffee',
         'server/methods/thirdparties/linkedin.coffee',
 		'server/services/_base/_base.coffee',
