@@ -59,8 +59,8 @@ class @Helpers.Server.Email
             helpers:    options.helpers
         }
 
-        Meteor.Mailgun.send {
-            from:       options.from || Meteor.settings.mailgun.from
+        Meteor.Sendgrid.send {
+            from:       options.from || Meteor.settings.sendgrid.from
             to:         options.to
             subject:    options.subject
             html:       html
