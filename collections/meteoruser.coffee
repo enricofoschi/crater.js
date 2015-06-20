@@ -56,6 +56,13 @@ class @MeteorUser
         else
             return @profile.firstName
 
+    getProfilePicture: =>
+        if facebook = @getFacebook()
+            return 'http://graph.facebook.com/' + facebook.id + '/picture?width=250'
+        if linkedin = @getLinkedIn()
+            if linkedin.profile.pictureUrls._total > 0
+                return linkedin.profile.pictureUrls.values[0]
+
     isAdminByEmail: =>
         return @getEmail() in Meteor.settings.adminEmails
 

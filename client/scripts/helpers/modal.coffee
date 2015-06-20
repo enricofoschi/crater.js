@@ -6,3 +6,6 @@ class @Helpers.Client.Modal
             backdrop: 'static'
             keyboard: true
         }
+
+    @Close: ->
+        $('.modal.fade.in').modal 'hide'
