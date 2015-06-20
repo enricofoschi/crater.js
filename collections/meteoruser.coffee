@@ -1,9 +1,8 @@
 class @MeteorUser
 
 
-    _user = null
-    _profile = null
-    _id = null
+    _user: null
+    _id: null
 
     email: null
     anonymous: true
@@ -15,7 +14,7 @@ class @MeteorUser
         if typeof(user) is 'string'
             user = Meteor.users.findOne user
 
-        _user = user
+        @_user = user
 
         @init user
 
@@ -23,29 +22,46 @@ class @MeteorUser
         @profile = user?.profile
         @services = user?.services
         @_id = user?._id
+        @id =
         @email = @getEmail()
         @anonymous = (user?._id || '').length is 0
         @registered = not @anonymous
 
     getEmail: =>
-        if google = getGoogle()
+        if facebook = @getFacebook()
+            return facebook.email
+        if google = @getGoogle()
             return google.email
-        else if xing = getXing()
+        else if xing = @getXing()
             return xing.active_email
-        else if linkedin = getLinkedIn()
+        else if linkedin = @getLinkedIn()
             return linkedin.emailAddress
         else
-            return _user?.emails?[0]?.address
+            return @_user?.emails?[0]?.address
+
+    getFullName: =>
+        if facebook = @getFacebook()
+            return facebook.name
+        if linkedin = @getLinkedIn()
+            return linkedin.profile.formattedName
+        return 'somebody'
 
     getFirstName: =>
-        if google = getGoogle()
+        if facebook = @getFacebook()
+            return facebook.first_name
+        if linkedin = @getLinkedIn()
+            return linkedin.firstName
+        if google = @getGoogle()
             return google.given_name
         else
             return @profile.firstName
 
+    isAdminByEmail: =>
+        return @getEmail() in Meteor.settings.adminEmails
+
     update: (attr) =>
-        Meteor.users.update _user._id, attr
-        @init Meteor.users.findOne _user._id
+        Meteor.users.update @_user._id, attr
+        @init Meteor.users.findOne @_user._id
 
     attachServices: (services) =>
         setAttr = {}
@@ -56,36 +72,40 @@ class @MeteorUser
         new MeteorUser(Meteor.users.findOne(userId))
 
     # Xing
-    getXing = =>
-        return _user?.services?.xing
+    getXing: =>
+        return @_user?.services?.xing
 
     getXingAccessToken: =>
-        if xing = getXing()
+        if xing = @getXing()
             return xing.accessToken
 
     getXingAccessTokenSecret: =>
-        if xing = getXing()
+        if xing = @getXing()
             return xing.accessTokenSecret
 
     # Google
-    getGoogle = =>
-        return _user?.services?.google
+    getGoogle: =>
+        return @_user?.services?.google
 
     getGoogleAccessToken: =>
-        if google = getGoogle()
+        if google = @getGoogle()
             return google.accessToken
         return ''
 
     getGoogleRefreshToken: =>
-        if google = getGoogle()
+        if google = @getGoogle()
             return google.refreshToken
         return ''
 
+    # Facebook
+    getFacebook: =>
+        return @_user?.services?.facebook
+
     # LinkedIn
-    getLinkedIn = =>
-        return _user?.services?.linkedin
+    getLinkedIn: =>
+        return @_user?.services?.linkedin
 
     getLinkedInAccessToken: =>
-        if linkedin = getLinkedIn()
+        if linkedin = @getLinkedIn()
             return linkedin.accessToken
         return ''
