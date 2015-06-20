@@ -1,3 +1,5 @@
+global = @
+
 class @Crater.Services.Core.Translation extends @Crater.Services.Core.Base
 
     addEmptyTranslation: (key, route) ->
@@ -12,7 +14,7 @@ class @Crater.Services.Core.Translation extends @Crater.Services.Core.Base
             if key.indexOf('commons.') is 0
                 obj.common = true
 
-            Translation.create obj
+            global.Translation.create obj
 
 
     translate: (doc) ->
