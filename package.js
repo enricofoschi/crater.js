@@ -1,3 +1,7 @@
+Npm.depends({
+	"oauth-signature": "1.3.0"
+});
+
 Package.describe({
   name: 'enricofoschi:crater.js',
   version: '0.0.11',
@@ -129,10 +133,6 @@ Package.onUse(function(api) {
 		'server/smtp.coffee',
         'server/users.coffee'
 	], 'server');
-
-	Npm.depends({
-		"oauth-signature": "1.3.0"
-	});
 });
 
 Package.onTest(function(api) {
