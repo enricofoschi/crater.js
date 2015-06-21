@@ -2,6 +2,9 @@ Accounts.validateNewUser (newUser) ->
 
     retVal = false
 
+    if not Helpers.Server.Auth.GetCurrentConnectionId()
+        return true
+
     if Meteor.userId()
         currentUser = new MeteorUser Meteor.user()
         currentUser.attachServices newUser.services

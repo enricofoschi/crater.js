@@ -54,7 +54,7 @@ class @MeteorUser
         if google = @getGoogle()
             return google.given_name
         else
-            return @profile.firstName
+            return @profile?.firstName || 'somebody'
 
     getProfilePicture: =>
         if facebook = @getFacebook()
