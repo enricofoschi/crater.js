@@ -6,6 +6,9 @@ class @Helpers.Client.Notifications
     @Error: (msg, title = 'Damn') ->
         swal title, msg, "error"
 
+    @Warning: (msg, title = 'Cool... or not?') ->
+        swal title, msg, "warning"
+
     @Confirm: (msg, callback) ->
 
         originalCallback = callback
