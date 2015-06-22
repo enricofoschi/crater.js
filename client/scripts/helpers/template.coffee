@@ -1,3 +1,5 @@
+global = @
+
 class @Helpers.Client.TemplatesHelper
 
     serverSettings = new ReactiveVar()
@@ -22,6 +24,10 @@ class @Helpers.Client.TemplatesHelper
     @DecorateTemplates: =>
         UI.registerHelper 'currentUser', ->
             new MeteorUser Meteor.user()
+
+        UI.registerHelper 'templateLayout', ->
+            console.log 'Getting'
+            global.CurrentTemplateLayout.get()
 
         UI.registerHelper 't', (msg) ->
             Helpers.Translation.Translate msg

@@ -29,12 +29,11 @@ Package.onUse(function(api) {
 		'yogiben:autoform-modals@0.3.5',
 		'meteor-platform@1.2.2',
 		'accounts-base@1.2.0',
-		'useraccounts:bootstrap@1.10.0',
-		'accounts-ui@1.1.5',
 		'alanning:roles@1.2.13',
 		'aldeed:tabular@1.2.0',
 		'service-configuration@1.0.4',
-		'meteorhacks:npm@1.3.0'
+		'meteorhacks:npm@1.3.0',
+		'reactive-dict@1.1.0'
 	]);
 
 	api.use([
@@ -72,7 +71,8 @@ Package.onUse(function(api) {
         'lib/schema/_base.coffee',
         'lib/schema/account.coffee',
 		'lib/environment.js',
-		'lib/router.coffee'
+		'lib/router.coffee',
+		'lib/seo.coffee'
 	]);
 
 	api.addFiles([
@@ -82,6 +82,7 @@ Package.onUse(function(api) {
 		'client/scripts/helpers/meteor.coffee',
         'client/scripts/helpers/modal.coffee',
 		'client/scripts/helpers/notifications.coffee',
+		'client/scripts/helpers/seo.coffee',
 		'client/scripts/helpers/session.coffee',
 		'client/scripts/helpers/storage.coffee',
 		'client/scripts/helpers/template.coffee',
@@ -115,7 +116,8 @@ Package.onUse(function(api) {
 		'server/helpers/time.coffee',
 		'server/methods/auth/session.coffee',
         'server/methods/auth/account.coffee',
-        'server/methods/core/translation.coffee',
+		'server/methods/core/core.coffee',
+		'server/methods/core/translation.coffee',
         'server/methods/thirdparties/xing.coffee',
         'server/methods/thirdparties/linkedin.coffee',
 		'server/services/_base/_base.coffee',
