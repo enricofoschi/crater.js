@@ -7,10 +7,6 @@
         key: 'account'
         service: -> new Crater.Services.Core.Account()
 
-    TRANSLATOR:
-        key: 'translator'
-        service: -> new Crater.Services.Core.Translation()
-
     XING:
         key: 'xing',
         service: -> new Crater.Services.ThirdParties.Xing Meteor.settings.xing?.key, Meteor.settings.xing?.secret

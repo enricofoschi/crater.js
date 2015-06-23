@@ -29,3 +29,10 @@ class @Crater.Services.Core.Translation extends @Crater.Services.Core.Base
     translate: (doc) ->
         DDP._CurrentInvocation.get()
         console.log doc
+
+@Services.TRANSLATOR =
+    key: 'translator'
+    service: -> new Crater.Services.Core.Translation()
+
+@Crater.Services.Set(@Services.TRANSLATOR)
+

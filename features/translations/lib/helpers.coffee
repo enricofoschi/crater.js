@@ -12,7 +12,6 @@ class @Helpers.Translation
 
     @Init: =>
         if (translations is null or not Object.keys(translations).length) and globalContext.Translation
-            console.log 'Rewriting translations'
             translations = {}
             translationData = globalContext.Translation.where {
                 lang: @GetUserLanguage()

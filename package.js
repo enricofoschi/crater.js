@@ -61,20 +61,23 @@ Package.onUse(function(api) {
         'collections/_base/basecollection.coffee',
         'collections/time/_base.coffee',
         'collections/currentusersession.coffee',
-        'collections/translation.coffee',
         'collections/meteoruser.coffee',
 		'lib/helpers/_core/core.coffee',
 		'lib/helpers/common/conversions.coffee',
 		'lib/helpers/common/token.coffee',
         'lib/helpers/common/promises.coffee',
         'lib/helpers/common/router.coffee',
-        'lib/helpers/common/translation.coffee',
-		'lib/helpers/application.js',
+        'lib/helpers/application.js',
         'lib/schema/_base.coffee',
         'lib/schema/account.coffee',
 		'lib/environment.js',
 		'lib/router.coffee',
-		'lib/seo.coffee'
+
+        /* Features */
+        'features/translations/lib/collections.coffee',
+        'features/translations/lib/helpers.coffee',
+        'features/translations/lib/datatables.coffee',
+        'features/translations/lib/router.coffee'
 	]);
 
 	api.addFiles([
@@ -96,7 +99,11 @@ Package.onUse(function(api) {
 		'client/scripts/loaders/adaptive-label.js',
 		'client/styles/lib/datatables.fixes.css',
 		'client/styles/lib/sweetalert.css',
-        'client/startup.coffee'
+        'client/startup.coffee',
+
+        /* Features */
+        'features/translations/client/all.html',
+        'features/translations/client/all.coffee'
 	], 'client');
 
 	api.addFiles([
@@ -121,23 +128,25 @@ Package.onUse(function(api) {
 		'server/methods/auth/session.coffee',
         'server/methods/auth/account.coffee',
 		'server/methods/core/core.coffee',
-		'server/methods/core/translation.coffee',
         'server/methods/thirdparties/xing.coffee',
         'server/methods/thirdparties/linkedin.coffee',
 		'server/services/_base/_base.coffee',
 		'server/services/core/_base.coffee',
         'server/services/core/account.coffee',
 		'server/services/core/log.coffee',
-        'server/services/core/translation.coffee',
 		'server/services/thirdparties/_base.coffee',
 		'server/services/thirdparties/xing.coffee',
         'server/services/thirdparties/linkedin.coffee',
 		'server/services/config.coffee',
 		'server/publications/roles.coffee',
-        'server/publications/translations.coffee',
 		'server/kadira.coffee',
 		'server/smtp.coffee',
-        'server/users.coffee'
+        'server/users.coffee',
+
+        /* Features */
+        'features/translations/server/methods.coffee',
+        'features/translations/server/publications.coffee',
+        'features/translations/server/services.coffee',
 	], 'server');
 });
 

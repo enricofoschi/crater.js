@@ -1,6 +1,9 @@
-globalContext = @
+ironRouter = Router
+ironRouteController = RouteController
 
 class @Helpers.Router
+
+    routes = []
 
     setBodyLayout = (layout) ->
         body = $ document.body
@@ -21,9 +24,14 @@ class @Helpers.Router
         body.attr 'data-layout-class', classes
 
     @AddRoute: (route) =>
+        routes.push route
+
+    @SetRoute: (route) =>
 
         path = '/' + route.path
         delete route.path
+
+        route.controller = route.controller.controller
 
         action = route.action
 
@@ -35,7 +43,7 @@ class @Helpers.Router
                 @layout 'loader'
                 @render 'loading'
 
-        globalContext.Router.route path, route
+        ironRouter.route path, route
 
     @AddController: (controller) =>
 
@@ -53,11 +61,11 @@ class @Helpers.Router
                     retVal = originalWaitOn()
 
                 retVal.push ReactivePromise.when("craterStarted", Crater._startedDeferred.promise());
-                retVal.push Meteor.subscribe('translations', globalContext.Router.current().route.getName())
+                retVal.push Meteor.subscribe('translations', ironRouter.current().route.getName())
 
                 retVal
 
-        ret = globalContext.RouteController.extend _.extend(controller, {
+        ret = ironRouteController.extend _.extend(controller, {
             onAfterAction: =>
 
                 setBodyLayout controller.name
@@ -68,3 +76,7 @@ class @Helpers.Router
 
         ret.layout = layout
         ret
+
+    @Init: =>
+        for route in routes
+            @SetRoute route
