@@ -1,3 +1,4 @@
+# Token Management
 Meteor.autorun ->
     if Meteor.status().connected
         Helpers.Client.SessionHelper.EnsureToken()

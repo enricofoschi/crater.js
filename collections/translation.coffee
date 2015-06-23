@@ -28,10 +28,14 @@ class @Translation extends BaseCollection
 
     @_collection.allow {
         insert: (userId, doc) ->
-            Meteor.settings.debug || Roles.userIsInRole userId, ['admin']
+            Meteor.settings?.debug || Roles.userIsInRole userId, ['admin']
+        update: (userId, doc) ->
+            Meteor.settings?.debug || Roles.userIsInRole userId, ['admin']
+        remove: (userId, doc) ->
+            Meteor.settings?.debug || Roles.userIsInRole userId, ['admin']
     }
 
-Meteor.startup( ->
+Crater.startup( ->
 
     if Meteor.isServer
         Translation._collection._ensureIndex {

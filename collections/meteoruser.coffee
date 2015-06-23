@@ -78,6 +78,9 @@ class @MeteorUser
     @getUser: (userId) =>
         new MeteorUser(Meteor.users.findOne(userId))
 
+    isAdmin: =>
+        Roles.userIsInRole Meteor.userId(), GlobalSettings.adminRoles
+
     # Xing
     getXing: =>
         return @_user?.services?.xing

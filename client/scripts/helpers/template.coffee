@@ -25,12 +25,8 @@ class @Helpers.Client.TemplatesHelper
         UI.registerHelper 'currentUser', ->
             new MeteorUser Meteor.user()
 
-        UI.registerHelper 'templateLayout', ->
-            console.log 'Getting'
-            global.CurrentTemplateLayout.get()
-
         UI.registerHelper 't', (msg) ->
-            Helpers.Translation.Translate msg
+            translate msg
 
         Helpers.Client.MeteorHelper.CallMethod {
             method: 'getClientSettings'

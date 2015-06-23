@@ -19,7 +19,7 @@ class @Helpers.Client.SessionHelper
 
     ''' Ensures that the data that should be available on the client is actually loaded
         into che client Session '''
-    @ParseClientData: (clientData) ->
+    @ParseClientData: (clientData) =>
         Helpers.Client.Storage.Set CLIENT_DATA, clientData
 
         Session.set CLIENT_DATA, clientData
@@ -35,5 +35,5 @@ class @Helpers.Client.SessionHelper
 
     ''' Sets a new value on the client available data, stored on the server and reloaded'''
     @Set: (key, value) =>
-        Meteor.call 'setSessionValue', key, value, (errors, results) ->
+        Meteor.call 'setSessionValue', key, value, (errors, results) =>
             @ParseClientData results.clientData if results and results.clientData

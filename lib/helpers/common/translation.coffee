@@ -6,35 +6,41 @@ class @Helpers.Translation
     translations = null
     LANGUAGE_KEY = 'session_lang'
 
-    @Init: ->
-        if translations is null and globalContext.Translation
-            translations = []
-            translationData = globalContext.Translation.all()
+    @Reset: =>
+        translations = null
+        @Init()
+
+    @Init: =>
+        if (translations is null or not Object.keys(translations).length) and globalContext.Translation
+            console.log 'Rewriting translations'
+            translations = {}
+            translationData = globalContext.Translation.where {
+                lang: @GetUserLanguage()
+            }
             for translation in translationData
-                translations[translation.key] = translation
+                translations[translation.key] = translation.value || ''
 
     @Translate: (key) =>
 
         @Init()
 
-
-        if not translations[key]
+        if not translations[key] and translations[key] isnt ''
             if Meteor.isClient
+
+                console.log 'Missing key ' + key
+
                 Helpers.Client.MeteorHelper.CallMethod {
                     method: 'addEmptyTranslation'
                     params: [
                         key
-                        Router.current()?.route?.getName()
+                        Router.current?()?.route?.getName()
                     ]
                 }
             else
-                translatorService.addEmptyTranslation key, Router.current()?.route?.getName()
+                translatorService = Crater.Services.Get Services.TRANSLATOR
+                translatorService.addEmptyTranslation key, Router.current?()?.route?.getName()
 
-        translations[key]?.value || "%#{key}%"
-
-    if Meteor.isServer
-        Meteor.startup ->
-            translationService = Crater.Services.Get Services.TRANSLATOR
+        translations[key] || "%#{key}%"
 
     @GetUserLanguage: =>
 
@@ -48,3 +54,12 @@ class @Helpers.Translation
         sessionHandler?.Set LANGUAGE_KEY, lang, true, true
 
         lang || 'en'
+
+    if Meteor.isServer
+        Crater.startup ->
+            translationService = Crater.Services.Get Services.TRANSLATOR
+    else if Meteor.isClient
+        Crater.beforeStartup Helpers.Promises.FromSubscription 'translations'
+
+
+globalContext.translate = @Helpers.Translation.Translate

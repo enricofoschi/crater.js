@@ -66,6 +66,8 @@ Package.onUse(function(api) {
 		'lib/helpers/_core/core.coffee',
 		'lib/helpers/common/conversions.coffee',
 		'lib/helpers/common/token.coffee',
+        'lib/helpers/common/promises.coffee',
+        'lib/helpers/common/router.coffee',
         'lib/helpers/common/translation.coffee',
 		'lib/helpers/application.js',
         'lib/schema/_base.coffee',
@@ -77,6 +79,7 @@ Package.onUse(function(api) {
 
 	api.addFiles([
         'client/scripts/helpers/auth.coffee',
+		'client/scripts/helpers/dom.coffee',
 		'client/scripts/helpers/forms.coffee',
 		'client/scripts/helpers/loader.coffee',
 		'client/scripts/helpers/meteor.coffee',
@@ -88,6 +91,7 @@ Package.onUse(function(api) {
 		'client/scripts/helpers/template.coffee',
 		'client/scripts/lib/amplify.js',
 		'client/scripts/lib/sweetalert.min.js',
+        'client/scripts/lib/reactive-promise.js',
 		'client/scripts/lib/bootbox.min.js',
 		'client/scripts/loaders/adaptive-label.js',
 		'client/styles/lib/datatables.fixes.css',

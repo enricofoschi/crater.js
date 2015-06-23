@@ -20,7 +20,7 @@ class @Fixture.Base
         @_collection.insert attr
 
 
-Meteor.startup =>
+Crater.startup =>
     BaseCollection.InitCollections()
 
     for own key, value of @Fixture

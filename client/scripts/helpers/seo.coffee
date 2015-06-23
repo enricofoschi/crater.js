@@ -6,6 +6,6 @@ class @Helpers.Client.SEO
     @SetTitle: (title) ->
         pageProperties.set 'title', title
 
-    Meteor.startup ->
+    Crater.startup ->
         Tracker.autorun =>
             document.title = pageProperties.get 'title'

@@ -1,4 +1,4 @@
-Meteor.startup =>
+Crater.startup =>
     if Meteor.settings.sendgrid
         Meteor.Sendgrid.config {
             username: Meteor.settings.sendgrid.username

@@ -2,3 +2,9 @@
 {
 	vertical-align:middle !important;
 }
+.dataTable-top-left
+{
+	position: absolute;
+	margin:-3px 0 0 0;
+	z-index:1;
+}

@@ -1,20 +1,14 @@
-Meteor.publish 'translations', (route) ->
+Meteor.publish 'translations', (route=null) ->
     lang = 'en'
 
     Translation.find {
-        $and: [
+        $or: [
             {
-                $or: [
-                    {
-                        common: true
-                    },
-                    {
-                        route: route
-                    }
-                ]
+                common: true
             },
             {
-                language: lang
+                route: route
             }
-        ]
+        ],
+        lang: lang
     }

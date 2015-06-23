@@ -30,3 +30,4 @@ class @Helpers.Client.Notifications
         bootbox.prompt msg, (result) ->
             if result
                 callback result
+
