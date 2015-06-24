@@ -35,7 +35,9 @@ class @Translation extends BaseCollection
             Meteor.settings?.debug || Roles.userIsInRole userId, ['admin']
     }
 
-Crater.startup( ->
+BaseCollection.InitCollections()
+
+Meteor.startup( ->
 
     if Meteor.isServer
         Translation._collection._ensureIndex {

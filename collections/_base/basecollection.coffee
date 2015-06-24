@@ -223,7 +223,7 @@ class @BaseCollection extends Minimongoid
 
             for obj of holder
 
-                if obj and obj.indexOf('webkit') is -1 and holder[obj] and holder[obj].prototype instanceof BaseCollection
+                if obj and obj.indexOf('webkit') is -1 and holder[obj] and holder[obj].prototype instanceof BaseCollection and not holder[obj].simpleSchema
                     holder[obj].schema = _.extend holder[obj].schema, BaseCollection.ExtraSchema
 
                     holder[obj].simpleSchema = new SimpleSchema holder[obj].schema
@@ -234,4 +234,6 @@ class @BaseCollection extends Minimongoid
 @BaseCollectionHolders = [
     @
 ]
+
+BaseCollection.InitCollections()
 

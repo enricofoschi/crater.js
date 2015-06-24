@@ -57,7 +57,7 @@ class @CurrentUserSession extends BaseCollection
             clientData: @clientData
         }
 
-Crater.startup( ->
+Meteor.startup( ->
 
     if Meteor.isServer
         CurrentUserSession._collection._ensureIndex {
