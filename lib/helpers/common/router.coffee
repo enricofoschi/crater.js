@@ -29,6 +29,8 @@ class @Helpers.Router
     @SetRoute: (route) =>
 
         path = '/' + route.path
+        title = route.title
+        delete route.title
         delete route.path
 
         route.controller = route.controller.controller
@@ -38,6 +40,12 @@ class @Helpers.Router
         route.action = ->
             if @ready()
                 @layout route.controller.layout
+
+                if title
+                    Helpers.Client.SEO.SetTitle title()
+                else
+                    Helpers.Client.SEO.SetTitle GlobalSettings.companyName
+
                 action.apply @
             else
                 @layout 'loader'
