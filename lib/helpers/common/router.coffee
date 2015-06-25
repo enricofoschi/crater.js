@@ -3,6 +3,9 @@ ironRouteController = RouteController
 
 class @Helpers.Router
 
+    currentLayout = null
+    currentRouteName = null
+
     routes = []
 
     setBodyLayout = (layout) ->
@@ -31,7 +34,7 @@ class @Helpers.Router
 
     @SetRoute: (route) =>
 
-        path = '/' + route.path
+        path = '/:lang?/' + route.path
         title = route.title
         delete route.title
         delete route.path
@@ -39,22 +42,38 @@ class @Helpers.Router
         route.controller = route.controller.controller
 
         action = route.action
+        originalOnBeforeAction = route.onBeforeAction
+
+        route.onBeforeAction = ->
+
+            if originalOnBeforeAction
+                return originalOnBeforeAction()
+
+            @next()
 
         route.action = ->
             if @ready()
-                @layout route.controller.layout
 
                 if title
                     Helpers.Client.SEO.SetTitle title()
                 else
                     Helpers.Client.SEO.SetTitle GlobalSettings.companyName
 
-                action.apply @
+
+                if currentLayout isnt route.controller.layout
+                    @layout route.controller.layout
+
+                Helpers.Log.Info 'Action rendered'
+
+                return action.apply @
             else
                 @layout 'loader'
                 @render 'loading'
 
         ironRouter.route path, route
+
+    @GetCurrentRouteName: =>
+        currentRouteName
 
     @AddController: (controller) =>
 
@@ -66,31 +85,26 @@ class @Helpers.Router
         if Meteor.isClient
             originalWaitOn = controller.waitOn
 
-            controller.onBeforeAction = ->
+            controller.waitOn = ->
+                currentRouteName = @route.getName()
 
-                if originalOnBeforeAction
-                    return originalOnBeforeAction.apply @
-
-                @next()
-
-            controller.waitOn = =>
                 retVal = []
 
                 if originalWaitOn
                     retVal = originalWaitOn()
 
                 retVal.push ReactivePromise.when("craterStarted", Crater._startedDeferred.promise());
-                retVal.push Meteor.subscribe('translations', Helpers.Translation.GetUserLanguage(), ironRouter.current().route.getName())
+                retVal.push Meteor.subscribe('translations', Helpers.Translation.GetUserLanguage(), currentRouteName)
 
                 retVal
 
-        ret = ironRouteController.extend _.extend(controller, {
-            onAfterAction: =>
+            controller.onAfterAction = =>
                 setBodyLayout controller.name
 
                 if originalOnAfterAction
                     originalOnAfterAction()
-        })
+
+        ret = ironRouteController.extend controller
 
         ret.layout = layout
         ret

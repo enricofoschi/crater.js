@@ -1,3 +1,11 @@
+@GlobalSettings = {
+    adminRoles: ['admin']
+    companyName: '4Scotty'
+    languages: ["en", "de"]
+    defaultLanguage: "en"
+
+}
+
 @Crater = {}
 
 # Callbacks executed once all _beforeStartup promises succeed
@@ -22,35 +30,29 @@ if Meteor.isClient
     Crater._startedDeferred = $.Deferred()
 
 Crater.onStartup = =>
-    for callback in _.sortBy(Crater._startupCallbacks, (c) -> c.priority)
-        callback.func()
 
     if Meteor.isClient
-        Crater._startedDeferred.resolve()
+        Helpers.Log.Info 'Client Startup'
+
+        promises = []
+        for callback in Crater._startupCallbacks
+            promises.push {
+                promise: Helpers.Promises.FromSyncFunction(callback.func)
+                priority: callback.priority
+            }
+
+        Helpers.Promises.RunInSequence(Crater._beforeStartup).done(=>
+            Helpers.Log.Info 'Client Initialised'
+            Crater._startedDeferred.resolve()
+        )
+    else
+        for callback in _.sortBy(Crater._startupCallbacks, (c) -> c.priority)
+            callback.func()
 
 Meteor.startup ->
     if Meteor.isClient
-
-        promisesByPriorityObj = _.groupBy(Crater._beforeStartup, (c) -> c.priority)
-        promisesByPriorityList = []
-
-        for own key, value of promisesByPriorityObj
-            promisesByPriorityList.push _.map(value, (p) -> p.promise)
-
-        currentIndex = 0
-
-        runPromises = =>
-            Helpers.Log.Info 'Running priorities: ' + currentIndex
-            Helpers.Log.Info promisesByPriorityList[currentIndex]
-            $.when.apply($, promisesByPriorityList[currentIndex]).done(=>
-                currentIndex++;
-                if promisesByPriorityList[currentIndex]
-                    runPromises()
-                else
-                    Crater.onStartup()
-            )
-
-        runPromises()
+        Helpers.Log.Info 'Client Before Startup'
+        Helpers.Promises.RunInSequence(Crater._beforeStartup).done(Crater.onStartup)
     else
         Crater.onStartup()
 

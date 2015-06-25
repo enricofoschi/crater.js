@@ -26,8 +26,6 @@ class @Helpers.Translation
     @Init: =>
         if globalContext.Translation
 
-            route = Router.current?()?.route?.getName()
-
             if Meteor.isClient
                 if not commonTranslationsLoaded
                     translations = null
@@ -42,11 +40,14 @@ class @Helpers.Translation
 
                     Helpers.Log.Info 'Global Translations Loaded'
 
-                if route is not routeLoaded
+                route = Helpers.Router.GetCurrentRouteName()
+
+                if route is not routeLoaded and route
                     loadTranslations {
                         route: route
                     }
                     Helpers.Log.Info 'Route Translations Loaded for ' + route
+                    routeLoaded = route
 
             else if Meteor.isServer
                 if not translations
@@ -54,7 +55,6 @@ class @Helpers.Translation
                     Helpers.Log.Info 'All translations loaded'
 
     @Translate: (key) =>
-
         @Init()
 
         if not translations[key] and translations[key] isnt ''
@@ -77,16 +77,29 @@ class @Helpers.Translation
 
     @GetUserLanguage: =>
 
-        sessionHandler = if Meteor.isServer then Helpers.Server.Session else Helpers.Client.SessionHelper
+        if Meteor.isClient
+            if location.pathname.length > 1
+                langPath = location.pathname.substring(0, if location.pathname.length is 2 then 2 else 3)
 
-        lang = sessionHandler?.Get(LANGUAGE_KEY) || GlobalSettings?.defaultLanguage
+                if langPath[langPath.length - 1] is '/'
+                    langPath = langPath.substring(0, langPath.length - 1)
 
-        if lang not in (GlobalSettings?.languages || [])
-            lang = GlobalSettings?.defaultLanguage
+                if langPath in GlobalSettings.languages
+                    return langPath
 
-        sessionHandler?.Set LANGUAGE_KEY, lang, true, true
+                return GlobalSettings.defaultLanguage
 
-        lang || 'en'
+        else if Meteor.isServer
+            sessionLang = Helpers.Server.Session.Get(LANGUAGE_KEY)
+            lang =  sessionLang || GlobalSettings.defaultLanguage
+
+            if lang not in (GlobalSettings.languages || [])
+                lang = GlobalSettings.defaultLanguage
+
+            if Meteor.isServer and lang isnt sessionLang
+                Helpers.Server.Session.Set LANGUAGE_KEY, lang, true, true
+
+            return lang
 
     if Meteor.isServer
         Crater.startup ->
@@ -96,14 +109,14 @@ class @Helpers.Translation
 
 Helpers.Router.Path = (route, params, options) =>
 
-    if not route?.path
+    if not route?.path and route?.path isnt ''
         return null
 
     path = route.path params, options
 
-    lang = Helpers.Translation.GetUserLanguage()
+    lang = ((options || {}).lang || Helpers.Translation.GetUserLanguage()).toString()
 
-    if lang is GlobalSettings?.defaultLanguage
+    if lang is GlobalSettings.defaultLanguage
         return path
     else
         return '/' + lang + path

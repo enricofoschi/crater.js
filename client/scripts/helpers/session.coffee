@@ -38,6 +38,8 @@ class @Helpers.Client.SessionHelper
         if clientData?[key] then clientData[key] else Session.get(key)
 
     ''' Sets a new value on the client available data, stored on the server and reloaded'''
-    @Set: (key, value) =>
+    @Set: (key, value, callback) =>
         Meteor.call 'setSessionValue', key, value, (errors, results) =>
             @ParseClientData results.clientData if results and results.clientData
+            if callback
+                callback()

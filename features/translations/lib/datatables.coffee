@@ -27,7 +27,7 @@ Crater.startup ->
                     link = data
 
                     if Router.routes[data]
-                        link = '<a href="' + Helpers.Router.Path(Router.routes[data]) + '">' + data + '</a>'
+                        link = '<a href="' + Helpers.Router.Path Router.routes[data].path() + '">' + data + '</a>'
 
                     $td.empty().html link
             }

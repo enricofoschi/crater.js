@@ -11,3 +11,6 @@ String::htmlEncode = ->
     .replace(/'/g, '&#39;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
+
+String::escapeForRegEx = ->
+    @replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
