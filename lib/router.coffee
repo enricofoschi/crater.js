@@ -17,8 +17,6 @@ Router.configure {
     controller: Helpers.Router.AddController {
         name: 'presentation'
         layoutTemplate: 'PresentationLayout'
-        onAfterAction: ->
-            setBodyLayout 'presentation'
     }
 }
 

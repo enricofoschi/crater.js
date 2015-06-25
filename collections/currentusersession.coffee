@@ -63,7 +63,7 @@ Meteor.startup( ->
         CurrentUserSession._collection._ensureIndex {
             createdAt: 1
         }, {
-            expireAfterSeconds: Meteor.settings.sessionLength
+            expireAfterSeconds: Meteor.settings.sessionLength || 60 * 60 * 24 * 60
         }
         CurrentUserSession._collection._ensureIndex {
             token: 1

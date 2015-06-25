@@ -4,7 +4,7 @@ class @Helpers.Client.SessionHelper
     CLIENT_DATA = 'client'
 
     ''' Ensures the token is refreshed or created if not available'''
-    @EnsureToken: =>
+    @EnsureToken: (callback) =>
         token = Helpers.Client.Storage.Get TOKEN_KEY
         clientData = null
 
@@ -13,9 +13,13 @@ class @Helpers.Client.SessionHelper
                 if not errors
                     Helpers.Client.Storage.Set TOKEN_KEY, results.token
                     @ParseClientData results.clientData if results?.clientData
+                if callback
+                    callback errors, results
         else
             Meteor.call 'persistSessionToken', token, (errors, results) =>
                 @ParseClientData results.clientData if results?.clientData
+                if callback
+                    callback errors, results
 
     ''' Ensures that the data that should be available on the client is actually loaded
         into che client Session '''

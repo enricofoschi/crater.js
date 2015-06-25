@@ -29,7 +29,9 @@ class @Helpers.Server.Session
 
             sessionData.setData key, value, forClient, forServer
 
-            sessionData
+            return sessionData
+
+        return null
 
     @Get: (key, fromClient=false) ->
 

@@ -5,19 +5,53 @@ class @Helpers.Translation
     translator = null
     translations = null
     LANGUAGE_KEY = 'session_lang'
+    routeLoaded = null
+    commonTranslationsLoaded = false
+
+    commonTranslations = {}
 
     @Reset: =>
-        translations = null
+        commonTranslations = {}
+
         @Init()
 
+    loadTranslations = (filters) =>
+        translationData = globalContext.Translation.where filters
+
+        translations = _.extend {}, commonTranslations || {}
+
+        for translation in translationData
+            translations[translation.key] = translation.value || ''
+
     @Init: =>
-        if (translations is null or not Object.keys(translations).length) and globalContext.Translation
-            translations = {}
-            translationData = globalContext.Translation.where {
-                lang: @GetUserLanguage()
-            }
-            for translation in translationData
-                translations[translation.key] = translation.value || ''
+        if globalContext.Translation
+
+            route = Router.current?()?.route?.getName()
+
+            if Meteor.isClient
+                if not commonTranslationsLoaded
+                    translations = null
+
+                    loadTranslations {
+                        common: true
+                    }
+                    commonTranslationsLoaded = true
+
+                    # Caching Global Translations
+                    commonTranslations = _.extend {}, translations
+
+                    Helpers.Log.Info 'Global Translations Loaded'
+
+                if route is not routeLoaded
+                    loadTranslations {
+                        route: route
+                    }
+                    Helpers.Log.Info 'Route Translations Loaded for ' + route
+
+            else if Meteor.isServer
+                if not translations
+                    loadTranslations {}
+                    Helpers.Log.Info 'All translations loaded'
 
     @Translate: (key) =>
 
@@ -26,7 +60,7 @@ class @Helpers.Translation
         if not translations[key] and translations[key] isnt ''
             if Meteor.isClient
 
-                console.log 'Missing key ' + key
+                Helpers.Log.Info 'Missing key ' + key
 
                 Helpers.Client.MeteorHelper.CallMethod {
                     method: 'addEmptyTranslation'
@@ -58,7 +92,25 @@ class @Helpers.Translation
         Crater.startup ->
             translationService = Crater.Services.Get Services.TRANSLATOR
     else if Meteor.isClient
-        Crater.beforeStartup Helpers.Promises.FromSubscription 'translations'
+        Crater.beforeStartup(Helpers.Promises.FromSubscription('common_translations', @GetUserLanguage()), 10)
+
+Helpers.Router.Path = (route, params, options) =>
+
+    if not route?.path
+        return null
+
+    path = route.path params, options
+
+    lang = Helpers.Translation.GetUserLanguage()
+
+    if lang is GlobalSettings?.defaultLanguage
+        return path
+    else
+        return '/' + lang + path
+
+if Meteor.isClient
+    UI.registerHelper 'pathFor', (route, params) ->
+        Helpers.Router.Path route, params
 
 
 globalContext.translate = @Helpers.Translation.Translate

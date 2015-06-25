@@ -6,10 +6,13 @@ Crater._startupCallbacks = []
 # Promises that need to be resolved before triggering Crater.Startup
 Crater._beforeStartup = []
 
-Crater.beforeStartup = (promise) ->
-    Crater._beforeStartup.push promise
+Crater.beforeStartup = (promise, priority = 100) ->
+    Crater._beforeStartup.push {
+        promise: promise
+        priority: priority
+    }
 
-Crater.startup = (func, priority = 0) ->
+Crater.startup = (func, priority = 100) ->
     Crater._startupCallbacks.push {
         func: func
         priority: priority
@@ -27,7 +30,27 @@ Crater.onStartup = =>
 
 Meteor.startup ->
     if Meteor.isClient
-        $.when.apply($, Crater._beforeStartup).done Crater.onStartup
+
+        promisesByPriorityObj = _.groupBy(Crater._beforeStartup, (c) -> c.priority)
+        promisesByPriorityList = []
+
+        for own key, value of promisesByPriorityObj
+            promisesByPriorityList.push _.map(value, (p) -> p.promise)
+
+        currentIndex = 0
+
+        runPromises = =>
+            Helpers.Log.Info 'Running priorities: ' + currentIndex
+            Helpers.Log.Info promisesByPriorityList[currentIndex]
+            $.when.apply($, promisesByPriorityList[currentIndex]).done(=>
+                currentIndex++;
+                if promisesByPriorityList[currentIndex]
+                    runPromises()
+                else
+                    Crater.onStartup()
+            )
+
+        runPromises()
     else
         Crater.onStartup()
 

@@ -4,7 +4,7 @@
 
     Crater.startup ->
         TabularTables.InitTableHelper(template, 'Translations')
-    , 1
+    , 101
 
     template.helpers {
         'languages': ->

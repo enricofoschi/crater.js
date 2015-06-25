@@ -24,5 +24,8 @@ Meteor.methods {
 
     'setSessionValue': (key, value) ->
         data = Helpers.Server.Session.Set key, value, true
-        data.forClient()
+        if not data
+            Helpers.Log.Error 'No session data yet'
+        else
+            data.forClient()
 }

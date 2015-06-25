@@ -16,6 +16,8 @@ class @TabularTables
 
     @Create = (name, options) =>
 
+        console.log 'Init table'
+
         options.actions ||= []
 
         if options.editable
@@ -104,6 +106,8 @@ class @TabularTables
         @[name] = new Tabular.Table options
 
     @InitTableHelper: (template, table) =>
+
+        console.log 'Get table'
 
         helper = {}
 

@@ -148,6 +148,10 @@ Package.onUse(function(api) {
         'features/translations/server/publications.coffee',
         'features/translations/server/services.coffee',
 	], 'server');
+
+    api.addFiles([
+        'lib/helpers/common/log.coffee'
+    ]);
 });
 
 Package.onTest(function(api) {

@@ -2,15 +2,21 @@ globalContext = @
 
 class @Helpers.Promises
 
-    @FromSubscription: (subscription) =>
+    @FromSubscription: (subscription, options...) =>
         deferred = $.Deferred()
 
-        Meteor.subscribe subscription, {
+        options ||= []
+
+        options.push {
             onReady: ->
                 deferred.resolve()
             onError: ->
                 deferred.reject()
         }
+
+        options.unshift subscription
+
+        Meteor.subscribe.apply @, options
 
         return deferred.promise()
 

@@ -23,6 +23,9 @@ class @Helpers.Router
         body.addClass classes
         body.attr 'data-layout-class', classes
 
+    @Path: (route, params, options) =>
+        route.path params, options
+
     @AddRoute: (route) =>
         routes.push route
 
@@ -56,11 +59,19 @@ class @Helpers.Router
     @AddController: (controller) =>
 
         originalOnAfterAction = controller.onAfterAction
+        originalOnBeforeAction = controller.onBeforeAction
         layout = controller.layoutTemplate
         delete controller.layoutTemplate
 
         if Meteor.isClient
             originalWaitOn = controller.waitOn
+
+            controller.onBeforeAction = ->
+
+                if originalOnBeforeAction
+                    return originalOnBeforeAction.apply @
+
+                @next()
 
             controller.waitOn = =>
                 retVal = []
@@ -69,13 +80,12 @@ class @Helpers.Router
                     retVal = originalWaitOn()
 
                 retVal.push ReactivePromise.when("craterStarted", Crater._startedDeferred.promise());
-                retVal.push Meteor.subscribe('translations', ironRouter.current().route.getName())
+                retVal.push Meteor.subscribe('translations', Helpers.Translation.GetUserLanguage(), ironRouter.current().route.getName())
 
                 retVal
 
         ret = ironRouteController.extend _.extend(controller, {
             onAfterAction: =>
-
                 setBodyLayout controller.name
 
                 if originalOnAfterAction
