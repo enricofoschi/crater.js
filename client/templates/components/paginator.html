@@ -1,0 +1,43 @@
+<template name="paginator">
+    {{#if hasPaging}}
+        <nav class="text-center">
+            <ul class="pagination">
+                {{#if hasPrevious }}
+                    <li>
+                        <a href="{{previousUrl}}">
+                            &laquo;
+                        </a>
+                    </li>
+                {{else}}
+                    <li class="disabled">
+                            <span>
+                                &laquo;
+                            </span>
+                    </li>
+                {{/if}}
+                {{#each pages}}
+                    {{#if isSelected ../options}}
+                        <li class="active">
+                            <span>{{this}}</span>
+                        </li>
+                    {{else}}
+                        <li><a href="{{pageUrl ../options}}">{{this}}</a></li>
+                    {{/if}}
+                {{/each}}
+                {{#if hasNext }}
+                    <li>
+                        <a href="{{nextUrl}}">
+                            &raquo;
+                        </a>
+                    </li>
+                {{else}}
+                    <li class="disabled">
+                            <span>
+                                &raquo;
+                            </span>
+                    </li>
+                {{/if}}
+            </ul>
+        </nav>
+    {{/if}}
+</template>

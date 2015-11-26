@@ -1,5 +1,3 @@
-fs = Npm.require 'fs'
-
 class @Helpers.Server.Email
 
     templates = {}

@@ -1,0 +1,26 @@
+<template name="AutoForm_SimpleTags">
+    <div class="form-group">
+        <div class="form-control-container">
+            <ul class="list-inline skills-list">
+                <li type="button" class="hide template">
+                    <span class="content label label-warning">
+                        <span class="text"></span>
+                        <a class="btn-remove text-danger">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </span>
+                </li>
+                {{#each value}}
+                    <li type="button" class="tag">
+                        <span class="content label label-warning">
+                            <span class="text">{{this}}</span>
+                            <a class="btn-remove text-danger">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </span>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</template>

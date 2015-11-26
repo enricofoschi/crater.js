@@ -1,10 +1,8 @@
-@GlobalSettings = {
-    adminRoles: ['admin']
-    companyName: '4Scotty'
-    languages: ["en", "de"]
-    defaultLanguage: "en"
+if Meteor.isClient
+    @ServerSettings = Injected.obj 'ServerSettings'
 
-}
+if Meteor.isServer
+    @ServerSettings = Meteor.settings
 
 @Crater = {}
 
@@ -41,7 +39,7 @@ Crater.onStartup = =>
                 priority: callback.priority
             }
 
-        Helpers.Promises.RunInSequence(Crater._beforeStartup).done(=>
+        Helpers.Promises.RunInSequence(promises).done(=>
             Helpers.Log.Info 'Client Initialised'
             Crater._startedDeferred.resolve()
         )
@@ -56,3 +54,14 @@ Meteor.startup ->
     else
         Crater.onStartup()
 
+if Meteor.isClient
+    Tracker.Dependency.prototype.changed = ->
+        self = this
+        for own key, value of self._dependentsById
+            self._dependentsById[key].invalidate()
+
+    Tracker.Dependency.prototype.hasDependents = ->
+        self = this
+        for own key, value of self._dependentsById
+            true
+        false

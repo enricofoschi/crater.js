@@ -5,7 +5,7 @@ class @CurrentUserSession extends BaseCollection
     @before_create: (attr) ->
         attr ||= attr
         attr.updatedAt = new Date
-        attr.token ||= (Helpers.Token.GetGuid() + Helpers.Token.GetGuid())
+        attr.token ||= Helpers.Token.GetGuid()
         attr.serverData ||= {}
         attr.clientData ||= {}
         attr
@@ -15,7 +15,8 @@ class @CurrentUserSession extends BaseCollection
         attr.updatedAt = new Date
         attr
 
-    @schema: {
+    @schema: ->
+        {
         token:
             type: String
             max: 72
@@ -27,12 +28,12 @@ class @CurrentUserSession extends BaseCollection
             blackbox: true
             type: Object
             label: 'Client Data'
-    }
+        }
 
     getData: (key) ->
         {
-            client: @clientData[key]
-            server: @serverData[key]
+        client: @clientData[key]
+        server: @serverData[key]
         }
 
     setData: (key, value, forClient, forServer) ->
@@ -53,17 +54,16 @@ class @CurrentUserSession extends BaseCollection
 
     forClient: ->
         {
-            token: @token
-            clientData: @clientData
+        token: @token
+        clientData: @clientData
         }
 
-Meteor.startup( ->
-
+Meteor.startup(->
     if Meteor.isServer
         CurrentUserSession._collection._ensureIndex {
             createdAt: 1
         }, {
-            expireAfterSeconds: Meteor.settings.sessionLength || 60 * 60 * 24 * 60
+            expireAfterSeconds: parseInt(Meteor.settings.sessionLength) || 60 * 60 * 24 * 60
         }
         CurrentUserSession._collection._ensureIndex {
             token: 1

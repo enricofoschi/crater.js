@@ -2,37 +2,62 @@ global = @
 
 class @Crater.Services.Core.Translation extends @Crater.Services.Core.Base
 
-    addEmptyTranslation: (key, route) =>
-        for lang in GlobalSettings.languages
+    addEmptyTranslation: (key, route, routeParams) =>
 
-            @addTranslation lang, key, null, route
+        route = Helpers.Translation.CleanRouteName route
 
-    addTranslation: (lang, key, value, route) ->
+        for lang in ServerSettings.languages
+
+            @addTranslation lang, key, null, route, routeParams
+
+    addTranslation: (lang, key, value, route, routeParams) ->
+
         obj = {
             key: key
-            route: route
             lang: lang
             value: value
+            routes: []
         }
 
         if key.indexOf('commons.') is 0
             obj.common = true
+        else
+            if route
+                obj.routes.push {
+                    name: route
+                    params: routeParams
+                }
 
-        existingTranslation = global.Translation.first {
-            key: key
-            lang: lang
-        }
+        if global.Translation.count()
+            existingTranslation = global.Translation.first {
+                key: key
+                lang: lang
+            }
 
-        if not existingTranslation
-            global.Translation.create obj
+            # Adding the translation if it doesn't exists
+            if not existingTranslation
+                global.Translation.create obj
+            # linking existing route otherwise
+            else if not existingTranslation.common and not _.find(existingTranslation.routes || [], (r) -> r.name is route) and route
+                existingTranslation.push {
+                    routes: [
+                        {
+                            name: route
+                            params: routeParams
+                        }
+                    ]
+                }
 
     translate: (doc) ->
         DDP._CurrentInvocation.get()
-        console.log doc
+
+    removeTranslation: (key) ->
+        global.Translation.destroyAll {
+            key: key
+        }
 
 @Services.TRANSLATOR =
     key: 'translator'
     service: -> new Crater.Services.Core.Translation()
 
 @Crater.Services.Set(@Services.TRANSLATOR)
-

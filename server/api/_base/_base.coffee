@@ -20,6 +20,7 @@ class @Crater.Api.Base
 
     _baseUrl: ''
     _contentType: ''
+    _userAgent: null
 
     _logService: null
 
@@ -45,16 +46,17 @@ class @Crater.Api.Base
         options ||= {}
         options.custom ||= {}
         options.custom.user = user
+        options.headers ||= {}
 
         # Extending specifying content type requested
         if @_contentType
-            options = _.extend(options, {
-                headers: {
-                    'content-type': @_contentType
-                }
-            })
+            options.headers['content-type'] = @_contentType
 
-        @_setAuthentication(method, url, options)
+        if @_userAgent
+            options.headers['user-agent'] = @_userAgent
+
+
+        @_setAuthentication(method, url, options) if @_setAuthentication
 
         # Deleting possible custom options
         delete(options.custom)
@@ -62,7 +64,7 @@ class @Crater.Api.Base
         # Making the actual call
 
         HTTP.call method, url, options, (e, r) =>
-            callback e, r
+            callback(e, r) if callback
 
     All: (callback) ->
         @Call 'get', '', callback
@@ -72,6 +74,11 @@ class @Crater.Api.Base
 
         # Getting User if hidden in options
         user = null
+
+    Post: (data, callback) ->
+        @Call 'post', '', {
+            content: data
+        }, callback
 
     _getSessionKey: (key) =>
         @_serviceName + '_' + key

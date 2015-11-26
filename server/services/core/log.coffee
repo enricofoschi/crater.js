@@ -1,9 +1,13 @@
 class @Crater.Services.Core.Log extends @Crater.Services.Core.Base
 
-    Info: (msg) ->
-        if console?.info
-            console.info msg
+    Log: ->
+        if console?.log
+            console.log.apply console, arguments
 
-    Error: (msg) ->
+    Info: ->
+        if console?.info
+            console.info.apply console, arguments
+
+    Error: ->
         if console?.error
-            console.error msg
+            console.error.apply console, arguments

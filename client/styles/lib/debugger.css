@@ -1,0 +1,13 @@
+.debug-container
+{
+    border-top: 2px solid #f00;
+    background: #f0f0f0;
+}
+
+.debug-container .logs-list > li
+{
+    border-bottom: 1px solid #aaa;
+    padding:20px;
+    margin:0 0 3px 0;
+    background: #fff;
+}

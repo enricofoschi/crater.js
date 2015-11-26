@@ -1,7 +1,5 @@
 class @Crater.Api.OAuth1 extends @Crater.Api.Base
 
-    oauthSigner = Npm.require('oauth-signature');
-
     '''
     Authentication obj:
 
@@ -34,6 +32,7 @@ class @Crater.Api.OAuth1 extends @Crater.Api.Base
         options.params.oauth_token = oauth_token
         options.params.oauth_secret = oauth_secret
 
+        oauthSigner = Meteor.npmRequire('oauth-signature');
         encryptedSignature = oauthSigner.generate method.toUpperCase(), @_baseUrl + url, options.params, @_authentication.secret, ''
         options.params.oauth_signature = decodeURIComponent(encryptedSignature)
 

@@ -1,0 +1,77 @@
+@import '{}/client/styles/_base/variables.import.less';
+
+.status-line {
+
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
+
+    position: relative !important;
+    z-index: 1;
+
+    li:first-child {
+        margin-left: 0;
+    }
+
+    li:last-child {
+        margin-right: 0;
+    }
+
+    li {
+        width: 2em;
+        height: 2em;
+        text-align: center;
+        line-height: 2em;
+        border-radius: 1em;
+        background: #df691a;
+        margin: 0 2em;
+        display: inline-block;
+        color: white;
+        position: relative;
+    }
+
+    li.danger
+    {
+        background:@colorDanger;
+    }
+
+    li::before {
+        content: '';
+        position: absolute;
+        top: .9em;
+        left: -5em;
+        width: 5em;
+        height: .2em;
+        background: #df691a;
+        z-index: -1;
+    }
+
+    li:first-child::before {
+        display: none;
+    }
+
+    .active {
+        background: #df691a;
+    }
+
+    .active ~ li {
+        background: #c9c9c9;
+    }
+
+    .active ~ li::before {
+        background: #c9c9c9;
+    }
+}
+
+@media @mobile {
+    .status-line {
+        li {
+            margin: 0 0.6em;
+        }
+
+        li::before {
+            width: 3em;
+            left: -3em;
+        }
+    }
+}

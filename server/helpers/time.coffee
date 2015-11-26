@@ -27,7 +27,7 @@ class @Helpers.Server.Time
                 stepDate = new Date(currentDate)
                 stepDate.setHours(startHour, startMinute + step * 30)
 
-                start = stepDate.getTime() / GlobalSettings.timeslotDivider
+                start = stepDate.getTime() / 86400
 
                 timesToCheck.push({
                     start: start

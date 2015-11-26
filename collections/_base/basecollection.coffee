@@ -2,7 +2,8 @@ global = @
 
 class @BaseCollection extends Minimongoid
 
-    @schema: new SimpleSchema {}
+    @schema: null
+    @stateMachineConfig: null
 
     # overriding function, waiting for pull request https://github.com/Exygy/minimongoid/pull/31 to be approved
     # this function sets up all of the attributes to be stored on the model as well as
@@ -103,17 +104,54 @@ class @BaseCollection extends Minimongoid
                         return HasAndBelongsToManyRelation.new(@, global[class_name], inverse_identifier, identifier,
                             @id)
 
-    @create: (attr) ->
+    @create: (attr) =>
         attr ||= {}
         attr.updatedAt = new Date
         attr.createdAt = new Date
 
         super attr
 
-    update: (attr) ->
+    @after_create: (doc) ->
+        try
+            if @stateMachineConfig
+                for own key, config of @stateMachineConfig
+                    sm = doc.getStateMachine(key)
+                    sm.initStatus()
+        catch e
+
+        doc
+
+    update: (attr, partial = false) =>
         attr ||= attr
         attr.updatedAt = new Date
-        super attr
+
+        if not attr.createdAt
+            attr.createdAt = attr.updatedAt
+
+        if not @constructor.schema or partial
+
+            for own key, value of attr
+                @[key] = value
+
+            @constructor._collection.update @id, {
+                $set: attr
+            }
+        else
+            super attr
+
+    @allCached: (identifier) ->
+        identifier ||= @_collection._name
+        Helpers.Client.MeteorHelper.GetCachedSubscribedData identifier, @
+
+    @cacheSubscribe: (subs, params, identifier, subscription) ->
+        subscription ||= @_collection._name
+        identifier ||= @_collection._name
+        Helpers.Client.MeteorHelper.SubscribeIfNotCached(
+            subs
+            identifier
+            subscription
+            params
+        )
 
     @first: (selector = {}, options = {}, defaults = {}) ->
         if typeof(selector) is 'string'
@@ -165,7 +203,47 @@ class @BaseCollection extends Minimongoid
 
         @constructor._collection.update @id, updateObj
 
+    addToSet: (lists) ->
+        updateObj = lists
+
+        @constructor._collection.update @_id, {
+            $set:
+                updatedAt: new Date()
+            $addToSet: updateObj
+        }
+
+    removeFromSet: (lists) ->
+        updateObj = lists
+
+        @constructor._collection.update @_id, {
+            $set:
+                updatedAt: new Date()
+            $pull: updateObj
+        }
+
+    # Localized property
+    userLanguage = null
+
+
+
+    getLocalizedName: =>
+        @getLocalizedProperty 'name'
+
+    @GetLocalizedName: (obj) =>
+        @GetLocalizedProperty obj, 'name'
+
+    @GetLocalizedProperty: (obj, property) =>
+        if not userLanguage
+            userLanguage = Helpers.Translation.GetUserLanguage()
+        return obj[property + '_' + userLanguage] || obj[property]
+
+    getLocalizedProperty: (property) =>
+        @constructor.GetLocalizedProperty @, property
+
+    # Validation
     getValidationContext: (name) ->
+        if not @constructor.schema
+            null
         @constructor._collection.simpleSchema().namedContext name
 
     getBaseObject: ->
@@ -177,20 +255,32 @@ class @BaseCollection extends Minimongoid
 
         attr = {}
 
-        for own key, value of obj when key not in ['errors', 'id', '_id']
+        for own key, value of obj when key not in ['errors', 'id', '_id', '__is_new']
+
+            continue if typeof value is 'function'
+
             attr[key] = value
 
         attr
 
+    isValid: (attr = {}) ->
+        if not @constructor.schema
+            true
+        super attr
+
     validate: ->
+
+        if not @constructor.schema
+            return
 
         obj = @constructor.getBaseObject @
         validationContext = @getValidationContext @constructor.name
 
         validationContext.validate obj, {modifier: false}
 
-        for validationError in validationContext.invalidKeys()
-            @error validationError.name, validationContext.keyErrorMessage validationError.name
+        if @constructor.schema
+            for validationError in validationContext.invalidKeys()
+                @error validationError.name, validationContext.keyErrorMessage validationError.name
 
     error_message: ->
         msg = ''
@@ -210,12 +300,15 @@ class @BaseCollection extends Minimongoid
                     $setOnInsert: new Date
                     }
                 else
-                    @unset();
+                    @unset()
         updatedAt:
             type: Date
             autoValue: ->
                 new Date
     }
+
+    getStateMachine: (field = 'status') =>
+        new StateMachine @constructor.stateMachineConfig[field], @
 
     @InitCollections: ->
 
@@ -223,17 +316,32 @@ class @BaseCollection extends Minimongoid
 
             for obj of holder
 
-                if obj and obj.indexOf('webkit') is -1 and holder[obj] and holder[obj].prototype instanceof BaseCollection and not holder[obj].simpleSchema
-                    holder[obj].schema = _.extend holder[obj].schema, BaseCollection.ExtraSchema
+                try
+                    if obj and obj isnt 'opener' and obj isnt 'localStorage' and obj isnt 'sessionStorage' and obj.indexOf('webkit') is -1 and holder[obj] and holder[obj].prototype instanceof BaseCollection and not holder[obj].simpleSchema
 
-                    holder[obj].simpleSchema = new SimpleSchema holder[obj].schema
+                        classDef = holder[obj]
 
-                    holder[obj]._collection.attachSchema holder[obj].simpleSchema
+                        if classDef.stateMachineConfig and not classDef.stateMachineSetupInit
+                            StateMachineDriven.push classDef
+                            classDef.stateMachineSetupInit = true
+
+                        schema = classDef.schema() if classDef.schema
+
+                        continue if not schema
+
+                        schema = _.extend schema, BaseCollection.ExtraSchema
+
+                        classDef.simpleSchema = new SimpleSchema schema
+
+                        classDef._collection.attachSchema classDef.simpleSchema
+                catch
+                    if Meteor.isClient
+                        Helpers.Log.Error obj + ' cannot be initialized'
 
 
+@StateMachineDriven = []
 @BaseCollectionHolders = [
     @
 ]
 
 BaseCollection.InitCollections()
-

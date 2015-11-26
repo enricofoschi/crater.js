@@ -1,0 +1,55 @@
+<template name="user_signup">
+    <section class="page-section">
+        <h3>
+            {{t 'view.signup.signup_buttons'}}
+        </h3>
+        <div class="row">
+            <div class="col-md-4 bottom15">
+                <a data-track="linkedin" class="track-me btn btn-block btn-primary btn-linkedin2 btn-social btn-login-linkedin">
+                    <i class="fa fa-linkedin"></i>
+                    {{t 'commons.services.linkedin'}}
+                </a>
+            </div>
+            <div class="col-md-4 bottom15">
+                <a data-track="xing" class="track-me btn btn-block btn-primary btn-xing btn-social btn-login-xing">
+                    <i class="fa fa-xing"></i>
+                    {{t 'commons.services.xing'}}
+                </a>
+            </div>
+            <div class="col-md-4 bottom15">
+                <a data-track="google" class="track-me btn btn-block btn-primary btn-google btn-social btn-login-google">
+                    <i class="fa fa-google"></i>
+                    {{t 'commons.services.google'}}
+                </a>
+            </div>
+        </div>
+
+        <h3>
+            {{t 'view.signup.signup_email'}}
+        </h3>
+
+        {{#autoForm class='form-horizontal' schema=schema id="emailSignupForm" trimStrings=true type="method" meteormethod=emailMethod resetOnSuccess=false }}
+
+            {{#if wrapMode}}
+                {{> UI.contentBlock}}
+            {{else}}
+                {{> afQuickField placeholder="schemaLabel" name="firstName" }}
+                {{> afQuickField placeholder="schemaLabel" name="lastName" }}
+                {{> afQuickField placeholder="schemaLabel" name="email" type="email" }}
+                {{> afQuickField placeholder="schemaLabel" name="password" type="password" }}
+            {{/if}}
+
+            <div class="row">
+                {{#if tandc}}
+                <div class="col-md-8 text-left top10">
+                    {{{tandc}}}
+                </div>
+                {{/if}}
+                <div class="{{#if tandc}}col-md-4{{else}}col-md-12{{/if}} text-right">
+                    <button type="submit" data-track="continue"
+                            class="track-me btn btn-success">{{t 'view.signup.email_signup_cta'}}</button>
+                </div>
+            </div>
+        {{/autoForm}}
+    </section>
+</template>

@@ -1,0 +1,34 @@
+<template name="afArrayFieldCustom">
+    <ul class="list-unstyled list-container">
+        {{#afEachArrayItem name=name minCount=minCount maxCount=maxCount}}
+            <li class="autoform-array-item">
+                <div class="panel">
+                    <div class="panel-body">
+
+                        {{#if afArrayFieldHasMoreThanMinimum name=../name minCount=../minCount maxCount=../maxCount}}
+                            <div class="text-right bottom15">
+                                <a type="button" class="text-danger autoform-remove-item">
+                                    <i class="fa fa-times-circle text-danger"></i>
+                                    {{../removeText}}
+                                </a>
+                            </div>
+                        {{/if}}
+
+                        {{> UI.contentBlock data=this }}
+
+                    </div>
+                </div>
+
+            </li>
+        {{/afEachArrayItem}}
+    </ul>
+    <div class="top15 text-center">
+        {{#if afArrayFieldHasLessThanMaximum name=name minCount=minCount maxCount=this.atts.maxCount}}
+            <button type="button" class="btn btn-sm btn-primary autoform-add-item" data-autoform-field="{{name}}"
+                    data-autoform-minCount="{{minCount}}" data-autoform-maxCount="{{maxCount}}">
+                <i class="fa fa-plus-circle"></i>
+                {{addText}}
+            </button>
+        {{/if}}
+    </div>
+</template>

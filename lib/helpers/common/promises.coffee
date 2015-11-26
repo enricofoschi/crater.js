@@ -2,25 +2,29 @@ globalContext = @
 
 class @Helpers.Promises
 
-    @FromSubscription: (subscription, options...) =>
-        deferred = $.Deferred()
+    @FromSubscription: (subscription, paramsGetter) =>
+        =>
+            deferred = $.Deferred()
 
-        options ||= []
+            options = paramsGetter() || []
 
-        options.push {
-            onReady: ->
-                deferred.resolve()
-            onError: ->
-                deferred.reject()
-        }
+            options.push {
+                onReady: ->
+                    deferred.resolve()
+                onError: ->
+                    deferred.reject()
+            }
 
-        options.unshift subscription
+            options.unshift subscription
 
-        Meteor.subscribe.apply @, options
+            subManager.subscribe.apply @, options
 
-        return deferred.promise()
+            return deferred.promise()
 
     @FromSyncFunction: (func) =>
+
+        if func.done
+            return func
 
         deferred = $.Deferred()
 
@@ -54,7 +58,14 @@ class @Helpers.Promises
         runPromises = =>
             Helpers.Log.Info 'Running priorities: ' + currentIndex
 
-            $.when.apply($, promisesByPriorityList[currentIndex]).done(=>
+            promisesToRun = _.map(promisesByPriorityList[currentIndex], (p) ->
+                if p.done
+                    return p
+                else
+                    return p()
+            )
+
+            $.when.apply($, promisesToRun).done(=>
                 currentIndex++;
                 if promisesByPriorityList[currentIndex]
                     runPromises()
@@ -65,3 +76,24 @@ class @Helpers.Promises
         runPromises()
 
         return deferred.promise()
+
+    _waitOnPromises = {}
+    @FromPromisesToWaitOnHandle: (name, promises) =>
+
+        _waitOnPromises[name] = {
+            promises: promises
+            ready: false
+            readyDeps: new Deps.Dependency
+        }
+
+        $.when.apply(@, promises).done =>
+            _waitOnPromises[name].ready = true
+            _waitOnPromises[name].readyDeps.changed()
+
+        handle = {
+            ready: =>
+                _waitOnPromises[name].readyDeps.depend()
+                _waitOnPromises[name].ready
+        }
+
+        return handle

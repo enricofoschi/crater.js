@@ -6,9 +6,7 @@ class @Fixture.Users extends Fixture.Base
 
     @_uniqueFilter: (u) ->
         {
-        emails:
-            $elemMatch:
-                address: u.email
+            email: u.email
         }
 
     @_data: _.map Meteor.settings.users, (u) ->

@@ -1,8 +1,11 @@
 Meteor.methods {
-    'getClientSettings': ->
-        obj = {}
-        if Meteor.settings.forClient
-            for forClient in Meteor.settings.forClient
-                obj[forClient] = Meteor.settings[forClient]
-        obj
+    'logError': ->
+        console.log 'Client error:'
+        console.log arguments
+
+        Crater.Collections.Error.create {
+            data: arguments
+        }
 }
+
+@AVOID_THROTTLING_FOR.push 'logError'
