@@ -1,6 +1,6 @@
 Package.describe({
   name: 'enricofoschi:crater.js',
-  version: '0.0.17',
+  version: '0.0.18',
   // Brief, one-line summary of the package.
   summary: 'Meteor Micro Framework For Highly Effective Projects',
   // URL to the Git repository containing the source code for this package.
