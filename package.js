@@ -98,7 +98,9 @@ Package.onUse(function(api) {
 	]);
 
 	api.addFiles([
-        'lib/helpers/common/log.coffee',
+		'lib/helpers/common/head.coffee',
+
+		'lib/helpers/common/log.coffee',
 
 
 		'client/scripts/helpers/animations.coffee',
