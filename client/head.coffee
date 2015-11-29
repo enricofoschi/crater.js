@@ -13,7 +13,7 @@ faviconRender = ->
 
     output += '<meta content="yes" name="apple-mobile-web-app-capable">'
     output += '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">'
-    output += '<meta name="application-name" content="' + ServerSettings.titleSuffix +'">'
+    output += '<meta name="application-name" content="' + ServerSettings.titleSuffix + '">'
     output = output.replace(/\{\{imgPath\}\}/g, imgPath)
     document.write output
     return

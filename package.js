@@ -17,7 +17,6 @@ Package.onUse(function(api) {
 		'underscore',
 		'reactive-var',
 		'coffeescript',
-		'accounts-facebook',
 		'kaptron:minimongoid@0.9.5',
 		'aldeed:collection2',
 		'aldeed:autoform',
@@ -40,7 +39,7 @@ Package.onUse(function(api) {
 	]);
 
 	api.use([
-		'less@2.5.0_2',
+		'less@2.5.1',
         'tomi:upload-jquery@2.1.7'
 	], 'client');
 
@@ -98,7 +97,7 @@ Package.onUse(function(api) {
 	]);
 
 	api.addFiles([
-		'lib/helpers/common/head.coffee',
+		'client/head.coffee',
 
 		'lib/helpers/common/log.coffee',
 
