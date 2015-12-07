@@ -63,15 +63,6 @@ Accounts.config {
    forbidClientAccountCreation : true
 }
 
-Meteor.startup ->
-   UploadServer.init {
-       tmpDir: Meteor.settings.tmpFolder
-       uploadDir: Meteor.settings.uploadFolder
-       checkCreateDirectories: false
-       maxFileSize: 25000000
-       cacheTime: 0
-   }
-
 # Building Settings shared with client
 clientSettings = {}
 if Meteor.settings.forClient

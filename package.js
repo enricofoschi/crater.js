@@ -39,8 +39,7 @@ Package.onUse(function(api) {
 	]);
 
 	api.use([
-		'less@2.5.1',
-        'tomi:upload-jquery@2.1.7'
+		'less@2.5.1'
 	], 'client');
 
 	api.use([
@@ -50,7 +49,6 @@ Package.onUse(function(api) {
 		'meteorhacks:async',
 		'base64',
         'froatsnook:request',
-        'tomi:upload-server@1.0.3',
         'sha',
 		'meteorhacks:unblock',
 		'meteorhacks:npm'
