@@ -28,7 +28,7 @@ class @Crater.Services.Core.Translation extends @Crater.Services.Core.Base
                     params: routeParams
                 }
 
-        if global.Translation.count()
+        if global.Translation.count() or Helpers.Server.Auth.GetCurrentConnection()
             existingTranslation = global.Translation.first {
                 key: key
                 lang: lang
