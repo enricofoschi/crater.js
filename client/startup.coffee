@@ -1,5 +1,6 @@
 global = @
 @Crater.ConnectedPromise = $.Deferred()
+ReactivePromise.when 'clientConnected', Crater.ConnectedPromise
 @Crater.TokenInitialized = false
 
 Crater.beforeStartup(@Crater.ConnectedPromise, 1)

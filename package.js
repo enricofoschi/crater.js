@@ -35,7 +35,8 @@ Package.onUse(function(api) {
         'browser-policy',
         'http',
         'meteorhacks:inject-initial',
-		'meteorhacks:subs-manager'
+		'meteorhacks:subs-manager',
+		'arsnebula:reactive-promise'
 	]);
 
 	api.use([
