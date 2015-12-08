@@ -18,20 +18,24 @@ class @Helpers.Server.Session
         if connectionId
             connections[connectionId] = token
 
+    @GetSessionToken: ->
+        connectionId = Helpers.Server.Auth.GetCurrentConnectionId.apply @
+        connections[connectionId]
+
     @Set: (key, value, forClient=false, forServer=true) ->
 
-        connectionId = Helpers.Server.Auth.GetCurrentConnectionId.apply @
+        sessionToken = Session.GetSessionToken.apply @
 
-        if connections[connectionId]
+        if sessionToken
             sessionData = null
 
             sessionData = CurrentUserSession.first {
-                token: connections[connectionId]
+                token: sessionToken
             }
 
             if not sessionData
                 sessionData = CurrentUserSession.create {
-                    token: connections[connectionId]
+                    token: sessionToken
                     clientData: {
                         init: true
                         missing: true
