@@ -83,40 +83,40 @@ class @Helpers.Client.Form
 
 
     @LimitFromToFields: (yearFrom, yearTo, monthFrom, monthTo) ->
-        limitEachOther = (from, to, extraCondition) ->
-            toValue = parseInt(to.val())
-            fromValue = parseInt(from.val())
-
-            to.find('option').each ->
+        hideOptionsLowerThan = (number, select) ->
+            select.find('option').each ->
                 currentValue = parseInt(@value)
-
-                doCheck = true
-
-                if extraCondition
-                    doCheck = extraCondition()
-
-                if doCheck and fromValue and currentValue and currentValue < fromValue
+                if currentValue and currentValue < number
                     $(@).hide()
                 else
                     $(@).show()
 
-            # in case a to date < from date was previously selected
-            if fromValue and toValue and toValue < fromValue
-                to.val(fromValue)
-
         limit = ->
-            limitEachOther yearFrom, yearTo
+            yearFromValue   = parseInt(yearFrom.val())
+            monthFromValue  = parseInt(monthFrom.val())
+            yearToValue     = parseInt(yearTo.val())
+            monthToValue    = parseInt(monthTo.val())
 
-            # months
-            if monthFrom and monthTo
-                limitEachOther monthFrom, monthTo, -> yearFrom.val() is yearTo.val()
+            if yearToValue < yearFromValue
+                yearTo.val(yearFromValue)
+                yearToValue = yearFromValue
 
+            if yearToValue is yearFromValue
+                if monthToValue < monthFromValue
+                    monthTo.val(monthFromValue)
+
+                hideOptionsLowerThan(monthFromValue, monthTo)
+            else
+                hideOptionsLowerThan(0, monthTo)
+
+            hideOptionsLowerThan(yearFromValue, yearTo)
 
         limit()
 
         yearFrom.change limit
         monthFrom.change limit
         yearTo.change limit
+        monthTo.change limit
 
     @DisableOnChecked: (checkbox, target) ->
         disableTarget = ->
