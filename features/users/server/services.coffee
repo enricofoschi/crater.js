@@ -609,8 +609,6 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
 
     updateLocationGeocode: ->
 
-        cachedQueries = []
-
         logServices = Crater.Services.Get Services.LOG
 
         users = Meteor.users.find({
@@ -632,28 +630,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
             if user.location.formatted_name and (not user.location.lat or not user.location.lon or not user.location.country_name)
 
                 try
-
-                    query = user.location.formatted_name
-
-                    # Getting from cached queries
-                    geocodedLocation = _.find(cachedQueries, (q) ->
-                        q.query is query.toLowerCase()
-                    )?.location
-
-                    # Getting from Google
-                    if not geocodedLocation
-                        # Sleep to avoid getting our IP banned for the too many queries
-                        Meteor.sleep 0.5 * Math.random() * 1
-
-                        logServices.Info 'Getting geocode for ' + query
-                        response = Meteor.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(user.location.formatted_name))
-                        results = JSON.parse(response.content).results
-                        if results.length
-                            geocodedLocation = results[0]
-                            cachedQueries.push {
-                                query: query.toLowerCase()
-                                location: geocodedLocation
-                            }
+                    geocodedLocation = Helpers.Google.GetGeocodedLocation user.location.formatted_name
 
                     # Updating location for user
                     if geocodedLocation
