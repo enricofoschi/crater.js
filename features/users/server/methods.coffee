@@ -279,4 +279,12 @@ Meteor.methods {
             user = new MeteorUser user
             accountService.getUserAutologinToken(user, 100)
 
+    'users.updateLocationGeocode': ->
+
+        if not Roles.userIsInRole Meteor.userId(), 'admin'
+            throw 'Bad kittydoggy'
+
+        accountService = Crater.Services.Get Services.ACCOUNT
+        accountService.updateLocationGeocode()
+
 }

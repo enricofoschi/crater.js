@@ -305,7 +305,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
     ensureLocation: (userId) ->
         user = new MeteorUser userId
 
-        userIp = Helpers.Server.Auth.GetCurrentConnection()?.clientAddress
+        userIp = Helpers.Server.Auth.GetCurrentConnection()?.remoteAddress
 
         if Meteor.settings.local
             userIp = '62.157.63.1'
@@ -339,14 +339,15 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
 
         user = new MeteorUser userId
 
-        country = place.address_components?[place.address_components?.length - 1]
+        country = _.find place.address_components || [], (ac) ->
+            'country' in ac.types
 
         user.update {
             $set:
                 location: _.extend {
                     formatted_name: place.formatted_address
                     country_code: country?.short_name
-                    country_code: country?.long_name
+                    country_name: country?.long_name
                 }, Helpers.Google.GetLatLonFromLocation place.geometry?.location
         }
 
@@ -605,6 +606,55 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
                 user.updateHighrise()
 
         logService.Info 'Finished'
+
+    updateLocationGeocode: ->
+
+        logServices = Crater.Services.Get Services.LOG
+
+        users = Meteor.users.find({
+            'location.formatted_name':
+                $exists: true
+            'location.geocoded':
+                $ne: true
+        }, {
+            sort:
+                createdAt: -1
+        }).fetch()
+
+        for user in users
+
+            user = new MeteorUser user
+
+            if not user.location.lat or not user.location.lon
+
+                logServices.Info 'Fixing location for', user._id
+
+                try
+                    response = Meteor.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(user.location.formatted_name))
+                    results = JSON.parse(response.content).results
+                    if results.length
+
+                        geocodedLocation =  results[0]
+
+                        country = _.find geocodedLocation.address_components || [], (ac) ->
+                            'country' in ac.types
+
+                        user.update {
+                            $set: _.extend({
+                                'location.country_code': country?.short_name
+                                'location.country_name': country?.long_name
+                            }, Helpers.Google.GetLatLonFromLocation geocodedLocation.geometry.location)
+                        }
+                catch e
+                    console.log e
+
+            logServices.Info 'Updating user'
+            user.update {
+                $set:
+                    'location.geocoded': true
+            }
+
+            break
 
 @Services.ACCOUNT =
     key: 'account'
