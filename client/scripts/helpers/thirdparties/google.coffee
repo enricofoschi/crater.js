@@ -51,6 +51,12 @@ class @Helpers.Client.Google
 
                 if place?.formatted_address
                     $input.data('google-place', place)
+
+                    # fixing lat / lon
+                    if typeof(place?.geometry?.location?.lat) is 'function'
+                        place.geometry.location.lat = place.geometry.location.lat()
+                        place.geometry.location.lng = place.geometry.location.lng()
+
                     if callback
                         callback place
                 else
