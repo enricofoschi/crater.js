@@ -86,7 +86,7 @@ class @Crater.Services.ThirdParties.ElasticSearch extends @Crater.Services.Third
 
         if model.IsUsers
             # Rebuilding users
-            users = Meteor.users.find(model.UsersFilter).fetch()
+            users = Meteor.users.find(model.UsersFilter || {}).fetch()
 
             @pushUsers users
 
