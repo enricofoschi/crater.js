@@ -23,7 +23,7 @@ class @Helpers.Google
             if results.length
                 geocodedLocation = results[0]
 
-                geocodedLocation.formatted_address = geocodedLocation.formatted_address.replace(/^([0-9]+ )?/, '')
+                geocodedLocation.formatted_address = geocodedLocation.formatted_address.replace(/^([0-9]+,? )?/, '')
 
                 cachedQueries.push {
                     address: address.toLowerCase()
