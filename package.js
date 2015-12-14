@@ -58,6 +58,7 @@ Package.onUse(function(api) {
 	api.addFiles([
 		'lib/_base/_base.coffee',
 		'lib/extensions/array.coffee',
+        'lib/extensions/number.coffee',
 		'lib/extensions/date.coffee',
 		'lib/extensions/object.coffee',
 		'lib/extensions/strings.coffee',
@@ -72,6 +73,7 @@ Package.onUse(function(api) {
         'lib/helpers/_core/core.coffee',
 		'lib/helpers/common/analytics.coffee',
 		'lib/helpers/common/conversions.coffee',
+		'lib/helpers/common/geo.coffee',
 		'lib/helpers/common/token.coffee',
 		'lib/helpers/common/number.coffee',
 		'lib/helpers/common/paging.coffee',
