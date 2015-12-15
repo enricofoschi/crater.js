@@ -131,7 +131,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
                 password_reset_token: null
         }
 
-    sendEmailVerificationRequest: ->
+    sendEmailVerificationRequest: =>
 
         _user = Meteor.user()
 
@@ -143,12 +143,13 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
                 email_verification_token: Helpers.Token.GetGuid()
         }
 
-        params = {
+        params = _.extend {
             token: user._user.email_verification_token
         }
 
         activationLink = Helpers.Router.Path('presentation.account.verify_email', params, {
             absolute: 1
+            query: @getUserAutologinTokenSuffix user, 100
         })
 
         template = userType.EMAIL_TEMPLATE_ACTIVATION || 'user-confirm-email'
@@ -351,9 +352,17 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
                 }, Helpers.Google.GetLatLonFromLocation place.geometry?.location
         }
 
-    getUserAutologinTokenSuffix: (user, durationInDays) =>
+    getUserAutologinTokenSuffixParams: (user, durationInDays) =>
         token = @getUserAutologinToken user, durationInDays
-        'autologin_userid=' + user._id + '&autologin_token=' + token
+
+        {
+            autologin_userid: user._id
+            autologin_token: token
+        }
+
+    getUserAutologinTokenSuffix: (user, durationInDays) =>
+        params = @getUserAutologinTokenSuffixParams user, durationInDays
+        'autologin_userid=' + params.autologin_userid + '&autologin_token=' + params.autologin_token
 
     getUserAutologinToken: (user, durationInDays) ->
 
