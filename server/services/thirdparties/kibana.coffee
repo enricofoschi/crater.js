@@ -68,8 +68,6 @@ class @Crater.Services.ThirdParties.Kibana extends @Crater.Services.ThirdParties
 
         console.log 'Rebuilding Kibana'
 
-        initCollections()
-
         startDate = null
 
         if not full
