@@ -3,7 +3,7 @@ class @Crater.Services.ThirdParties.Kibana extends @Crater.Services.ThirdParties
     _esAPI = null
 
     KIBANA_INDEX_PREFIX = 'slom_'
-    KIBANA_COLLECTIONS = null
+    @KIBANA_COLLECTIONS: null
     PERIOD = 8 * 60 * 60 # seconds to export
 
     constructor: () ->
@@ -76,7 +76,7 @@ class @Crater.Services.ThirdParties.Kibana extends @Crater.Services.ThirdParties
 
         started = new Date()
 
-        for own key, properties of KIBANA_COLLECTIONS
+        for own key, properties of @constructor.KIBANA_COLLECTIONS
             index = getIndex key
 
             if full
