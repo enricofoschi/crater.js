@@ -498,9 +498,17 @@ if Meteor.isServer
             @_softDeleteNoSecurityCheck()
 
         _softDeleteNoSecurityCheck: =>
+
+            emailSuffix = '___' + (new Date()).getTime()
+
+            for email in @emails
+                email.address += emailSuffix
+
             @update {
                 $set:
+                    emails: @emails
                     deleted: true
+                    email: @email + emailSuffix
                     resume: null
                     services: null
                     services_bak: @services
