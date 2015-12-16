@@ -210,8 +210,19 @@ Meteor.methods {
 
     'users.setStatus': (id, status) ->
 
-        if not Roles.userIsInRole Meteor.userId(), 'admin'
+        if not Roles.userIsInRole(Meteor.userId(), 'admin')
             throw 'Bad puppy!'
+
+        check id, String
+        check status, String
+
+        user = new MeteorUser id
+        user.update {
+            $set:
+                status: status
+        }
+
+    'users.setStatusNoSecurityCheck': (id, status) ->
 
         check id, String
         check status, String
