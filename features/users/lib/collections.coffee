@@ -544,7 +544,7 @@ if Meteor.isServer
 
             newToken
 
-# Getting the token and resetting it for security purposes
+        # Getting the token and resetting it for security purposes
         isTmpAdminToken: (token) =>
             r = @admin_tmp_token is token and token.length > 5
 
