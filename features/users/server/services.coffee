@@ -62,21 +62,32 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
     updateAccountSettings: (userId, doc) =>
         user = new MeteorUser userId
 
+        # New Email Update
+        if doc.email isnt user.email
+
+            userByEmail = Meteor.users.findOne {
+                email: doc.email
+                _id:
+                    $ne: user._id
+            }
+
+            if userByEmail
+                return 'EMAIL_EXISTS'
+            else
+                @sendEmailVerificationRequest doc.email
+
+                user.update {
+                    $set:
+                        tmp_email: doc.email
+                }
+
+        # Other updates
         user.update {
             $set:
                 first_name: doc.first_name
                 last_name: doc.last_name
                 phone: doc.phone
         }
-
-        if doc.email isnt user.email
-
-            @sendEmailVerificationRequest doc.email
-
-            user.update {
-                $set:
-                    tmp_email: doc.email
-            }
 
     getNewLoginToken: (userId) ->
         newToken = Accounts._generateStampedLoginToken()
