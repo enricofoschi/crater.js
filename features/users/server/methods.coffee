@@ -143,9 +143,9 @@ Meteor.methods {
         catch e
             console.error e
 
-    'verifyUserEmail': (token) ->
+    'users.verifyEmail': (token, newEmail) ->
         accountService = Crater.Services.Get Services.ACCOUNT
-        accountService.verifyUserEmail token
+        accountService.verifyUserEmail token, newEmail
 
     'ensurePostSignupOps': ->
         @unblock()

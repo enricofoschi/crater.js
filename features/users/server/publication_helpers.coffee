@@ -2,6 +2,7 @@ class @Crater.Users.Server.PublicationHelpers
 
     privateFields = {
         email: true
+        tmp_email: true
         emails: true
         platform: true
         notifications: true

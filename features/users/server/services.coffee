@@ -59,16 +59,24 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
 
         return false
 
-    updateAccountSettings: (userId, doc) ->
+    updateAccountSettings: (userId, doc) =>
         user = new MeteorUser userId
 
         user.update {
             $set:
-                email: doc.email
                 first_name: doc.first_name
                 last_name: doc.last_name
                 phone: doc.phone
         }
+
+        if doc.email isnt user.email
+
+            @sendEmailVerificationRequest doc.email
+
+            user.update {
+                $set:
+                    tmp_email: doc.email
+            }
 
     getNewLoginToken: (userId) ->
         newToken = Accounts._generateStampedLoginToken()
@@ -131,65 +139,98 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
                 password_reset_token: null
         }
 
-    sendEmailVerificationRequest: =>
+    sendEmailVerificationRequest: (newEmail) =>
 
         _user = Meteor.user()
 
         userType = MeteorUser.GetUserType _user
         user = MeteorUser.GetDefinedUser _user
 
+        updateObj = {}
+        token = token = Helpers.Token.GetGuid()
+
+        if newEmail
+            updateObj.tmp_email_verification_token = token
+        else
+            updateObj.email_verification_token = token
+
         user.update {
-            $set:
-                email_verification_token: Helpers.Token.GetGuid()
+            $set: updateObj
         }
 
         params = _.extend {
-            token: user._user.email_verification_token
+            token: token
         }
 
         activationLink = Helpers.Router.Path('presentation.account.verify_email', params, {
             absolute: 1
-            query: @getUserAutologinTokenSuffix user, 100
+            query: (if newEmail then 'newEmail=1&' else '') + @getUserAutologinTokenSuffix user, 100
         })
 
-        template = userType.EMAIL_TEMPLATE_ACTIVATION || 'user-confirm-email'
+        # Email Change
+        if newEmail
+            template = 'user-confirm-new-email'
+        # Email Verification post Signup
+        else
+            template = userType.EMAIL_TEMPLATE_ACTIVATION || 'user-confirm-email'
 
         emailService = Crater.Services.Get Services.EMAIL
         emailService.SendWithMandrill template, {
             toUser: user
             global_merge_vars: [
                 {
-                    name: 'firstName'
-                    content: user.first_name
-                }
-                {
                     name: 'activationLink'
                     content:  activationLink
                 }
             ]
-        }, user.email
+        }, newEmail || user.email
 
-    verifyUserEmail: (token) ->
+    verifyUserEmail: (token, newEmail) ->
 
         user = new MeteorUser Meteor.user()
 
-        if user.email_verification_token is token
+        # New email verified
+        if newEmail
+            if user.tmp_email_verification_token is token
+                user.update {
+                    $set:
+                        email: user.tmp_email
+                        emails: [
+                            {
+                                address: user.tmp_email
+                                verified: true
+                            }
+                        ]
+                    $unset:
+                        tmp_email_verification_token: null
+                        tmp_email: null
+                }
 
-            Meteor.users.update {
-                _id: user._id
-                'emails.address': user.email
-            }, {
-                $set:
-                    'emails.$.verified': true
-                $unset:
-                    email_verification_token: null
-            }
+                return {
+                    success: true
+                }
+            else return false
 
-            return {
-                success: true
-            }
+        # Signup email verified
+        else
+            if user.email_verification_token is token
 
-        else return false
+                user.update {
+                    $set:
+                        emails: [
+                            {
+                                address: user.email
+                                verified: true
+                            }
+                        ]
+                    $unset:
+                        email_verification_token: null
+                }
+
+                return {
+                    success: true
+                }
+            else return false
 
     uploadNewProfilePicture: (userId, localPath) =>
 
