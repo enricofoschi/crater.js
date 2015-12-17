@@ -1,13 +1,21 @@
 class @Crater.Services.Core.Log extends @Crater.Services.Core.Base
 
-    Log: ->
+    @prefix: ''
+
+    SetPrefix: (prefix) =>
+        @prefix = prefix
+
+    getArguments: (args) =>
+        if @prefix then [@prefix].pushArray(args) else args
+
+    Log: =>
         if console?.log
-            console.log.apply console, arguments
+            console.log.apply console, @getArguments(arguments)
 
-    Info: ->
+    Info: =>
         if console?.info
-            console.info.apply console, arguments
+            console.info.apply console, @getArguments(arguments)
 
-    Error: ->
+    Error: =>
         if console?.error
-            console.error.apply console, arguments
+            console.error.apply console, @getArguments(arguments)
