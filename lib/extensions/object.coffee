@@ -36,3 +36,19 @@ Object.isSameAs = (a, b) ->
         return false if b[key] isnt value
 
     return true
+
+Object.getOwnKeys = (obj) ->
+    _.map obj, (value, key) -> key
+
+Object.splitKeyValues = (obj) ->
+    keys = []
+    values = []
+
+    for own key, value of obj
+        keys.push key
+        values.push value
+
+    {
+        keys: keys
+        values: values
+    }
