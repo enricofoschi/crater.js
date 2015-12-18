@@ -71,12 +71,12 @@ class @Helpers.Client.Google
                 lat: parseFloat(lat)
                 lng: parseFloat(lon)
             geocoder.geocode { 'location': latlng }, (results, status) ->
-                if status == google.maps.GeocoderStatus.OK
+                if status is google.maps.GeocoderStatus.OK
                     if callback
                         callback results
 
     @GetLocationFromSensor: (callback) =>
         if navigator.geolocation
             navigator.geolocation.getCurrentPosition ((position) =>
-                @GetLocationFromLatLon(position.coords.latitude, position.coords.longitude, callback)
+                @GetLocationFromLatLon(position?.coords.latitude, position?.coords.longitude, callback)
             )
