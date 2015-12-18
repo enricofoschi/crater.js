@@ -222,6 +222,16 @@ Meteor.methods {
                 status: status
         }
 
+    'users.setCurrentUserStatus': (status) ->
+        check status, String
+
+        id = Meteor.userId()
+        user = new MeteorUser id
+        user.update {
+            $set:
+                status: status
+        }
+
     'users.signupTracked': ->
         user = new MeteorUser Meteor.user()
         user.update {
