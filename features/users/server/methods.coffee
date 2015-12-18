@@ -222,14 +222,10 @@ Meteor.methods {
                 status: status
         }
 
-    'users.setCurrentUserStatus': (id, status) ->
-
-        if not Roles.userIsInRole(Meteor.userId(), 'admin') and Meteor.userId() isnt id
-            throw 'Bad puppy!'
-
-        check id, String
+    'users.setCurrentUserStatus': (status) ->
         check status, String
 
+        id = Meteor.userId()
         user = new MeteorUser id
         user.update {
             $set:
