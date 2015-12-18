@@ -222,7 +222,10 @@ Meteor.methods {
                 status: status
         }
 
-    'users.setStatusNoSecurityCheck': (id, status) ->
+    'users.setCurrentUserStatus': (id, status) ->
+
+        if not Roles.userIsInRole(Meteor.userId(), 'admin') and Meteor.userId() isnt id
+            throw 'Bad puppy!'
 
         check id, String
         check status, String
