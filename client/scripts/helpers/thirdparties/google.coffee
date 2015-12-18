@@ -63,3 +63,20 @@ class @Helpers.Client.Google
                     window.setTimeout ->
                         $input.val('')
                     , 100
+
+    @GetLocationFromLatLon: (lat, lon, callback) ->
+        @LoadPlacesAPI ->
+            geocoder = new google.maps.Geocoder;
+            latlng =
+                lat: parseFloat(lat)
+                lng: parseFloat(lon)
+            geocoder.geocode { 'location': latlng }, (results, status) ->
+                if status is google.maps.GeocoderStatus.OK
+                    if callback
+                        callback results
+
+    @GetLocationFromSensor: (callback) =>
+        if navigator.geolocation
+            navigator.geolocation.getCurrentPosition ((position) =>
+                @GetLocationFromLatLon(position?.coords.latitude, position?.coords.longitude, callback)
+            )
