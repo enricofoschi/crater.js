@@ -46,13 +46,25 @@ Meteor.methods {
         translations = Translation.all()
 
         for translation in translations
-            emptySiblings = Translation.destroyAll {
-                lang: translation.lang
+            Translation.destroyAll {
                 key: translation.key
+                lang: translation.lang
                 _id:
                     $ne: translation._id
-                value: null
+                $or: [
+                    {
+                        value: null
+                    }
+                    {
+                        value: ''
+                    }
+                    {
+                        value:
+                            $exists: false
+                    }
+                ]
             }
+
 }
 
 @AVOID_THROTTLING_FOR.push 'addEmptyTranslation'
