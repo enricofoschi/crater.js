@@ -129,17 +129,20 @@ class @Helpers.Router
         # Ensuring query string is always an object and persisting UTM params
         options.query ||= {}
 
-        if typeof options.query is 'string'
-            params = options.query.split '&'
-            for param in params
-                paramParts = params.split '='
-                options.query[paramParts[0]] = paramParts[1] if paramParts.length is 2
+        try
+            if typeof options.query is 'string'
+                params = options.query.split '&'
+                for param in params
+                    paramParts = param.split '='
+                    options.query[paramParts[0]] = paramParts[1] if paramParts.length is 2
 
-        queryString = Helpers.Router.GetQueryString()
+            queryString = Helpers.Router.GetQueryString()
 
-        for own key, value of queryString
-            if key.toLowerCase().indexOf('utm_') is 0
-                options.query[key] = value
+            for own key, value of queryString
+                if key.toLowerCase().indexOf('utm_') is 0
+                    options.query[key] = value
+        catch e
+            console.log e
 
         if not route?.path
             return route
