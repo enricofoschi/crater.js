@@ -87,7 +87,7 @@ class @Crater.Services.Core.StateMachine extends @Crater.Services.Core.Base
                 console.log 'No - local'
             else
                 emailService = Crater.Services.Get Services.EMAIL
-                emailService.SendWithMandrill template, {
+                emailService.sendWithMandrill template, {
                     toUser: toUser
                     untranslated: untranslated
                     global_merge_vars: [

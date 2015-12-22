@@ -350,9 +350,9 @@ if Meteor.isClient
 
 if Meteor.isServer
     Meteor.startup ->
-        _sendWithMandrill = Helpers.Server.Email.SendWithMandrill
+        _sendWithMandrill = Helpers.Server.Email.sendWithMandrill
 
-        Helpers.Server.Email.SendWithMandrill = (slug, params...) ->
+        Helpers.Server.Email.sendWithMandrill = (slug, params...) ->
 
             slug = slug + '-' + Helpers.Translation.GetUserLanguage()
 

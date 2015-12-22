@@ -117,7 +117,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
             })
 
         emailService = Crater.Services.Get Services.EMAIL
-        emailService.SendWithMandrill 'user-pwd-reset', {
+        emailService.sendWithMandrill 'user-pwd-reset', {
             toUser: foundUser
             global_merge_vars: [
                 {
@@ -186,7 +186,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
             template = userType.EMAIL_TEMPLATE_ACTIVATION || 'user-confirm-email'
 
         emailService = Crater.Services.Get Services.EMAIL
-        emailService.SendWithMandrill template, {
+        emailService.sendWithMandrill template, {
             toUser: user
             global_merge_vars: [
                 {

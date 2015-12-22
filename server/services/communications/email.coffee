@@ -5,7 +5,8 @@ class @Crater.Services.Communications.Email extends @Crater.Services.Communicati
     constructor: (mandrillConfig) ->
         @mandrillApi = new Crater.Api.Mandrill.Email(null, mandrillConfig.apiKey)
 
-    SendWithMandrill: (slug, message, to) =>
+    # Refactor to use proper casing
+    sendWithMandrill: (slug, message, to) =>
 
         if message.toUser
             message.lang = Meteor.settings.email.forceLang || message.toUser.lang
@@ -37,3 +38,20 @@ class @Crater.Services.Communications.Email extends @Crater.Services.Communicati
         delete message.toUser
 
         @mandrillApi.SendTemplate slug, message, to
+
+    messageAdmin: (subject, content) =>
+        logServices = Crater.Services.Get Services.LOG
+
+        try
+            @sendWithMandrill 'admin-simple-message', {
+                subject: subject
+                untranslated: true
+                global_merge_vars: [
+                    {
+                        name: 'message'
+                        content: content
+                    }
+                ]
+            }, Meteor.settings.email.admin
+        catch e
+            logServices.Error e

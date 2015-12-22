@@ -495,13 +495,17 @@ if Meteor.isServer
             if Meteor.userId() isnt @_id and not Roles.userIsInRole(Meteor.userId(), 'admin')
                 throw 'Unauthorized'
 
+            adminMessage = @full_name + ' (id: ' + @_id + ', email: ' + @email + ', phone: ' + @phone + ') deleted their profile.'
+
             @_softDeleteNoSecurityCheck()
+
+            Crater.Services.Get(Services.EMAIL).messageAdmin('A user deleted their profile', adminMessage)
 
         _softDeleteNoSecurityCheck: =>
 
             emailSuffix = '___' + (new Date()).getTime()
 
-            for email in @emails
+            for email in (@emails || [])
                 email.address += emailSuffix
 
             @update {
