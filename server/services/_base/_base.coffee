@@ -9,8 +9,11 @@ class @Crater.Services
 
         services[properties.key] = properties.service()
 
-    @Get: (properties) ->
-        services[properties.key]
+    @Get: (properties, newInstance) ->
+        if newInstance
+            return properties.service()
+        else
+            services[properties.key]
 
     @InitAll: =>
         for own key, value of globalContext.Services

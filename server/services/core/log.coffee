@@ -2,6 +2,7 @@ class @Crater.Services.Core.Log extends @Crater.Services.Core.Base
 
     @prefix: ''
 
+
     SetPrefix: (prefix) =>
         @prefix = prefix
 

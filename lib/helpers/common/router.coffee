@@ -121,10 +121,28 @@ class @Helpers.Router
         window.onhashchange = updateQueryString
 
     # Iron Router Management
-    @Path: (route, params, options) =>
+    @Path: (route, params, options= {}) =>
 
         if typeof route is 'string' and ironRouter.routes[route]
             route = ironRouter.routes[route]
+
+        # Ensuring query string is always an object and persisting UTM params
+        options.query ||= {}
+
+        try
+            if typeof options.query is 'string'
+                params = options.query.split '&'
+                for param in params
+                    paramParts = param.split '='
+                    options.query[paramParts[0]] = paramParts[1] if paramParts.length is 2
+
+            queryString = Helpers.Router.GetQueryString()
+
+            for own key, value of queryString
+                if key.toLowerCase().indexOf('utm_') is 0
+                    options.query[key] = value
+        catch e
+            console.log e
 
         if not route?.path
             return route
@@ -140,8 +158,10 @@ class @Helpers.Router
     ironRouter.Path = @Path
 
     _ironRouterGo = ironRouter.go
-    ironRouter.go = (route, params, options) ->
+    ironRouter.go = (route, params, options = {}) ->
         path = route
+
+        # Ensuring proper routing by path or route
         if ironRouter.routes[route]
             path = Router.Path route, params, options
         _ironRouterGo.call @, path
