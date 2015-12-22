@@ -43,7 +43,7 @@ class @Crater.Services.ThirdParties.Kibana extends @Crater.Services.ThirdParties
                 if not mapping[mappingKey]
                     mapping[mappingKey] = {
                         type: 'date'
-                        format: Date.ES_FORMAT
+                        format: Date.ES_FORMAT_KIBANA
                     }
 
             else if typeof value is 'object'
