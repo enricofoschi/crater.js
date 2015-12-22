@@ -20,9 +20,10 @@ Date::resetTime = ->
     @setMilliseconds 0
     @
 
-Date.ES_FORMAT = 'yyyy/MM/dd HH:mm:ss'
+Date.ES_FORMAT_KIBANA = 'yyyy/MM/dd HH:mm:ss' # kibana format
+Date.ES_FORMAT_MOMENTJS = 'YYYY/MM/DD HH:mm:ss' # momentjs format
 
 Date::toESFormat = ->
-    moment(@).format('YYYY/MM/DD HH:mm:ss')
+    moment(@).format(Date.ES_FORMAT_MOMENTJS)
 
 Date::isDate = true
