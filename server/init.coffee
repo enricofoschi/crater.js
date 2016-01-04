@@ -54,6 +54,9 @@ BrowserPolicy.content.allowOriginForAll 'https://d26b395fwzu5fz.cloudfront.net'
 BrowserPolicy.content.allowOriginForAll 'https://api.keen.io'
 BrowserPolicy.content.allowOriginForAll 'http://heapanalytics.com'
 BrowserPolicy.content.allowOriginForAll 'https://heapanalytics.com'
+BrowserPolicy.content.allowOriginForAll 'http://*.linkedin.com'
+BrowserPolicy.content.allowOriginForAll 'https://*.linkedin.com'
+BrowserPolicy.content.allowOriginForAll 'https://*.licdn.com'
 
 for url in Meteor.settings.policies.allow
    BrowserPolicy.content.allowOriginForAll url
