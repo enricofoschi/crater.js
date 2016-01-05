@@ -14,7 +14,7 @@ Router.configure {
     notFoundTemplate: '_404'
     waitOn: ->
         [
-            subManager.subscribe 'roles'
+            Meteor.subscribe 'roles'
             Meteor.subscribe 'available_users'
         ]
 }
