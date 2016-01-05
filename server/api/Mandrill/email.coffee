@@ -23,7 +23,7 @@ class @Crater.Api.Mandrill.Email extends Crater.Api.Mandrill.Base
         delete message.lang
 
         # Slug (with or with    out translation)
-        slug = (Meteor.settings.mandrill.templatePrefix || '') + slug + (if message.untranslated then '' else '-' + lang)
+        slug = (Meteor.settings.mandrill.prefix || '') + slug + (if message.untranslated then '' else '-' + lang)
         delete message.untranslated
 
         tos = [
