@@ -272,9 +272,9 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
         user = new MeteorUser userId
 
         if not user.platform?.post_signup_executed
-            @updateProfilePictures userId
-
             @ensureLocation userId
+
+            @updateProfilePictures userId
 
             if Meteor.settings.email.signupNotification
                 try
@@ -367,7 +367,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
     ensureLocation: (userId) ->
         user = new MeteorUser userId
 
-        userIp = Helpers.Server.Auth.GetCurrentConnection()?.remoteAddress
+        userIp = Helpers.Server.Auth.GetCurrentConnection()?.clientAddress
 
         if Meteor.settings.local
             userIp = '62.157.63.1'
