@@ -57,6 +57,7 @@ BrowserPolicy.content.allowOriginForAll 'https://heapanalytics.com'
 BrowserPolicy.content.allowOriginForAll 'http://*.linkedin.com'
 BrowserPolicy.content.allowOriginForAll 'https://*.linkedin.com'
 BrowserPolicy.content.allowOriginForAll 'https://*.licdn.com'
+BrowserPolicy.content.allowOriginForAll 'https://*.xing-share.com'
 
 for url in Meteor.settings.policies.allow
    BrowserPolicy.content.allowOriginForAll url
@@ -85,6 +86,7 @@ Inject.rawModHtml 'setupAssets', (html) ->
     try
         if Meteor.settings.urls.cdn
             html = html.replace /<link rel="stylesheet" type="text\/css" class="__meteor-css__" href="\//g, '<link rel="stylesheet" type="text/css" class="__meteor-css__" href="' + Meteor.settings.urls.cdn
+            html = html.replace /href="\/img\//g, 'href="' + Meteor.settings.urls.cdn + 'img/'
             html = html.replace /<script type="text\/javascript" src="\//g, '<script type="text/javascript" src="' + Meteor.settings.urls.cdn
 
         return html
