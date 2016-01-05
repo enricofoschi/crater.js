@@ -13,11 +13,11 @@ if /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine
 
 # Login management
 userConnected = false
-Crater.startup ->
+Crater.ConnectedPromise.done  ->
     Tracker.autorun ->
         if Meteor.userId() and not userConnected
             userConnected = true
-            Feature_Users.Helpers.OnLoggedIn()
+            Feature_Users.Helpers.EnsurePostSignupOps()
         else if not Meteor.userId() and userConnected
             userConnected = false
 
