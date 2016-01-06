@@ -50,14 +50,18 @@ class @Crater.Api.ElasticSearch.Core extends Crater.Api.ElasticSearch.Base
 
         return if Meteor.settings.elasticsearch.disable
 
-        HTTP.post @_baseUrl + index, {
-            content: EJSON.stringify({
-                settings: settings || {}
-            })
-            auth: @_auth
-        }
+        HTTP.call 'GET', @_baseUrl + index, {}, (error, response) ->
+            if response is not 200
+                HTTP.post @_baseUrl + index, {
+                    content: EJSON.stringify({
+                        settings: settings || {}
+                    })
+                    auth: @_auth
+                }
 
-        @_logService.Info 'ES: Created index ' + index
+                @_logService.Info 'ES: Created index ' + index
+            else
+                @_logService.Info 'ES: Skipped create index: ' + index + '; Already exists'
 
     delete: (index, type, id) =>
 
@@ -94,10 +98,15 @@ class @Crater.Api.ElasticSearch.Core extends Crater.Api.ElasticSearch.Base
             HTTP.del @_baseUrl + index + (if type then ('/' + type) else ''), {
                 auth: @_auth
             }
+            @_logService.Info 'Mapping cleared'
         catch e
-            @_logService.Error e
+            if e.response.statusCode is 404
+                console.log 'Mapping was not existing, not a big deal'
+                return
+            else
+                @_logService.Error e
 
-        @_logService.Info 'Mapping cleared'
+
 
     search: (properties) =>
 
