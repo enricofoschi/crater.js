@@ -5,14 +5,7 @@ Crater.Routing.Controllers.LoggedInController = Helpers.Router.AddController {
     layoutTemplate: 'PresentationLayout'
     waitOn: ->
         Helpers.Log.Tick('LoggedIn WO')
-        subs = [
-            subManager.subscribe 'available_users'
-            subManager.subscribe 'available_companies'
-            subManager.subscribe 'job_locations_for_all'
-            subManager.subscribe 'invitations_basic'
-        ]
-
-        subs
+        Crater.Routing.Controllers.LoggedInController.DefaultSubscriptions || []
     onBeforeAction: ->
         Helpers.Log.Tick('LoggedIn OBA')
         if not Meteor.userId()

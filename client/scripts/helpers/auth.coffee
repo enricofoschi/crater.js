@@ -1,6 +1,7 @@
 class @Helpers.Client.Auth
 
     SESSION_KEY_TRACKING = 'UtmTrackingInfo'
+    SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED = 'LgnWthExtrnl'
 
     @SetUtmInfo: =>
         return if @GetUtmInfo()?.source
@@ -83,6 +84,13 @@ class @Helpers.Client.Auth
             userId: userId
         }, callback
 
+    @HasTriedToLogInExternally: (flush) =>
+        r = Helpers.Client.SessionHelper.Get SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED
+        
+        if flush
+            Helpers.Client.SessionHelper.Set SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED, null
+        r
+
     @LoginWith: (service, callback) =>
         method = Meteor['loginWith' + service]
         properties = {}
@@ -98,15 +106,15 @@ class @Helpers.Client.Auth
                 'public_profile'
             ]
 
-        Helpers.Client.Loader.Show()
+        Helpers.Client.SessionHelper.Set SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED, true
+
         method properties, (e, r) =>
             if e?.message?.indexOf('403') is -1
                 Router.go 'presentation.signup'
             else
                 Helpers.Log.Info 'Logged in with ' + service
                 Feature_Users.Helpers.OnLogin(->
-                    Helpers.Client.Loader.Hide()
-                    callback.apply @, arguments
+                    callback.apply(@, arguments) if callback
                 )
 
     @UntilNextUserRefresh: (callback) ->

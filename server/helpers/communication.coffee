@@ -10,6 +10,10 @@ class @Helpers.Server.Communication
     }
 
     @GetPage: (url, timeout=10) ->
+
+        logServices = Crater.Services.Get Services.LOG
+        logServices.Info 'Loading page', url
+
         Meteor.http.get(url).content
 
     @GetFile: (url, destination, appendExtension, callback) ->

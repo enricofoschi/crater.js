@@ -9,8 +9,8 @@ class @Crater.Services.ThirdParties.Kibana extends @Crater.Services.ThirdParties
     constructor: () ->
         _logServices = Crater.Services.Get Services.LOG
         _esAPI = new Crater.Api.ElasticSearch.Core()
-        _esAPI._baseUrl = Meteor.settings.kibana.url
-        _esAPI._auth = Meteor.settings.kibana.username + ':' + Meteor.settings.kibana.password
+        _esAPI._baseUrl = Meteor.settings.kibana?.url
+        _esAPI._auth = Meteor.settings.kibana?.username + ':' + Meteor.settings.kibana?.password
 
     getIndex = (key) ->
         KIBANA_INDEX_PREFIX + key

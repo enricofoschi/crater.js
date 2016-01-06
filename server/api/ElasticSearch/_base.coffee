@@ -2,7 +2,7 @@
 
 class @Crater.Api.ElasticSearch.Base extends @Crater.Api.Base
 
-    _baseUrl: Meteor.settings.elasticsearch.url
+    _baseUrl: Meteor.settings.elasticsearch?.url
     _auth: null
 
     specialCharacters = [

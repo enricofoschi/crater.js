@@ -267,12 +267,21 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
         user.pictures
 
     ensurePostSignupOps: (userId) =>
+        logServices = Crater.Services.Get Services.LOG
+
         user = new MeteorUser userId
 
         if not user.platform?.post_signup_executed
+            @ensureLocation userId
+
             @updateProfilePictures userId
 
-            @ensureLocation userId
+            if Meteor.settings.email.signupNotification
+                try
+                    emailServices = Crater.Services.Get Services.EMAIL
+                    emailServices.messageAdmin 'New user signed up - ' + user.full_name, user.full_name + ' - ' + user.email
+                catch e
+                    logServices.Error e
 
             user.update {
                 $set:
@@ -358,7 +367,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
     ensureLocation: (userId) ->
         user = new MeteorUser userId
 
-        userIp = Helpers.Server.Auth.GetCurrentConnection()?.remoteAddress
+        userIp = Helpers.Server.Auth.GetCurrentConnection()?.clientAddress
 
         if Meteor.settings.local
             userIp = '62.157.63.1'

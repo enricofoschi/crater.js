@@ -8,22 +8,26 @@ class @Feature_Users.Helpers
             method: 'loginConnectedUser'
             callback: callback
         }
-    @OnLoggedIn = (before) =>
 
-        subManager.reset()
-
-        globalContext.Helpers.Log.Info 'On Logged In'
-
-        onPostBefore = =>
+    @EnsurePostSignupOps = =>
+        if Meteor.userId() and not Meteor.user()?.platform?.post_signup_executed
+            globalContext.Helpers.Log.Info 'Executing post Signup'
             globalContext.Helpers.Client.MeteorHelper.CallMethod {
                 method: 'ensurePostSignupOps'
                 background: true
             }
 
-            globalContext.Helpers.Log.Info 'On Post Before'
-            redirect = Router.current()?.params?.query?.redirect
+    @OnLoggedIn = (before) =>
 
-            subManager.reset()
+        subManager.reset()
+        subManager.clear()
+
+        globalContext.Helpers.Log.Info 'On Logged In'
+
+        onPostBefore = =>
+            @EnsurePostSignupOps()
+
+            redirect = Router.current()?.params?.query?.redirect
 
             if redirect
                 location.href = redirect
