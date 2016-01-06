@@ -27,7 +27,7 @@ Helpers.Router.AddRoute {
     onBeforeAction: ->
         if Meteor.userId()
             if redirect = @params?.query?.redirect
-                location.href = r edirect
+                location.href = redirect
             else
                 Helpers.Log.Info 'Redirecting to loggedin from login'
                 Helpers.Client.Auth.OnLoggedInRedirect()
