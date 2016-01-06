@@ -132,18 +132,16 @@ class @Crater.Services.ThirdParties.ElasticSearch extends @Crater.Services.Third
             logService.Info 'Pushed ' + value.docs.length + ' docs'
 
     pushToES: (object, model) =>
-        console.log 'inside pushToES'
+        console.log 'Preparing to pushToES'
         logService = Crater.Services.Get Services.LOG
 
         docsByIndex = {}
         for item in object
             try
                 model.esItem=item
-                item = model.esItem
                 if item
                     esModel = Feature_Company.ElasticSearch
                     key = esModel.index + ':' + esModel.type
-                    console.log 'here'
                     docsByIndex[key] = {
                         model: esModel
                         docs: []
@@ -155,11 +153,10 @@ class @Crater.Services.ThirdParties.ElasticSearch extends @Crater.Services.Third
                     throw e
 
             for own key, value of docsByIndex
-            #console.log docsByIndex
                 @upsert {
                     documents: value.docs
-                    index: 'slom'
-                    type: 'companies'
+                    index: value.model.index
+                    type: value.model.type
                     operation: 'UPSERT'
                 }
 
