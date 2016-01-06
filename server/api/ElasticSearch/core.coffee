@@ -50,18 +50,16 @@ class @Crater.Api.ElasticSearch.Core extends Crater.Api.ElasticSearch.Base
 
         return if Meteor.settings.elasticsearch.disable
 
-        HTTP.call 'GET', @_baseUrl + index, {}, (error, response) ->
-            if response is not 200
-                HTTP.post @_baseUrl + index, {
-                    content: EJSON.stringify({
-                        settings: settings || {}
-                    })
-                    auth: @_auth
-                }
+        if not @getIndex index
+            HTTP.post @_baseUrl + index, {
+                content: EJSON.stringify({
+                    settings: settings || {}
+                })
+                auth: @_auth
+            }
 
-                @_logService.Info 'ES: Created index ' + index
-            else
-                @_logService.Info 'ES: Skipped create index: ' + index + '; Already exists'
+            @_logService.Info 'ES: Created index ' + index
+
 
     delete: (index, type, id) =>
 
