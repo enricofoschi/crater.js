@@ -71,7 +71,7 @@ Meteor.methods {
             throw 'Whatever'
 
         Translation.destroyAll {
-            route: route
+            'routes.name': route
         }
 }
 
