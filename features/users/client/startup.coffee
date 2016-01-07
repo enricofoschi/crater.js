@@ -9,9 +9,6 @@ Crater.startup ->
     if autoLoginUserId
 
         onLoggedIn = ->
-            if queryString.ftuf is '1'
-                Session.set('allowFTUF', '1')
-
             if queryString.redirect
                 Router.go queryString.redirect
 
