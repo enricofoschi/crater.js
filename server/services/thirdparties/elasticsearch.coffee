@@ -56,8 +56,8 @@ class @Crater.Services.ThirdParties.ElasticSearch extends @Crater.Services.Third
 
         logService = Crater.Services.Get Services.LOG
         logService.Info 'Rebuilding ElasticSearch Index'
-        for model in models
-            @clear model.index
+        for model in models #we want to clear all the indexes first
+            @clear model.index #clearMapping() has been modified and doesnt throw error if the index doesnt exist
 
         for model in models
             @createIndex model.index, {
@@ -92,7 +92,7 @@ class @Crater.Services.ThirdParties.ElasticSearch extends @Crater.Services.Third
                 @pushUsers users
 
             else
-                #Rebuilding companies
+                #this should take whatever collection
                 @pushToES collection, model
 
 
@@ -131,7 +131,7 @@ class @Crater.Services.ThirdParties.ElasticSearch extends @Crater.Services.Third
 
             logService.Info 'Pushed ' + value.docs.length + ' docs'
 
-    pushToES: (object, model) =>
+    pushToES: (object, esModel) =>
         console.log 'Preparing to pushToES'
         logService = Crater.Services.Get Services.LOG
 
@@ -140,7 +140,6 @@ class @Crater.Services.ThirdParties.ElasticSearch extends @Crater.Services.Third
             try
                 model.esItem=item
                 if item
-                    esModel = Feature_Company.ElasticSearch
                     key = esModel.index + ':' + esModel.type
                     docsByIndex[key] = {
                         model: esModel
@@ -152,13 +151,13 @@ class @Crater.Services.ThirdParties.ElasticSearch extends @Crater.Services.Third
                 if Meteor.settings.debug
                     throw e
 
-            for own key, value of docsByIndex
-                @upsert {
-                    documents: value.docs
-                    index: value.model.index
-                    type: value.model.type
-                    operation: 'UPSERT'
-                }
+        for own key, value of docsByIndex
+            @upsert {
+                documents: value.docs
+                index: value.model.index
+                type: value.model.type
+                operation: 'UPSERT'
+            }
 
     search: (properties) =>
         _esAPI.search properties
