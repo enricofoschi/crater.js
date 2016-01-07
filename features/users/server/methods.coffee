@@ -287,4 +287,7 @@ Meteor.methods {
         accountService = Crater.Services.Get Services.ACCOUNT
         accountService.updateLocationGeocode()
 
+    'users.getIP': ->
+        'IP: ' + Helpers.Server.Auth.GetCurrentConnection().clientAddress
+
 }

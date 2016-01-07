@@ -27,6 +27,13 @@ class @NamedCollection extends BaseCollection
 
         @first filter
 
+    @firstByNameFromCached: (name) ->
+        name = (name || '').toString().trim().toLowerCase()
+
+        _.find @allCached() || [], (obj) =>
+            @MatchByName obj, name
+
+
     @MatchByName: (obj, name) ->
         name = (name || '').trim().toLowerCase()
 

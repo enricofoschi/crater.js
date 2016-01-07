@@ -114,7 +114,7 @@ class @Helpers.Client.Auth
             else
                 Helpers.Log.Info 'Logged in with ' + service
                 Feature_Users.Helpers.OnLogin(->
-                    callback.apply @, arguments
+                    callback.apply(@, arguments) if callback
                 )
 
     @UntilNextUserRefresh: (callback) ->

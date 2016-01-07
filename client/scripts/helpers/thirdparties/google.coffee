@@ -3,6 +3,7 @@ globalContext = @
 class @Helpers.Client.Google
 
     placesApiPromise = null
+    placesAutocompleteMobileFixed = false
 
     @LoadPlacesAPI: (callback) =>
 
@@ -31,6 +32,16 @@ class @Helpers.Client.Google
         $input.data 'autocomplete-initialized', true
 
         @LoadPlacesAPI ->
+
+            if not placesAutocompleteMobileFixed
+
+                $(document).on {
+                    'DOMNodeInserted': ->
+                        $('.pac-item, .pac-item span', this).addClass 'needsclick'
+                        return
+                }, '.pac-container'
+
+                placesAutocompleteMobileFixed = true
 
             properties = {}
             if types
