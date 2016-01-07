@@ -65,6 +65,14 @@ Meteor.methods {
                 ]
             }
 
+    'translations.clearForRoute': (route)->
+
+        if not Roles.userIsInRole Meteor.userId(), 'admin'
+            throw 'Whatever'
+
+        Translation.destroyAll {
+            route: route
+        }
 }
 
 @AVOID_THROTTLING_FOR.push 'addEmptyTranslation'
