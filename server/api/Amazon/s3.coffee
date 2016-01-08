@@ -9,9 +9,9 @@ class @Crater.Api.Amazon.S3 extends Crater.Api.Amazon.Base
         bucketName = _bucketName
         aws = _aws
 
+    uploadFile: (path, name, params, callback) =>
         mime = Meteor.npmRequire 'mime-types'
 
-    uploadFile: (path, name, params, callback) =>
         #@_logService.Info 'Reading file ' + path
         Helpers.Server.IO.ReadFile path, (err, data) ->
             if not err
@@ -24,7 +24,7 @@ class @Crater.Api.Amazon.S3 extends Crater.Api.Amazon.Base
                         Bucket: bucketName
                         Key: name
                         ContentEncoding: 'gzip'
-                        ContentType: 'image/jpeg'
+                        ContentType: mime.lookup(path)
                         ACL: 'public-read'
                         Expires: (new Date()).addDays(60)
                     }, params || {}
