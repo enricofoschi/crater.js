@@ -12,8 +12,8 @@ class @ElasticSearchObject
         @esItem = @toElasticSearchDocument item
         @shouldDelete = item.es_published and not @esItem
 
-    toElasticSearchDocument: (item) =>
-        {}
+    toElasticSearchDocument: (item = {}) =>
+        return item
 
     upsert: (id) =>
         esServices = Crater.Services.Get Services.ELASTIC_SEARCH
