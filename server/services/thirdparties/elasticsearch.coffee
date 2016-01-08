@@ -52,14 +52,21 @@ class @Crater.Services.ThirdParties.ElasticSearch extends @Crater.Services.Third
                 logService.Info 'Elasticsearch Service: OK'
                 esInitialized = true
 
-    rebuildIndex: (models, collection) => # Why am I doing this? Because I need to access to Companies collection and since Crater is public and we don't want to put our BI inside it. Can I do this?
+    rebuildIndex: (models) =>
 
         logService = Crater.Services.Get Services.LOG
         logService.Info 'Rebuilding ElasticSearch Index'
-        for model in models #we want to clear all the indexes first
-            @clear model.index #clearMapping() has been modified and doesnt throw error if the index doesnt exist
 
-        for model in models
+        # Clearing Index
+        cleared = []
+
+        models.forEach (model) =>
+            return if model in cleared
+            cleared.push model
+            @clear model.index
+
+        # Pushing Index / Types
+        models.forEach (model) =>
             @createIndex model.index, {
                 analysis:
                     filter:
@@ -85,79 +92,44 @@ class @Crater.Services.ThirdParties.ElasticSearch extends @Crater.Services.Third
                 mapping: model.mapping
             }
 
-            if model.IsUsers
-                # Rebuilding users
-                users = Meteor.users.find(model.UsersFilter || {}).fetch()
-
-                @pushUsers users
-
-            else
-                #this should take whatever collection
-                @pushToES collection, model
+            #Filter, prepare and push data into ES
+            data = model.collection.find(model.filters || {}).fetch()
+            @pushToES data, model
 
 
         esInitialized = true
 
-    pushUsers: (users) =>
+
+    pushToES: (data, esModel) =>
         logService = Crater.Services.Get Services.LOG
+        logService.Info 'Preparing data to push into Elastic Search'
 
         docsByIndex = {}
-        for user in users
+
+        for item in data
             try
-                user = MeteorUser.GetDefinedUser user
-                if user.getESObject
-                    userEs = new user.getESObject()
-                    if userEs.esItem
-                        esModel = MeteorUser.GetUserType(user).ESModel
-                        key = esModel.index + ':' + esModel.type
-                        docsByIndex[key] = {
-                            model: esModel
-                            docs: []
-                        } if not docsByIndex[key]
-                        docsByIndex[key].docs.push userEs.esItem
+                item = new esModel(item)
+                key = esModel.index + ':' + esModel.type
+
+                docsByIndex[key] = {
+                    model: esModel
+                    docs: []
+                } if not docsByIndex[key]
+                docsByIndex[key].docs.push item.esItem # push above where you assign it
             catch e
                 _logServices.Error e
                 if Meteor.settings.debug
                     throw e
 
         for own key, value of docsByIndex
-            #console.log docsByIndex
+            logService.Info 'Pushing  documents'
             @upsert {
                 documents: value.docs
                 index: value.model.index
                 type: value.model.type
                 operation: 'UPSERT'
             }
-
-            logService.Info 'Pushed ' + value.docs.length + ' docs'
-
-    pushToES: (object, esModel) =>
-        console.log 'Preparing to pushToES'
-        logService = Crater.Services.Get Services.LOG
-
-        docsByIndex = {}
-        for item in object
-            try
-                model.esItem=item
-                if item
-                    key = esModel.index + ':' + esModel.type
-                    docsByIndex[key] = {
-                        model: esModel
-                        docs: []
-                    } if not docsByIndex[key]
-                    docsByIndex[key].docs.push item
-            catch e
-                _logServices.Error e
-                if Meteor.settings.debug
-                    throw e
-
-        for own key, value of docsByIndex
-            @upsert {
-                documents: value.docs
-                index: value.model.index
-                type: value.model.type
-                operation: 'UPSERT'
-            }
+            logService.Info 'Pushed ' + value.docs.length * 2 + ' docs'
 
     search: (properties) =>
         _esAPI.search properties
