@@ -80,14 +80,14 @@ class @Crater.Api.ElasticSearch.Core extends Crater.Api.ElasticSearch.Base
         obj = {}
         obj[properties.type] = properties.mapping
 
-        @_logService.Info 'ES: Creating mapping for ' + properties.index
+        @_logService.Info 'ES: Creating mapping for ' + properties.index + '/' + properties.type
 
         HTTP.put @_baseUrl + properties.index + '/_mapping/' + properties.type, {
             content: EJSON.stringify obj
             auth: @_auth
         }
 
-        @_logService.Info 'ES: Mapping Set for ' + properties.index
+        @_logService.Info 'ES: Mapping Set for ' + properties.index + '/' + properties.type
 
     clearMapping: (index, type) =>
         return if Meteor.settings.elasticsearch.disable
@@ -99,7 +99,7 @@ class @Crater.Api.ElasticSearch.Core extends Crater.Api.ElasticSearch.Base
             @_logService.Info 'Mapping cleared'
         catch e
             if e.response.statusCode is 404
-                console.log 'Mapping was not existing, not a big deal'
+                console.log 'Index did not exist already - not clearing'
                 return
             else
                 @_logService.Error e
