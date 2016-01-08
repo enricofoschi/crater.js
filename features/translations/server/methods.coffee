@@ -72,6 +72,8 @@ Meteor.methods {
 
         Translation.destroyAll {
             'routes.name': route
+            common:
+                $ne: true
         }
 }
 
