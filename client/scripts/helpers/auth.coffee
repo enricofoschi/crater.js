@@ -134,9 +134,11 @@ class @Helpers.Client.Auth
     @GetLoggedInPath: =>
 
         if @SetLoggedInPath
-            @SetLoggedInPath()
-        else
-            Helpers.Router.Path 'default'
+            path = @SetLoggedInPath()
+
+        path || Helpers.Router.Path('default')
+
+
 
     @OnLoggedInRedirect: =>
         Router.go @GetLoggedInPath()

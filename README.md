@@ -1,6 +1,6 @@
 # crater.js
 
-Very opinionated meteor experimental boilerplate, designed to fit a large scale production app.
+Very opinionated, quickly hacked meteor experimental boilerplate.
  
 It includes a number of client + server packages, helpers and common features.
 
@@ -19,6 +19,9 @@ It includes a number of client + server packages, helpers and common features.
 * Collection 2 (aldeed:collection2) w/ MinimongoId integration
 * Kadira Setup
 * Spiderable - Longer Timeout
+* State machine
+* Intercom integration
+* Highrise integration
 
 and custom features like:
 
@@ -26,7 +29,9 @@ and custom features like:
 * Log exports to ElasticSearch for Kibana
 * Set of helpers and common modules
 
-## Doesn't come with (and should come with)
+## Doesn't come with (and should come with) - aka 2do
 
 * Proper testing coverage (it has been developed in an environment where production and live monitoring is preferred to automated testing)
 * Enough object composition on top of inheritance (we're still using some cs classes, but up to 2 level inheritance top)
+* Refined and standardized naming guidelines for classes, objects, methods, etc...
+* ES6 on top of coffeescript

@@ -30,9 +30,8 @@ class @NamedCollection extends BaseCollection
     @firstByNameFromCached: (name) ->
         name = (name || '').toString().trim().toLowerCase()
 
-        _.find @allCached(), (obj) =>
-            if @MatchByName obj, name
-                return true
+        _.find @allCached() || [], (obj) =>
+            @MatchByName obj, name
 
 
     @MatchByName: (obj, name) ->

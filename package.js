@@ -32,7 +32,6 @@ Package.onUse(function(api) {
 		'reactive-dict',
         'fastclick',
         'froatsnook:sleep',
-        'browser-policy',
         'http',
         'meteorhacks:inject-initial',
 		'meteorhacks:subs-manager',
