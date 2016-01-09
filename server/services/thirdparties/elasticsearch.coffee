@@ -122,14 +122,14 @@ class @Crater.Services.ThirdParties.ElasticSearch extends @Crater.Services.Third
                     throw e
 
         for own key, value of docsByIndex
-            logService.Info 'Pushing  documents'
+            logService.Info 'Pushing documents'
             @upsert {
                 documents: value.docs
                 index: value.model.index
                 type: value.model.type
                 operation: 'UPSERT'
             }
-            logService.Info 'Pushed ' + value.docs.length * 2 + ' docs'
+            logService.Info 'Pushed ' + value.docs.length + ' docs'
 
     search: (properties) =>
         _esAPI.search properties
