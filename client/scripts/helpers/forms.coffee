@@ -5,24 +5,44 @@ class @Helpers.Client.Form
         $(input).trigger('checkval') for input in form.find('input,textarea,select').not('[type="hidden"]')
 
     @GetFormHooks: (options) ->
-        origBefore = _.extend {}, options.before || {}
-        origOptions = _.extend {}, options
+
+        options = _.extend {
+            withLoader: true
+        }, options
+
+        _before = _.extend {}, options.before || {}
+        _beforeInsert = _before.insert
+        _beginSubmit = options.beginSubmit
+        _formToDoc = options.formToDoc
 
         newOptions = {
+            formToDoc: (doc, schema) ->
+                if _formToDoc
+                    doc = _formToDoc.apply(@, arguments)
+
+                if Helpers.Log.IsInDebug()
+                    try
+                        check doc, schema
+                    catch e
+                        Helpers.Log.Warning e
+
+                return doc
+
             beginSubmit: ->
-                Helpers.Client.Loader.Show()
+                Helpers.Client.Loader.Show() if options.withLoader
+                _beginSubmit.apply(@, arguments) if _beginSubmit
             endSubmit: ->
-                Helpers.Client.Loader.Hide()
-            before: {
+                Helpers.Client.Loader.Hide() if options.withLoader
+            before: _.extend(_before, {
                 insert: (attr) ->
                     attr.createdAt ||= (new Date()).UTCFromLocal()
                     attr.updatedAt = attr.createdAt
 
-                    if origBefore.insert
-                        return origBefore.insert(attr)
+                    if _beforeInsert
+                        return _beforeInsert(attr)
                     else
                         return attr
-            }
+            })
         }
 
         _.extend options, newOptions
@@ -77,10 +97,6 @@ class @Helpers.Client.Form
                         callback.apply @, arguments
                 )
         else
-
-
-
-
 
     @LimitFromToFields: (yearFrom, yearTo, monthFrom, monthTo) ->
         hideOptionsLowerThan = (number, select) ->
