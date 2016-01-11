@@ -20,3 +20,7 @@ class @Crater.Services.Core.Log extends @Crater.Services.Core.Base
     Error: =>
         if console?.error
             console.error.apply console, @getArguments(arguments)
+
+    Warning: =>
+        if console?.warn
+            console.warn.apply console, @getArguments(arguments)
