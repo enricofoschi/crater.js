@@ -62,9 +62,11 @@ class @Helpers.Client.TemplatesHelper
 
         template.helpers {
             currentUser: ->
-                new MeteorUser Meteor.user()
-            lang:
-                Helpers.Client.SessionHelper.Get @LANGUAGE_KEY
+                return new MeteorUser(Meteor.user())
+            currentInstance: ->
+                return Template.instance()
+            lang: ->
+                return Helpers.Client.SessionHelper.Get(@LANGUAGE_KEY)
         }
 
         template.getReactiveProperty = (data, name) ->
