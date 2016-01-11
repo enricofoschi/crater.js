@@ -61,10 +61,22 @@ Helpers.Client.TemplatesHelper.Handle('af_range_slider', (template) =>
         newDiv = newDiv.getElementsByTagName('span')[0]
         tooltips.push newDiv
 
-    if options.onUpdate
-        sliderComponent.noUiSlider.on 'update', (values, handle) ->
-            tooltips[handle].innerHTML = options.onUpdate values, handle
-            sliderInput.value = parseInt(values[0]) + ',' + parseInt(values[1])
+    _onUpdate = options.onUpdate
+    options.onUpdate = (values, handle) ->
+        val = parseInt(values[handle])
+        isMax = val is options.max
+        val = Math.round((parseInt(values[handle]) / 1000))
+        val += '+' if isMax
+        val += 'k' if options.extraK
+
+        if _onUpdate
+            _onUpdate.apply @, arguments
+
+        return val
+
+    sliderComponent.noUiSlider.on 'update', (values, handle) ->
+        tooltips[handle].innerHTML = options.onUpdate values, handle
+        sliderInput.value = parseInt(values[0]) + ',' + parseInt(values[1])
 )
 
 Crater.startup ->
