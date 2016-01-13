@@ -240,17 +240,19 @@ class @Helpers.Client.Form
         }
 
     @InitDatePicker: (properties) ->
-        if not IsMobile
-            defaultDate = new Date()
-            defaultDate.setHours(0)
-            defaultDate.setMinutes(0)
 
+        if not IsMobile
             minDate = properties.minDate || new Date()
             minDate.setHours(0)
             minDate.setMinutes(0)
 
-            if defaultDate < minDate
-                defaultDate = minDate
+            if not defaultDate = properties.value
+                defaultDate = new Date()
+                defaultDate.setHours(0)
+                defaultDate.setMinutes(0)
+
+                if defaultDate < minDate
+                    defaultDate = minDate
 
             properties.target.datetimepicker {
                 stepping: 15
@@ -277,9 +279,17 @@ class @Helpers.Client.Form
                 $(@).parents('.datepicker-container:first').data('DateTimePicker').show()
         else
             $input = properties.target.find('input')
-            $input.attr('type', 'datetime-local')
+
+            if properties.noTime
+                $input.attr('type', 'date')
+            else
+                $input.attr('type', 'datetime-local')
+
             $input.siblings('.input-group-addon').click ->
                 $(@).siblings('input').focus()
+
+            if properties.value
+                $input.val(moment(properties.value).format('YYYY-MM-DD'))
 
     @InitCropper: (callback) ->
 
