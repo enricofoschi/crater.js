@@ -291,6 +291,25 @@ class @Helpers.Client.Form
             if properties.value
                 $input.val(moment(properties.value).format('YYYY-MM-DD'))
 
+    @GetDatePickerValue: (container) ->
+
+        $container = $(container)
+        $input = $container.find('input:first')
+
+        if not IsMobile
+            date = $container.data('DateTimePicker').date()
+
+            if date
+                return date.toDate()
+            else
+                return null
+        else
+            if $input.val()
+                date = moment($input.val()).toDate()
+                return date
+            else
+                return null
+
     @InitCropper: (callback) ->
 
         prefix = ServerSettings.urls.cdn + 'components/cropper/'
