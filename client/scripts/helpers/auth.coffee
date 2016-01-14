@@ -84,12 +84,13 @@ class @Helpers.Client.Auth
             userId: userId
         }, callback
 
-    @HasTriedToLogInExternally: (flush) =>
+    @HasTriedToLogInExternally: (flushIfLoggedIn) =>
         r = Helpers.Client.SessionHelper.Get SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED
         
-        if flush
+        if flushIfLoggedIn and Meteor.userId() # flushing only if the user is logged in
             Helpers.Client.SessionHelper.Set SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED, null
-        r
+
+        return r
 
     @LoginWith: (service, callback) =>
         method = Meteor['loginWith' + service]
