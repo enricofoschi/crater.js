@@ -36,3 +36,11 @@ class @Helpers.Time
         nearest = nearest.startOf('day').hours(hours).toDate() if nearest
 
         nearest
+
+    @GetLocalDateISOString: =>
+        currentDate = new Date()
+        timezoneOffset = currentDate.getTimezoneOffset() * 60 * 1000
+
+        localDate = new Date(currentDate.getTime() - timezoneOffset)
+        localDateISOString = localDate.toISOString().replace('Z', '')
+        return localDateISOString

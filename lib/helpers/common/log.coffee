@@ -35,6 +35,9 @@ class @Helpers.Log
     @DisableDebug: =>
         debugMode = false
 
+    @IsInDebug: =>
+        return debugMode
+
     @DebugModeLog: (type, logs) =>
         if Meteor.isClient and debugMode
 
@@ -99,3 +102,11 @@ class @Helpers.Log
             logService.Error.apply @, arguments
 
         @DebugModeLog 'error', arguments
+
+    @Warning: =>
+        if Meteor.isClient
+            @LogOnClient 'warn', arguments
+        else
+            logService.Warning.apply @, arguments
+
+        @DebugModeLog 'warn', arguments

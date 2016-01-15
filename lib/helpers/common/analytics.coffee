@@ -28,7 +28,7 @@ class @Helpers.Analytics
             if Meteor.isClient and Helpers.Client.Auth.IsSpoofing()
                 return false
 
-            if ServerSettings['segment.io'].disable
+            if ServerSettings['segment.io']?.disable
                 return false
 
             if Meteor.isClient and Session.get('___isPhantomjs___')
@@ -49,7 +49,7 @@ class @Helpers.Analytics
         if not @CanTrack()
             return false
 
-        analytics.load(ServerSettings['segment.io'].key) if analytics
+        analytics.load(ServerSettings['segment.io']?.key) if analytics
 
         Tracker.autorun =>
             @Identify()
