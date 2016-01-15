@@ -24,10 +24,17 @@ Helpers.Client.TemplatesHelper.Handle('user_signup', (template) =>
     }
 
     template.helpers {
-        'schema': ->
-            signupFormSchema
-        'emailMethod': ->
-            @emailMethod || 'createUserWithEmail'
+        formClass: ->
+            return if not @twoColumns then 'form-horizontal' else ''
+
+        schema: ->
+            return signupFormSchema
+
+        emailMethod: ->
+            return @emailMethod || 'createUserWithEmail'
+
+        cta: ->
+            return @ctaCopy || translate('view.signup.email_signup_cta')
     }
 
     AutoForm.hooks {
