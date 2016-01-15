@@ -22,8 +22,11 @@ Helpers.Client.TemplatesHelper.Handle('user_login', (template) =>
     }
 
     template.helpers {
-        'schema': ->
-            loginFormSchema
+        schema: ->
+            return loginFormSchema
+
+        noSocial: ->
+            return ServerSettings.platform?.noSocialLogins
     }
 
 
@@ -38,21 +41,7 @@ Helpers.Client.TemplatesHelper.Handle('user_login', (template) =>
 
                     loginUser = =>
                         Meteor.loginWithPassword(email, password, (e) ->
-                            if e
-                                Helpers.Client.MeteorHelper.CallMethod {
-                                    method: 'users.legacyLogin'
-                                    params: [
-                                        email
-                                        password
-                                    ]
-                                    callback: (e, r) =>
-                                        if r
-                                            loginUser()
-                                        else
-                                            Helpers.Client.Notifications.Error translate('view.login.error.incorrect_password')
-                                }
-                            else
-                                Feature_Users.Helpers.OnLogin(template.uniqueInstance.data?.before)
+                            Feature_Users.Helpers.OnLogin(template.uniqueInstance.data?.before)
                         );
 
                     loginUser()
