@@ -11,10 +11,6 @@ Meteor.methods {
                 throw e
             return false
 
-    'users.legacyLogin': (email, pwd) ->
-        accountService = Crater.Services.Get Services.ACCOUNT
-        accountService.processLegacyLogin email, pwd
-
     'users.verifyPassword': (pwd) ->
         check pwd, String
 

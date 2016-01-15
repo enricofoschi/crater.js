@@ -36,29 +36,6 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
 
         not Accounts._checkPassword(user, pwdDigest).error
 
-    processLegacyLogin: (email, pwd) ->
-
-        user = Meteor.users.findOne {
-            email: email
-        }
-
-        if user?.legacy_pwd
-
-            crypto = Meteor.npmRequire 'crypto'
-            if crypto.createHash('sha256').update(pwd, 'utf8').digest('hex') is user.legacy_pwd
-
-                Accounts.setPassword user._id, pwd
-
-                user = new MeteorUser user
-                user.update {
-                    $unset:
-                        legacy_pwd: null
-                }
-
-                return true
-
-        return false
-
     updateAccountSettings: (userId, doc) =>
         user = new MeteorUser userId
 
