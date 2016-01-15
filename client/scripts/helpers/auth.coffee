@@ -85,9 +85,11 @@ class @Helpers.Client.Auth
         }, callback
 
     @HasTriedToLogInExternally: (flushIfLoggedIn) =>
+        return false if not Meteor.userId()
+
         r = Helpers.Client.SessionHelper.Get SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED
         
-        if flushIfLoggedIn and Meteor.userId() # flushing only if the user is logged in
+        if flushIfLoggedIn
             Helpers.Client.SessionHelper.Set SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED, null
 
         return r
@@ -107,7 +109,8 @@ class @Helpers.Client.Auth
                 'public_profile'
             ]
 
-        Helpers.Client.SessionHelper.Set SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED, true
+        if not Meteor.userId()
+            Helpers.Client.SessionHelper.Set SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED, true
 
         method properties, (e, r) =>
             if e?.message?.indexOf('403') is -1
