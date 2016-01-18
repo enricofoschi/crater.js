@@ -50,14 +50,16 @@ class @Crater.Api.ElasticSearch.Core extends Crater.Api.ElasticSearch.Base
 
         return if Meteor.settings.elasticsearch.disable
 
-        HTTP.post @_baseUrl + index, {
-            content: EJSON.stringify({
-                settings: settings || {}
-            })
-            auth: @_auth
-        }
+        if not @getIndex index
+            HTTP.post @_baseUrl + index, {
+                content: EJSON.stringify({
+                    settings: settings || {}
+                })
+                auth: @_auth
+            }
 
-        @_logService.Info 'ES: Created index ' + index
+            @_logService.Info 'ES: Created index ' + index
+
 
     delete: (index, type, id) =>
 
@@ -78,14 +80,14 @@ class @Crater.Api.ElasticSearch.Core extends Crater.Api.ElasticSearch.Base
         obj = {}
         obj[properties.type] = properties.mapping
 
-        @_logService.Info 'ES: Creating mapping for ' + properties.index
+        @_logService.Info 'ES: Creating mapping for ' + properties.index + '/' + properties.type
 
         HTTP.put @_baseUrl + properties.index + '/_mapping/' + properties.type, {
             content: EJSON.stringify obj
             auth: @_auth
         }
 
-        @_logService.Info 'ES: Mapping Set for ' + properties.index
+        @_logService.Info 'ES: Mapping Set for ' + properties.index + '/' + properties.type
 
     clearMapping: (index, type) =>
         return if Meteor.settings.elasticsearch.disable
@@ -94,10 +96,15 @@ class @Crater.Api.ElasticSearch.Core extends Crater.Api.ElasticSearch.Base
             HTTP.del @_baseUrl + index + (if type then ('/' + type) else ''), {
                 auth: @_auth
             }
+            @_logService.Info 'Mapping cleared'
         catch e
-            @_logService.Error e
+            if e.response.statusCode is 404
+                console.log 'Index did not exist already - not clearing'
+                return
+            else
+                @_logService.Error e
 
-        @_logService.Info 'Mapping cleared'
+
 
     search: (properties) =>
 
