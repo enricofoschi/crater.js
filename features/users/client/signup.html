@@ -1,5 +1,5 @@
 <template name="user_signup">
-    <section class="page-section">
+    <section class="{{containerClass}}">
         {{#unless noSocial }}
             <h3>
                 {{t 'view.signup.signup_buttons'}}
@@ -35,37 +35,18 @@
 
         {{#autoForm class=formClass schema=schema id="emailSignupForm" trimStrings=true type="method" meteormethod=emailMethod resetOnSuccess=false }}
 
-            {{#if wrapMode}}
-                {{> UI.contentBlock}}
-            {{else}}
-                {{#if twoColumns}}
-                    <div class="row">
-                        <div class="col-md-6">
-                            {{> afQuickField placeholder="schemaLabel" name="firstName" }}
-                        </div>
-                        <div class="col-md-6">
-                            {{> afQuickField placeholder="schemaLabel" name="lastName" }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            {{> afQuickField placeholder="schemaLabel" name="email" type="email" }}
-                        </div>
-                        <div class="col-md-6">
-                            {{> afQuickField placeholder="schemaLabel" name="password" type="password" }}
-                        </div>
-                    </div>
+            <div class="{{fieldsetClass}}">
+                {{#if wrapMode}}
+                    {{> UI.contentBlock}}
                 {{else}}
                     {{> afQuickField placeholder="schemaLabel" name="firstName" }}
                     {{> afQuickField placeholder="schemaLabel" name="lastName" }}
                     {{> afQuickField placeholder="schemaLabel" name="email" type="email" }}
                     {{> afQuickField placeholder="schemaLabel" name="password" type="password" }}
                 {{/if}}
-            {{/if}}
+            </div>
 
-            {{#if wrapTandC}}
-                {{> UI.contentBlock}}
-            {{else}}
+            {{#unless wrapTandC}}
                 <div class="row">
                     {{#if tandc}}
                         <div class="col-md-8 text-left top10">
@@ -77,7 +58,7 @@
                                 class="track-me btn btn-success">{{cta}}</button>
                     </div>
                 </div>
-            {{/if}}
+            {{/unless}}
         {{/autoForm}}
     </section>
 </template>

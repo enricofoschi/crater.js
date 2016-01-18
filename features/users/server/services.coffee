@@ -36,27 +36,30 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
 
         not Accounts._checkPassword(user, pwdDigest).error
 
+    changeUserEmail: (user, email) =>
+        userByEmail = Meteor.users.findOne {
+            email: doc.email
+            _id:
+                $ne: user._id
+        }
+
+        if userByEmail
+            return Crater.Users.Errors.EMAIL_EXISTS_ERROR
+        else
+            @sendEmailVerificationRequest(email)
+
+            user.update({
+                $set:
+                    tmp_email: doc.email
+            })
+
     updateAccountSettings: (userId, doc) =>
         user = new MeteorUser userId
 
         # New Email Update
         if doc.email isnt user.email
-
-            userByEmail = Meteor.users.findOne {
-                email: doc.email
-                _id:
-                    $ne: user._id
-            }
-
-            if userByEmail
-                return 'EMAIL_EXISTS'
-            else
-                @sendEmailVerificationRequest doc.email
-
-                user.update {
-                    $set:
-                        tmp_email: doc.email
-                }
+            r = @changeUserEmail(user, doc.email)
+            return r if r is Crater.Users.Errors.EMAIL_EXISTS_ERROR
 
         # Other updates
         user.update {

@@ -24,6 +24,12 @@ Helpers.Client.TemplatesHelper.Handle('user_signup', (template) =>
     }
 
     template.helpers {
+        containerClass: ->
+            if @containerClass isnt undefined
+                return @containerClass
+
+            return 'page-section'
+
         formClass: ->
             return if not @twoColumns then 'form-horizontal' else ''
 
