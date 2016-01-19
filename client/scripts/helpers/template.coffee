@@ -40,6 +40,13 @@ class @Helpers.Client.TemplatesHelper
                 Helpers.Client.SEO.SetDescription(@data.page.description) if @data.page.description
                 Helpers.Client.SEO.SetImage(@data.page.image) if @data.page.image
 
+        Template[name].onDestroyed(->
+            try
+                Helpers.Client.Form.Destroy(@)
+            catch e
+                throw e if ServerSettings.debug
+        )
+
     @InitTemplate: (name = '') =>
 
         template = Template[name]
