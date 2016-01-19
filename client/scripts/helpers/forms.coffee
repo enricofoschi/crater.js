@@ -20,7 +20,7 @@ class @Helpers.Client.Form
                 if _formToDoc
                     doc = _formToDoc.apply(@, arguments)
 
-                if Helpers.Log.IsInDebug()
+                if ServerSettings.debug
                     try
                         check doc, schema
                     catch e
@@ -238,6 +238,14 @@ class @Helpers.Client.Form
                 Helpers.Client.DOM.LoadCSS ServerSettings.urls.css + 'datepicker.css'
             blockUI: true
         }
+
+    @Destroy: (instance) ->
+        instance.$('.datepicker-container').each(->
+            dp = $(@).data("DateTimePicker")
+
+            if dp
+                dp.destroy()
+        )
 
     @InitDatePicker: (properties) ->
 
