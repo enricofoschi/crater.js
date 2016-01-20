@@ -1,38 +1,40 @@
 <template name="user_login">
+    {{#unless noSocial}}
     <h2>
         {{t 'view.login.login_buttons'}}
     </h2>
 
-    <div class="row">
-        <div class="col-md-3 bottom15">
-            <a class="btn btn-block btn-primary btn-linkedin2 btn-social btn-login-linkedin">
-                <i class="fa fa-linkedin"></i>
-                {{t 'commons.services.linkedin'}}
-            </a>
+        <div class="row">
+            <div class="col-md-3 bottom15">
+                <a class="btn btn-block btn-primary btn-linkedin2 btn-social btn-login-linkedin">
+                    <i class="fa fa-linkedin"></i>
+                    {{t 'commons.services.linkedin'}}
+                </a>
+            </div>
+            <div class="col-md-3 bottom15">
+                <a class="btn btn-block btn-primary btn-xing btn-social btn-login-xing">
+                    <i class="fa fa-xing"></i>
+                    {{t 'commons.services.xing'}}
+                </a>
+            </div>
+            <div class="col-md-3 bottom15">
+                <a class="btn btn-block btn-primary btn-google btn-social btn-login-google">
+                    <i class="fa fa-google"></i>
+                    {{t 'commons.services.google'}}
+                </a>
+            </div>
+            <div class="col-md-3 bottom15">
+                <a class="btn btn-block btn-primary btn-facebook btn-social btn-login-facebook">
+                    <i class="fa fa-facebook"></i>
+                    {{t 'commons.services.facebook'}}
+                </a>
+            </div>
         </div>
-        <div class="col-md-3 bottom15">
-            <a class="btn btn-block btn-primary btn-xing btn-social btn-login-xing">
-                <i class="fa fa-xing"></i>
-                {{t 'commons.services.xing'}}
-            </a>
-        </div>
-        <div class="col-md-3 bottom15">
-            <a class="btn btn-block btn-primary btn-google btn-social btn-login-google">
-                <i class="fa fa-google"></i>
-                {{t 'commons.services.google'}}
-            </a>
-        </div>
-        <div class="col-md-3 bottom15">
-            <a class="btn btn-block btn-primary btn-facebook btn-social btn-login-facebook">
-                <i class="fa fa-facebook"></i>
-                {{t 'commons.services.facebook'}}
-            </a>
-        </div>
-    </div>
 
     <h2>
         {{t 'view.login.login_email'}}
     </h2>
+    {{/unless}}
 
     {{#autoForm class='page-section form-horizontal' schema=schema id="userLoginForm" trimStrings=true type="insert" collection="Meteor.users" resetOnSuccess=false }}
 

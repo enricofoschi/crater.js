@@ -20,7 +20,7 @@ class @Helpers.Client.Form
                 if _formToDoc
                     doc = _formToDoc.apply(@, arguments)
 
-                if Helpers.Log.IsInDebug()
+                if ServerSettings.debug
                     try
                         check doc, schema
                     catch e
@@ -239,6 +239,14 @@ class @Helpers.Client.Form
             blockUI: true
         }
 
+    @Destroy: (instance) ->
+        instance.$('.datepicker-container').each(->
+            dp = $(@).data("DateTimePicker")
+
+            if dp
+                dp.destroy()
+        )
+
     @InitDatePicker: (properties) ->
 
         if not IsMobile
@@ -290,6 +298,25 @@ class @Helpers.Client.Form
 
             if properties.value
                 $input.val(moment(properties.value).format('YYYY-MM-DD'))
+
+    @GetDatePickerValue: (container) ->
+
+        $container = $(container)
+        $input = $container.find('input:first')
+
+        if not IsMobile
+            date = $container.data('DateTimePicker').date()
+
+            if date
+                return date.toDate()
+            else
+                return null
+        else
+            if $input.val()
+                date = moment($input.val()).toDate()
+                return date
+            else
+                return null
 
     @InitCropper: (callback) ->
 

@@ -36,50 +36,30 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
 
         not Accounts._checkPassword(user, pwdDigest).error
 
-    processLegacyLogin: (email, pwd) ->
-
-        user = Meteor.users.findOne {
+    changeUserEmail: (user, email) =>
+        userByEmail = Meteor.users.findOne {
             email: email
+            _id:
+                $ne: user._id
         }
 
-        if user?.legacy_pwd
+        if userByEmail
+            return Crater.Users.Errors.EMAIL_EXISTS_ERROR
+        else
+            @sendEmailVerificationRequest(email)
 
-            crypto = Meteor.npmRequire 'crypto'
-            if crypto.createHash('sha256').update(pwd, 'utf8').digest('hex') is user.legacy_pwd
-
-                Accounts.setPassword user._id, pwd
-
-                user = new MeteorUser user
-                user.update {
-                    $unset:
-                        legacy_pwd: null
-                }
-
-                return true
-
-        return false
+            user.update({
+                $set:
+                    tmp_email: email
+            })
 
     updateAccountSettings: (userId, doc) =>
         user = new MeteorUser userId
 
         # New Email Update
         if doc.email isnt user.email
-
-            userByEmail = Meteor.users.findOne {
-                email: doc.email
-                _id:
-                    $ne: user._id
-            }
-
-            if userByEmail
-                return 'EMAIL_EXISTS'
-            else
-                @sendEmailVerificationRequest doc.email
-
-                user.update {
-                    $set:
-                        tmp_email: doc.email
-                }
+            r = @changeUserEmail(user, doc.email)
+            return r if r is Crater.Users.Errors.EMAIL_EXISTS_ERROR
 
         # Other updates
         user.update {
@@ -428,8 +408,8 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
     getUserAutologinToken: (user, durationInDays) ->
 
         # Disabling ES
-        _esStatus = Meteor.settings.elasticsearch.disable
-        Meteor.settings.elasticsearch.disable = true
+        _esStatus = Meteor.settings.elasticsearch?.disable
+        Meteor.settings.elasticsearch.disable = true if Meteor.settings.elasticsearch
 
         if typeof user is 'string'
             user = new MeteorUser user
@@ -471,7 +451,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
             }
 
         # Re-enabling ES
-        Meteor.settings.elasticsearch.disable = _esStatus
+        Meteor.settings.elasticsearch.disable = _esStatus if Meteor.settings.elasticsearch
 
         loginToken.token
 

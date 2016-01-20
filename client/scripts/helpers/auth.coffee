@@ -75,12 +75,15 @@ class @Helpers.Client.Auth
             userId: userId
         }, callback
 
-    @HasTriedToLogInExternally: (flush) =>
+    @HasTriedToLogInExternally: (flushIfLoggedIn) =>
+        return false if not Meteor.userId()
+
         r = Helpers.Client.SessionHelper.Get SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED
         
-        if flush
+        if flushIfLoggedIn
             Helpers.Client.SessionHelper.Set SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED, null
-        r
+
+        return r
 
     @LoginWith: (service, callback) =>
         method = Meteor['loginWith' + service]
@@ -91,17 +94,21 @@ class @Helpers.Client.Auth
         if IsMobile
             properties.loginStyle = 'redirect'
 
-        if service is 'facebook'
+        if service.toLowerCase() is 'facebook'
             properties.requestPermissions = [
                 'email'
                 'public_profile'
             ]
 
-        Helpers.Client.SessionHelper.Set SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED, true
+        if not Meteor.userId()
+            Helpers.Client.SessionHelper.Set SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED, true
 
         method properties, (e, r) =>
-            if e?.message?.indexOf('403') is -1
-                Router.go 'presentation.signup'
+            if e
+                if e.message?.indexOf('No matching login') > -1
+                    return
+                if e.message?.indexOf('403') is -1
+                    Router.go 'presentation.signup'
             else
                 Helpers.Log.Info 'Logged in with ' + service
                 Feature_Users.Helpers.OnLogin(->

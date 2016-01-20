@@ -15,3 +15,7 @@ class @Crater.Services.ThirdParties.Amazon extends @Crater.Services.ThirdParties
 
     uploadFile: (path, name, params, callback) =>
         @getS3Api().uploadFile path, name, params, callback
+
+    updateAmazonMimeTypes: =>
+        @getS3Api().updateAmazonMimeTypes()
+

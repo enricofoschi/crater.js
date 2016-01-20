@@ -60,6 +60,7 @@ class @MeteorUser
             linkedin: (linkedin) -> linkedin.profile.firstName
             google: (google) -> google.given_name
             xing: (xing) -> xing.first_name
+            twitter: (twitter) -> twitter.screenName
             default: (user) -> user.profile?.firstName
         LAST_NAME:
             facebook: (facebook) -> facebook.last_name
@@ -74,6 +75,7 @@ class @MeteorUser
             default: (user) -> if user.profile then user.profile?.firstName + ' ' + user.profile?.lastName else null
             xing: (xing) -> xing.display_name
             google: (google) -> google.given_name
+            twitter: (twitter) -> twitter.screenName
             none: -> ''
         EMAIL:
             facebook: (facebook) -> facebook.email
@@ -86,6 +88,10 @@ class @MeteorUser
             facebook: (facebook) -> 'http://graph.facebook.com/' + facebook.id + '/picture?width=9999'
             linkedin: (linkedin) -> linkedin.profile.pictureUrls?.values?[0]
             xing: (xing) -> xing.photo_urls.size_original
+            twitter: (twitter) -> twitter.profile_image_url
+        THIRD_PARTY_URL:
+            linkedin: (linkedin) -> linkedin.publicProfileUrl
+            twitter: (twitter) -> 'https://twitter.com/' + twitter.screenName
     }
 
     providers = [
@@ -93,6 +99,7 @@ class @MeteorUser
         'facebook'
         'linkedin'
         'xing'
+        'twitter'
     ]
 
     constructor: (user) ->
@@ -176,6 +183,9 @@ class @MeteorUser
 
     getProfilePictureOriginal: =>
         @getProperty Properties.PROFILE_PICTURE_ORIGINAL
+
+    getThirdPartyUrl: =>
+        @getProperty Properties.THIRD_PARTY_URL
 
     getServices: =>
         retVal = []

@@ -96,10 +96,6 @@ class @Helpers.Client.DOM
                 success: ->
                     Helpers.Client.Loader.Hide() if properties.blockUI
                     deferred.resolve()
-                done: ->
-                    console.log arguments
-                error: ->
-                    console.log arguments
                 cache: true
             }
 

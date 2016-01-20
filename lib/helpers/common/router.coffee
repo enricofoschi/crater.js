@@ -131,8 +131,8 @@ class @Helpers.Router
 
         try
             if typeof options.query is 'string'
-                params = options.query.split '&'
-                for param in params
+                queryParams = options.query.split '&'
+                for param in queryParams
                     paramParts = param.split '='
                     options.query[paramParts[0]] = paramParts[1] if paramParts.length is 2
 

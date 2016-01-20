@@ -5,13 +5,13 @@ class @BaseCollection extends Minimongoid
     @schema: null
     @stateMachineConfig: null
 
-    # overriding function, waiting for pull request https://github.com/Exygy/minimongoid/pull/31 to be approved
-    # this function sets up all of the attributes to be stored on the model as well as
-    # setting up the relation methods
+# overriding function, waiting for pull request https://github.com/Exygy/minimongoid/pull/31 to be approved
+# this function sets up all of the attributes to be stored on the model as well as
+# setting up the relation methods
     initAttrsAndRelations: (attr = {}, parent = null) ->
-        # initialize relation arrays to be an empty array, if they don't exist
+# initialize relation arrays to be an empty array, if they don't exist
         for habtm in @constructor.has_and_belongs_to_many
-            # e.g. matchup.game_ids = []
+# e.g. matchup.game_ids = []
             identifier = "#{_.singularize(habtm.name)}_ids"
             @[identifier] ||= []
         # initialize relation arrays to be an empty array, if they don't exist
@@ -28,8 +28,8 @@ class @BaseCollection extends Minimongoid
             if name.match(/_id$/) and (value instanceof Meteor.Collection.ObjectID)
                 @[name] = value._str
             else if (embeds_many = _.findWhere(@constructor.embeds_many, {name: name}))
-                # initialize a model with the appropriate attributes
-                # also pass "self" along as the parent model
+# initialize a model with the appropriate attributes
+# also pass "self" along as the parent model
                 class_name = embeds_many.class_name || _.classify(_.singularize(name))
                 @[name] = global[class_name].modelize(value, @)
             else
@@ -50,7 +50,7 @@ class @BaseCollection extends Minimongoid
 
             @[relation] = do(relation, identifier, class_name) ->
                 (options = {}) ->
-                    # if we have a relation_id
+# if we have a relation_id
                     if global[class_name] and self[identifier]
                         return global[class_name].find self[identifier], options
                     else
@@ -62,7 +62,7 @@ class @BaseCollection extends Minimongoid
             relation = has_many.name
             selector = {}
             unless foreign_key = has_many.foreign_key
-                # can't use @constructor.name in production because it's been minified to "n"
+# can't use @constructor.name in production because it's been minified to "n"
                 foreign_key = "#{_.singularize(@constructor.to_s().toLowerCase())}_id"
             if @constructor._object_id
                 selector[foreign_key] = new Meteor.Collection.ObjectID @id
@@ -72,7 +72,7 @@ class @BaseCollection extends Minimongoid
             class_name = has_many.class_name || _.titleize(_.singularize(relation))
             @[relation] = do(relation, selector, class_name) ->
                 (mod_selector = {}, options = {}) ->
-                    # first consider any passed in selector options
+# first consider any passed in selector options
                     mod_selector = _.extend mod_selector, selector
                     # e.g. where {user_id: @id}
                     if global[class_name]
@@ -162,7 +162,6 @@ class @BaseCollection extends Minimongoid
         super selector, options
 
     @firstOrDefault: (selector = {}, options = {}, defaults = {}) ->
-
         doc = @first selector, options
 
         if not doc
@@ -179,7 +178,6 @@ class @BaseCollection extends Minimongoid
         doc
 
     push: (data) ->
-
         updateData = {}
 
         for type, list of data
@@ -192,7 +190,6 @@ class @BaseCollection extends Minimongoid
         }
 
     pull: (key, value) ->
-
         updateObj = {}
 
         updateObj[key] = value
@@ -225,7 +222,6 @@ class @BaseCollection extends Minimongoid
     userLanguage = null
 
 
-
     getLocalizedName: =>
         @getLocalizedProperty 'name'
 
@@ -240,7 +236,7 @@ class @BaseCollection extends Minimongoid
     getLocalizedProperty: (property) =>
         @constructor.GetLocalizedProperty @, property
 
-    # Validation
+# Validation
     getValidationContext: (name) ->
         if not @constructor.schema
             null
@@ -269,7 +265,6 @@ class @BaseCollection extends Minimongoid
         super attr
 
     validate: ->
-
         if not @constructor.schema
             return
 
@@ -297,7 +292,7 @@ class @BaseCollection extends Minimongoid
                     new Date
                 else if @isUpsert
                     {
-                    $setOnInsert: new Date
+                        $setOnInsert: new Date
                     }
                 else
                     @unset()
@@ -311,13 +306,21 @@ class @BaseCollection extends Minimongoid
         new StateMachine @constructor.stateMachineConfig[field], @
 
     @InitCollections: ->
-
         for holder in BaseCollectionHolders
 
             for obj of holder
 
                 try
-                    if obj and obj isnt 'opener' and obj isnt 'localStorage' and obj isnt 'sessionStorage' and obj.indexOf('webkit') is -1 and holder[obj] and holder[obj].prototype instanceof BaseCollection and not holder[obj].simpleSchema
+                    if (
+                        obj and
+                            obj isnt 'opener' and
+                            obj isnt 'localStorage' and
+                            obj isnt 'sessionStorage' and
+                            obj.indexOf('webkit') is -1 and
+                            holder[obj] and
+                            holder[obj].prototype instanceof BaseCollection and not holder[obj].simpleSchema and
+                            holder[obj]._collection
+                    )
 
                         classDef = holder[obj]
 
@@ -334,9 +337,9 @@ class @BaseCollection extends Minimongoid
                         classDef.simpleSchema = new SimpleSchema schema
 
                         classDef._collection.attachSchema classDef.simpleSchema
-                catch
+                catch e
                     if Meteor.isClient
-                        Helpers.Log.Error obj + ' cannot be initialized'
+                        Helpers.Log.Error obj + ' cannot be initialized', e
 
 
 @StateMachineDriven = []
