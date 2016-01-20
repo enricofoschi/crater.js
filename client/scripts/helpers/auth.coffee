@@ -1,16 +1,7 @@
 class @Helpers.Client.Auth
 
-    SESSION_KEY_TRACKING = 'UtmTrackingInfo'
+
     SESSION_LOGIN_WITH_EXTERNAL_TRIGGERED = 'LgnWthExtrnl'
-
-    @SetUtmInfo: =>
-        return if @GetUtmInfo()?.source
-
-        info = Helpers.Router.GetUtmInfo()
-        Helpers.Client.Storage.Set SESSION_KEY_TRACKING, info
-
-    @GetUtmInfo: ->
-        Helpers.Client.Storage.Get(SESSION_KEY_TRACKING)
 
     @SetAsLoggedIn: (properties, callback) ->
 

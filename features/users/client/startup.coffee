@@ -3,8 +3,6 @@ Crater.startup ->
     queryString = Helpers.Router.GetQueryString()
     autoLoginUserId = queryString.autologin_userid
     autoLoginUserToken = queryString.autologin_token
-    Helpers.Client.Auth.SetUtmInfo()
-
 
     if autoLoginUserId
 
