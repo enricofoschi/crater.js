@@ -38,7 +38,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
 
     changeUserEmail: (user, email) =>
         userByEmail = Meteor.users.findOne {
-            email: doc.email
+            email: email
             _id:
                 $ne: user._id
         }
@@ -50,7 +50,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
 
             user.update({
                 $set:
-                    tmp_email: doc.email
+                    tmp_email: email
             })
 
     updateAccountSettings: (userId, doc) =>
@@ -408,8 +408,8 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
     getUserAutologinToken: (user, durationInDays) ->
 
         # Disabling ES
-        _esStatus = Meteor.settings.elasticsearch.disable
-        Meteor.settings.elasticsearch.disable = true
+        _esStatus = Meteor.settings.elasticsearch?.disable
+        Meteor.settings.elasticsearch.disable = true if Meteor.settings.elasticsearch
 
         if typeof user is 'string'
             user = new MeteorUser user
@@ -451,7 +451,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
             }
 
         # Re-enabling ES
-        Meteor.settings.elasticsearch.disable = _esStatus
+        Meteor.settings.elasticsearch.disable = _esStatus if Meteor.settings.elasticsearch
 
         loginToken.token
 
