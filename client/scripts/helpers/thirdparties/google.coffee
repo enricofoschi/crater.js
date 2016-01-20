@@ -69,7 +69,16 @@ class @Helpers.Client.Google
                         place.geometry.location.lng = place.geometry.location.lng()
 
                     if callback
-                        callback place
+
+                        for unwantedProperty in [
+                            'opening_hours'
+                            'rating'
+                            'photos'
+                            'reviews'
+                        ]
+                            Object.deleteProperty(place, unwantedProperty)
+
+                        callback(place)
                 else
                     window.setTimeout ->
                         $input.val('')
