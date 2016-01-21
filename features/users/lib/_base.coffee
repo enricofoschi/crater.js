@@ -13,6 +13,7 @@
         HUGE: 400
     Status:
         INACTIVE: 'INACTIVE'
+        APPROVED: 'APPROVED'
         DELETED: 'DELETED'
     PostSignupServices: []
 }
