@@ -173,6 +173,9 @@ class @Helpers.Router
 
         @Routes[route.name] = route
 
+
+    @GetPathPrefix: null
+
     @SetRoute: (originalRoute) =>
 
         if not originalRoute.title
@@ -183,7 +186,7 @@ class @Helpers.Router
 
             route = _.extend {}, originalRoute
 
-            path = '/' + route.path
+            path = (if @GetPathPrefix then @GetPathPrefix() else '/') + route.path
             title = route.title
             description = route.description
             image = route.image

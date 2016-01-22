@@ -9,9 +9,9 @@ class @Crater.Api.Amazon.S3 extends Crater.Api.Amazon.Base
         bucketName = _bucketName
         aws = _aws
 
+    uploadFile: (path, name, params, callback) =>
         mime = Meteor.npmRequire 'mime-types'
 
-    uploadFile: (path, name, params, callback) =>
         #@_logService.Info 'Reading file ' + path
         Helpers.Server.IO.ReadFile path, (err, data) ->
             if not err
@@ -24,7 +24,7 @@ class @Crater.Api.Amazon.S3 extends Crater.Api.Amazon.Base
                         Bucket: bucketName
                         Key: name
                         ContentEncoding: 'gzip'
-                        ContentType: 'image/jpeg'
+                        ContentType: mime.lookup(path)
                         ACL: 'public-read'
                         Expires: (new Date()).addDays(60)
                     }, params || {}
@@ -35,3 +35,78 @@ class @Crater.Api.Amazon.S3 extends Crater.Api.Amazon.Base
                 )
             else
                 callback err, null
+
+
+    updateAmazonMimeTypes: (marker = null)  ->
+        params = {
+            params: {
+                Bucket: bucketName
+                Marker: marker
+            }
+        }
+
+        api = new aws.S3(params)
+
+# Step 1: fetch all (up to 1000 each time) of the objects
+        api.listObjects (err, data) =>
+            if err
+                console.log 'Error while fetching the objects'
+                console.log err, err.stack
+                return false
+            else
+                console.log 'Loaded ' + data.Contents.length + ' items from S3'
+                if data.Contents.length < 1
+                    console.log 'All started'
+                    return true
+
+                i = 0
+                while i < data.Contents.length
+                    objectKey = data.Contents[i].Key
+                    @updateAmazonMimeTypesObject api, objectKey
+
+                    if i is data.Contents.length - 1
+                        marker = objectKey
+
+                    i++
+
+                @updateAmazonMimeTypes marker
+
+
+    updateAmazonMimeTypesObject: (api, objectKey) ->
+        mime = Meteor.npmRequire 'mime-types'
+
+        objectParams = {
+            Bucket: bucketName
+            Key: objectKey
+        }
+
+# Step 2: get meta data for each object
+        api.headObject objectParams, (err, data) ->
+            if err
+                console.log 'Fetching Head Error for: ' + objectKey
+                console.log err, err.stack
+                return false
+            else
+                copyObjectParams = {
+                    Bucket: bucketName
+                    CopySource: bucketName + '/' + objectKey
+                    Key: objectKey
+                    ContentEncoding: 'gzip'
+                    ContentType: mime.lookup(objectKey)
+                    ACL: 'public-read'
+                    Expires: new Date(data.Expires)
+                    ContentDisposition: data.ContentDisposition
+                    MetadataDirective: 'REPLACE'
+                }
+
+                if mime.lookup(objectKey) is data.ContentType
+                    return true
+
+# Step 3: overwrite object with modified metadata
+                api.copyObject copyObjectParams, (copyErr, copyData) ->
+                    if err
+                        console.log 'Copy Error for: ' + objectKey
+                        console.log copyErr, copyErr.stack
+                        return false
+                    else
+                        console.log 'Updated: ' + objectKey

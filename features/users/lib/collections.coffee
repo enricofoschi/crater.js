@@ -89,6 +89,9 @@ class @MeteorUser
             linkedin: (linkedin) -> linkedin.profile.pictureUrls?.values?[0]
             xing: (xing) -> xing.photo_urls.size_original
             twitter: (twitter) -> twitter.profile_image_url
+        THIRD_PARTY_URL:
+            linkedin: (linkedin) -> linkedin.publicProfileUrl
+            twitter: (twitter) -> 'https://twitter.com/' + twitter.screenName
     }
 
     providers = [
@@ -180,6 +183,9 @@ class @MeteorUser
 
     getProfilePictureOriginal: =>
         @getProperty Properties.PROFILE_PICTURE_ORIGINAL
+
+    getThirdPartyUrl: =>
+        @getProperty Properties.THIRD_PARTY_URL
 
     getServices: =>
         retVal = []

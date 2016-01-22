@@ -1,6 +1,8 @@
 @Crater.Users = {
     Client: {}
     Server: {}
+    Errors:
+        EMAIL_EXISTS_ERROR: 'EMAIL_EXISTS'
     PictureSizes:
         TINY: 50
         SMALL: 80
@@ -11,6 +13,7 @@
         HUGE: 400
     Status:
         INACTIVE: 'INACTIVE'
+        APPROVED: 'APPROVED'
         DELETED: 'DELETED'
     PostSignupServices: []
 }

@@ -3,10 +3,10 @@ class @Helpers.Geo
     @GetDistanceFromLatLon: (pointA, pointB) =>
         R = 6371
 
-        pointA.lat = parseInt(pointA.lat)
-        pointA.lon = parseInt(pointA.lon)
-        pointB.lat = parseInt(pointB.lat)
-        pointB.lon = parseInt(pointB.lon)
+        pointA.lat = parseFloat(pointA.lat)
+        pointA.lon = parseFloat(pointA.lon)
+        pointB.lat = parseFloat(pointB.lat)
+        pointB.lon = parseFloat(pointB.lon)
 
         rad1 = pointA.lat.toRad()
         rad2 = pointB.lat.toRad()
