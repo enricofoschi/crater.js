@@ -637,3 +637,21 @@ if Meteor.isClient
         Helpers.Translation.OnCommonTranslationsLoaded ->
             for service in MeteorUser.getProviders()
                 translate('commons.services.' + service)
+
+
+if Meteor.isServer
+
+    users = Meteor.users.find({
+        email: /[A-Z]/
+    }).fetch()
+
+    users.forEach((user) ->
+
+        console.log('Sanitizing email for', user.full_name, user.email)
+
+        Meteor.users.update(user._id, {
+            $set:
+                email: user.email?.toLowerCase() || ''
+        })
+    )
+
