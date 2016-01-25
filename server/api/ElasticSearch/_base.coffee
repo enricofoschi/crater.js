@@ -31,7 +31,8 @@ class @Crater.Api.ElasticSearch.Base extends @Crater.Api.Base
         term = term.replace /#/g, '_SHARP_'
 
     @EscapeQuery: (query) =>
-
+        if not query
+            return
         query = @PrepareTerm query
 
         for specialCharacter in specialCharacters
