@@ -654,4 +654,3 @@ if Meteor.isServer
                 email: user.email?.toLowerCase() || ''
         })
     )
-

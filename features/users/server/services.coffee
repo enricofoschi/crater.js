@@ -59,6 +59,8 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
     updateAccountSettings: (userId, doc) =>
         user = new MeteorUser userId
 
+        doc.email = doc.email.toLowerCase() if doc.email
+
         # New Email Update
         if doc.email isnt user.email
             r = @changeUserEmail(user, doc.email)
