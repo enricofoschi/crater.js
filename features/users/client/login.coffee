@@ -41,7 +41,10 @@ Helpers.Client.TemplatesHelper.Handle('user_login', (template) =>
 
                     loginUser = =>
                         Meteor.loginWithPassword(email, password, (e) ->
-                            Feature_Users.Helpers.OnLogin(template.uniqueInstance.data?.before)
+                            if e
+                                Helpers.Client.Notifications.Error translate('view.login.error.incorrect_password')
+                            else
+                                Feature_Users.Helpers.OnLogin(template.uniqueInstance.data?.before)
                         );
 
                     loginUser()
