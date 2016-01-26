@@ -1,3 +1,6 @@
+@import '{}/client/styles/_base/mixins.import.less';
+@import '{}/client/styles/_base/variables.import.less';
+
 .animated {
     -webkit-animation-duration: .25s;
     animation-duration: .25s;
@@ -161,4 +164,90 @@ li.removed-item {
     backface-visibility: visible !important;
     -webkit-animation-name: flipInX;
     animation-name: flipInX;
+}
+
+.animated.bounceOut {
+    -webkit-animation-duration: .45s;
+    animation-duration: .75s;
+}
+
+@-webkit-keyframes bounceOut {
+    20% {
+        -webkit-transform: scale3d(.9, .9, .9);
+        transform: scale3d(.9, .9, .9);
+    }
+
+    50%, 55% {
+        opacity: 1;
+        -webkit-transform: scale3d(1.1, 1.1, 1.1);
+        transform: scale3d(1.1, 1.1, 1.1);
+    }
+
+    to {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+        transform: scale3d(.3, .3, .3);
+    }
+}
+
+@keyframes bounceOut {
+    20% {
+        -webkit-transform: scale3d(.9, .9, .9);
+        transform: scale3d(.9, .9, .9);
+    }
+
+    50%, 55% {
+        opacity: 1;
+        -webkit-transform: scale3d(1.1, 1.1, 1.1);
+        transform: scale3d(1.1, 1.1, 1.1);
+    }
+
+    to {
+        opacity: 0;
+        -webkit-transform: scale3d(.3, .3, .3);
+        transform: scale3d(.3, .3, .3);
+    }
+}
+
+.bounceOut {
+    -webkit-animation-name: bounceOut;
+    animation-name: bounceOut;
+}
+
+@-webkit-keyframes slideOutUp {
+    from {
+        .opacity(1);
+        max-height: 200px;
+    }
+
+    to {
+        .opacity(0);
+        display: none;
+        max-height: 0px;
+    }
+}
+
+@keyframes slideOutUp {
+    from {
+        .opacity(1);
+        max-height: 200px;
+    }
+
+    to {
+        .opacity(0);
+        display: none;
+        max-height: 0px;
+        margin-bottom: 0;
+    }
+}
+
+.slideOutUp {
+    -webkit-animation-name: slideOutUp;
+    animation-name: slideOutUp;
+    overflow-y: hidden;
+}
+
+.disappear {
+    .transition();
+    .opacity(0);
 }
