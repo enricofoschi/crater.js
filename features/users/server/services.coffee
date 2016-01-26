@@ -134,8 +134,8 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
 
         _user = Meteor.user()
 
-        userType = MeteorUser.GetUserType _user
-        user = MeteorUser.GetDefinedUser _user
+        userType = MeteorUser.GetUserType(_user)
+        user = MeteorUser.GetDefinedUser(_user)
 
         updateObj = {}
         token = token = Helpers.Token.GetGuid()

@@ -198,7 +198,7 @@ class @Helpers.Translation
             if not retVal
                 # Then giving priority to the browser language
                 locationPath = location.pathname
-                if not history.pushState
+                if not history?.pushState
                     locationPath = location.hash
 
                 if locationPath.indexOf('#!') is 0 and locationPath.length > 2

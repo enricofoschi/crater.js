@@ -71,5 +71,5 @@ class @Crater.Api.Mandrill.Email extends Crater.Api.Mandrill.Base
                 to: originalTo
             }
         catch e
-            @_logService.Error e
+            @_logService.Error(e)
             throw e
