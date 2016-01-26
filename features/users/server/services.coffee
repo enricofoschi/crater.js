@@ -8,7 +8,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
             return 'LOGGED_IN'
 
         existingUser = Meteor.users.findOne {
-            email: doc.email
+            email: doc.email.toLowerCase()
         }
 
         if existingUser
@@ -37,6 +37,9 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
         not Accounts._checkPassword(user, pwdDigest).error
 
     changeUserEmail: (user, email) =>
+
+        email = email.toLowerCase()
+
         userByEmail = Meteor.users.findOne {
             email: email
             _id:
@@ -55,6 +58,8 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
 
     updateAccountSettings: (userId, doc) =>
         user = new MeteorUser userId
+
+        doc.email = doc.email.toLowerCase() if doc.email
 
         # New Email Update
         if doc.email isnt user.email
