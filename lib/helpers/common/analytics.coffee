@@ -198,7 +198,7 @@ class @Helpers.Analytics
             roles: Roles.getRolesForUser(Meteor.userId()).join(',')
         }
 
-        utmInfo = @GetStoredUtmInfo()
+        utmInfo = Helpers.Router.GetStoredUtmInfo()
 
         if Object.keys(utmInfo).length
             Helpers.Client.MeteorHelper.CallMethod {
