@@ -187,10 +187,11 @@ class @Helpers.Client.Form
 
             if properties.type isnt 'textarea'
                 events['keypress ' + properties.selector] =  (e) ->
+                    console.log(e.which)
                     if e.which is 13
                         _onChange.apply(@, arguments)
 
-            if properties.noBlur
+            if not properties.noBlur
                 events['blur ' + properties.selector] =  ->
 
                     _onChange.apply(@, arguments)
@@ -223,7 +224,7 @@ class @Helpers.Client.Form
                 if properties.saveCallback
                     properties.saveCallback.call @
 
-            , false, true, false)
+            , false, true, not Boolean(properties.saveCallback))
 
         properties.source.typeahead {
             source: properties.data
@@ -232,6 +233,8 @@ class @Helpers.Client.Form
                 if properties.saveCallback
                     properties.saveCallback.call properties.source.get(0)
                     properties.source.val('').get(0).focus()
+                else if properties.triggerEnter
+                    properties.source.trigger({ type : 'keypress', which : 13 })
         }
 
     @LoadDatePicker: (callback) ->
