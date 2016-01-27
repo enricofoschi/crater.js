@@ -172,16 +172,10 @@ class @Helpers.Client.Form
                     $this.data 'last-change-trigger-ts', e.timeStamp
                     properties.callback.apply @, arguments
         else
-            if properties.type isnt 'textarea'
-                events['keypress ' + properties.selector] =  (e) ->
-                    if e.which is 13
-                        e.target.blur()
 
-            events['blur ' + properties.selector] =  (e) ->
-
+            _onChange = (e) ->
                 originalValue = e.target.value
-
-                result = properties.callback.apply @, arguments
+                result = properties.callback.apply(@, arguments)
 
                 if result
                     if originalValue
@@ -190,6 +184,16 @@ class @Helpers.Client.Form
 
                         if properties.refocus
                             e.target.focus()
+
+            if properties.type isnt 'textarea'
+                events['keypress ' + properties.selector] =  (e) ->
+                    if e.which is 13
+                        _onChange.apply(@, arguments)
+
+            if properties.noBlur
+                events['blur ' + properties.selector] =  ->
+
+                    _onChange.apply(@, arguments)
 
             if properties.keyPress
                 delayedTrigger = null
@@ -208,7 +212,7 @@ class @Helpers.Client.Form
 
     @InitTypeAhead: (properties) ->
         if not properties.noEnterKeyHandling
-            Helpers.Client.DOM.OnEnterKey properties.source, (e) ->
+            Helpers.Client.DOM.OnEnterKey(properties.source, (e) ->
 
                 $this = $ @
 
@@ -218,7 +222,8 @@ class @Helpers.Client.Form
 
                 if properties.saveCallback
                     properties.saveCallback.call @
-            , false, true, false
+
+            , false, true, false)
 
         properties.source.typeahead {
             source: properties.data
