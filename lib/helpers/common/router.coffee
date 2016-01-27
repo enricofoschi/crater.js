@@ -124,14 +124,14 @@ class @Helpers.Router
         Helpers.Client.Storage.Set SESSION_KEY_TRACKING, info
 
     @GetStoredUtmInfo: =>
-        routerInfo = @GetUtmInfo()
-        storageInfo = Helpers.Client.Storage.Get(SESSION_KEY_TRACKING)
+        utmInfoFromUrl = @GetUtmInfo()
+        utmInfoFromStorage = Helpers.Client.Storage.Get(SESSION_KEY_TRACKING)
 
-        if not _.isEmpty(routerInfo)
-            @SetStoredUtmInfo(routerInfo)
-            storageInfo = routerInfo
+        if not _.isEmpty(utmInfoFromUrl)
+            @SetStoredUtmInfo(utmInfoFromUrl)
+            utmInfoFromStorage = utmInfoFromUrl
 
-        return storageInfo
+        return utmInfoFromStorage
 
     if Meteor.isClient
         updateQueryString()

@@ -35,7 +35,7 @@ class @Helpers.Analytics
                 callback null, null
 
             if isAdmin()
-                return true
+                return false
 
             return true
         catch e
