@@ -100,7 +100,6 @@ class @Helpers.Analytics
             if ServerSettings.debug
                 throw e
 
-
     @TrackPage: (pageName) =>
         if not @CanTrack()
             return false
@@ -146,7 +145,7 @@ class @Helpers.Analytics
         }
 
     @ServerSideTrack: (event, properties) =>
-        utmInfo = Helpers.Client.Auth.GetUtmInfo()
+        utmInfo = Helpers.Router.GetStoredUtmInfo()
         properties.utm_info = utmInfo if utmInfo
 
         Helpers.Client.MeteorHelper.CallMethod {
@@ -199,7 +198,7 @@ class @Helpers.Analytics
             roles: Roles.getRolesForUser(Meteor.userId()).join(',')
         }
 
-        utmInfo = Helpers.Client.Auth.GetUtmInfo()
+        utmInfo = Helpers.Router.GetStoredUtmInfo()
 
         if Object.keys(utmInfo).length
             Helpers.Client.MeteorHelper.CallMethod {
