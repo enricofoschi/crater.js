@@ -114,6 +114,7 @@ class @Helpers.Router
         r.medium = q.utm_medium if q.utm_medium
         r.term = q.utm_term if q.utm_term
         r.content = q.utm_content if q.utm_content
+        r.gclid = q.gclid if q.gclid
 
         r
 
