@@ -73,4 +73,5 @@ Meteor.startup ->
 
     Helpers.Client.TemplatesHelper.Init()
 
-    Helpers.Client.DOM.LoadCSS '//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'
+Crater.startup ->
+    Helpers.Client.DOM.LoadCSS('//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css')
