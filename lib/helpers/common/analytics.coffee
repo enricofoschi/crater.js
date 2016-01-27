@@ -5,7 +5,6 @@ class @Helpers.Analytics
     isLoggedOut = true
     userStatusInitialized = false
 
-    SESSION_KEY_TRACKING = 'UtmTrackingInfo'
     DEFAULT_TRACKERS = [
         'Errorception'
         'Google Analytics'
@@ -36,7 +35,7 @@ class @Helpers.Analytics
                 callback null, null
 
             if isAdmin()
-                return false
+                return true
 
             return true
         catch e
@@ -101,22 +100,6 @@ class @Helpers.Analytics
             if ServerSettings.debug
                 throw e
 
-    @SetUtmInfo: (info) =>
-        if not info?.source
-            info = Helpers.Router.GetUtmInfo()
-
-        Helpers.Client.Storage.Set SESSION_KEY_TRACKING, info
-
-    @GetUtmInfo: =>
-        routerInfo = Helpers.Router.GetUtmInfo()
-        storageInfo = Helpers.Client.Storage.Get(SESSION_KEY_TRACKING)
-
-        if _.isEmpty(storageInfo) and not _.isEmpty(routerInfo)
-            @SetUtmInfo(routerInfo)
-            storageInfo = routerInfo
-
-        storageInfo
-
     @TrackPage: (pageName) =>
         if not @CanTrack()
             return false
@@ -162,13 +145,7 @@ class @Helpers.Analytics
         }
 
     @ServerSideTrack: (event, properties) =>
-        utmInfo = Helpers.Router.GetUtmInfo()
-
-        if not _.isEmpty(utmInfo)
-            @SetUtmInfo(utmInfo)
-        else
-            utmInfo = @GetUtmInfo()
-
+        utmInfo = Helpers.Router.GetStoredUtmInfo()
         properties.utm_info = utmInfo if utmInfo
 
         Helpers.Client.MeteorHelper.CallMethod {
@@ -221,7 +198,7 @@ class @Helpers.Analytics
             roles: Roles.getRolesForUser(Meteor.userId()).join(',')
         }
 
-        utmInfo = @GetUtmInfo()
+        utmInfo = @GetStoredUtmInfo()
 
         if Object.keys(utmInfo).length
             Helpers.Client.MeteorHelper.CallMethod {

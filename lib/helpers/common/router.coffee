@@ -13,6 +13,8 @@ class @Helpers.Router
     @Routes: {}
     @CurrentTitle: null
 
+    SESSION_KEY_TRACKING = 'UtmTrackingInfo'
+
 
     @GetCurrentParams: => # For some reason, magically sometimes @route.params is empty when it shouldn't (e.g. search id). This fixes the issue
         currentParams
@@ -114,6 +116,22 @@ class @Helpers.Router
         r.content = q.utm_content if q.utm_content
 
         r
+
+    @SetStoredUtmInfo: (info) =>
+        if not info?.source
+            info = @GetUtmInfo()
+
+        Helpers.Client.Storage.Set SESSION_KEY_TRACKING, info
+
+    @GetStoredUtmInfo: =>
+        routerInfo = @GetUtmInfo()
+        storageInfo = Helpers.Client.Storage.Get(SESSION_KEY_TRACKING)
+
+        if not _.isEmpty(routerInfo)
+            @SetStoredUtmInfo(routerInfo)
+            storageInfo = routerInfo
+
+        return storageInfo
 
     if Meteor.isClient
         updateQueryString()
