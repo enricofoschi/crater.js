@@ -14,19 +14,19 @@ class @Crater.Api.Mandrill.Email extends Crater.Api.Mandrill.Base
 
         # Debug
         originalTo = to
-        originalTos = message.tos
-        delete message.tos
+        originalCc = message.cc
+        delete message.cc
 
         if Meteor.settings.debug
             to = Meteor.settings.email.catchAll
-            Object.deleteProperty(message, 'to')
-            originalTos = null
+            delete message.to
+            originalCc = null
 
         # Language
         lang = message.lang || Helpers.Translation.GetUserLanguage()
         delete message.lang
 
-        # Slug (with or with    out translation)
+        # Slug (with or without translation)
         slug = (Meteor.settings.mandrill.prefix || '') + slug + (if message.untranslated then '' else '-' + lang)
         delete message.untranslated
 
@@ -36,10 +36,11 @@ class @Crater.Api.Mandrill.Email extends Crater.Api.Mandrill.Base
             }
         ]
 
-        if originalTos
-            tos.pushArray(originalTos.map((originalTo) ->
+        if originalCc
+            tos.pushArray(originalCc.map((cc) ->
                 return {
-                    email: originalTo
+                    email: cc
+                    type: 'cc'
                 }
             ))
 
