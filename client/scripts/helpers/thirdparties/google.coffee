@@ -70,13 +70,15 @@ class @Helpers.Client.Google
 
                     if callback
 
-                        for unwantedProperty in [
-                            'opening_hours'
-                            'rating'
-                            'photos'
-                            'reviews'
+                        wantedProperty = [
+                            'address_components'
+                            'formatted_address'
+                            'geometry'
+                            'name'
                         ]
-                            Object.deleteProperty(place, unwantedProperty)
+
+                        for own locationProperty, locationValue of place
+                            Object.deleteProperty(place, locationProperty) if locationProperty not in wantedProperty
 
                         callback(place)
                 else
