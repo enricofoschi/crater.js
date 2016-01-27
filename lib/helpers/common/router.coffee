@@ -118,6 +118,10 @@ class @Helpers.Router
         r.term = q.utm_term if q.utm_term
         r.content = q.utm_content if q.utm_content
 
+        if q.gclid
+            r.gclid = q.gclid
+            r.source = 'adwords' if not r.source
+            
         r
 
     @SetStoredUtmInfo: (info) =>
