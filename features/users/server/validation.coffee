@@ -74,6 +74,6 @@ Accounts.validateNewUser (newUser) ->
             newUser.roles ||= []
             newUser.roles.push role
 
-        newUser = _.extend newUser, newUserDecorated.initCoreProperties()
+        newUser = _.extend(newUser, newUserDecorated.initCoreProperties())
 
     return createUser

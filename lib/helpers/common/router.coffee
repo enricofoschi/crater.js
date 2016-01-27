@@ -73,16 +73,19 @@ class @Helpers.Router
     lastQueryString = null
 
     getQueryString = ->
-        if history.pushState
-            query  = window.location.search.substring(1);
-        else
-            query  = window.location.hash
-            if query.length > 2
-                queryStart = query.indexOf '?'
-                if queryStart > -1 and queryStart < query.length - 2
-                    query = query.substr queryStart + 1
-                else
-                    query = ''
+        query = ''
+
+        if Meteor.isClient
+            if history?.pushState
+                query  = window.location.search.substring(1);
+            else
+                query  = window.location.hash
+                if query.length > 2
+                    queryStart = query.indexOf '?'
+                    if queryStart > -1 and queryStart < query.length - 2
+                        query = query.substr queryStart + 1
+                    else
+                        query = ''
 
         query
 
@@ -192,6 +195,9 @@ class @Helpers.Router
 
         @Routes[route.name] = route
 
+
+    @GetPathPrefix: null
+
     @SetRoute: (originalRoute) =>
 
         if not originalRoute.title
@@ -202,7 +208,7 @@ class @Helpers.Router
 
             route = _.extend {}, originalRoute
 
-            path = '/' + route.path
+            path = (if @GetPathPrefix then @GetPathPrefix() else '/') + route.path
             title = route.title
             description = route.description
             image = route.image

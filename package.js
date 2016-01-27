@@ -126,7 +126,7 @@ Package.onUse(function(api) {
 		'client/scripts/lib/vanilla-masker.min.js',
 		'client/scripts/loaders/adaptive-label.js',
 
-		'client/styles/lib/animations.css',
+		'client/styles/lib/animations.less',
 		'client/styles/lib/checkbox.css',
 		'client/styles/lib/debugger.css',
         'client/styles/lib/noui-slider.css',

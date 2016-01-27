@@ -1,6 +1,9 @@
 class @Helpers.Geo
 
     @GetDistanceFromLatLon: (pointA, pointB) =>
+
+        return null if not pointA?.lat or not pointB?.lat
+
         R = 6371
 
         pointA.lat = parseFloat(pointA.lat)

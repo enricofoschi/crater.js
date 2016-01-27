@@ -14,9 +14,13 @@ class @Crater.Api.Mandrill.Email extends Crater.Api.Mandrill.Base
 
         # Debug
         originalTo = to
+        originalTos = message.tos
+        delete message.tos
+
         if Meteor.settings.debug
             to = Meteor.settings.email.catchAll
-            Object.deleteProperty message, 'to'
+            Object.deleteProperty(message, 'to')
+            originalTos = null
 
         # Language
         lang = message.lang || Helpers.Translation.GetUserLanguage()
@@ -31,6 +35,13 @@ class @Crater.Api.Mandrill.Email extends Crater.Api.Mandrill.Base
                 email: to
             }
         ]
+
+        if originalTos
+            tos.pushArray(originalTos.map((originalTo) ->
+                return {
+                    email: originalTo
+                }
+            ))
 
         if Meteor.settings.email.alwaysBcc and not isCompanyEmail
             tos.push {
@@ -71,5 +82,5 @@ class @Crater.Api.Mandrill.Email extends Crater.Api.Mandrill.Base
                 to: originalTo
             }
         catch e
-            @_logService.Error e
+            @_logService.Error(e)
             throw e

@@ -37,13 +37,13 @@ class @Crater.Services.Communications.Email extends @Crater.Services.Communicati
 
         delete message.toUser
 
-        @mandrillApi.SendTemplate slug, message, to
+        @mandrillApi.SendTemplate(slug, message, to)
 
     messageAdmin: (subject, content) =>
         logServices = Crater.Services.Get Services.LOG
 
         try
-            @sendWithMandrill 'admin-simple-message', {
+            @sendWithMandrill('admin-simple-message', {
                 subject: subject
                 untranslated: true
                 global_merge_vars: [
@@ -52,6 +52,7 @@ class @Crater.Services.Communications.Email extends @Crater.Services.Communicati
                         content: content
                     }
                 ]
-            }, Meteor.settings.email.admin
+            }, Meteor.settings.email.admin)
         catch e
-            logServices.Error e
+            logServices.Error(e)
+            throw e if Meteor.settings.debug

@@ -42,11 +42,11 @@ class @MeteorUser
             if role in roles
                 return mapping
 
-        return null
+        return MeteorUser
 
     @GetDefinedUser: (user) =>
 
-        type = @GetUserType user
+        type = @GetUserType(user)
 
         if type
             new type user
@@ -92,6 +92,7 @@ class @MeteorUser
         THIRD_PARTY_URL:
             linkedin: (linkedin) -> linkedin.publicProfileUrl
             twitter: (twitter) -> 'https://twitter.com/' + twitter.screenName
+            facebook: (facebook) -> 'http://facebook.com/' + facebook.id
     }
 
     providers = [
@@ -127,6 +128,8 @@ class @MeteorUser
         retVal.email = @getEmail()
         retVal.platform = {}
         retVal.status = Crater.Users.Status.INACTIVE
+        retVal.url = @getThirdPartyUrl()
+        retVal.signup_type = @getSignupType()
 
         if @profile?.migrated_from
             retVal.migration = {
@@ -290,7 +293,7 @@ class @MeteorUser
         pictureUrl = @getProfilePictureUrl size
 
         if pictureUrl
-            return '<i style="background-image: url(\'' + pictureUrl + '\')" class="img"></i>'
+            return '<i style="background-image: url(\'' + pictureUrl + '\')" class="profile-picture img"></i>'
         else
             return '<i class="fa fa-user icon"></i>'
 
@@ -325,6 +328,11 @@ class @MeteorUser
             'facebook'
         else
             'email'
+
+    profileUrlName: =>
+        return null if not @url
+
+        return translate('user.profile.' + @signup_type)
 
 # Email Verified
     isVerified: =>
@@ -637,3 +645,19 @@ if Meteor.isClient
         Helpers.Translation.OnCommonTranslationsLoaded ->
             for service in MeteorUser.getProviders()
                 translate('commons.services.' + service)
+
+if Meteor.isServer
+
+    users = Meteor.users.find({
+        email: /[A-Z]/
+    }).fetch()
+
+    users.forEach((user) ->
+
+        console.log('Sanitizing email for', user.full_name, user.email)
+
+        Meteor.users.update(user._id, {
+            $set:
+                email: user.email?.toLowerCase() || ''
+        })
+    )
