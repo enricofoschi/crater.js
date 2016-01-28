@@ -4,20 +4,21 @@ Helpers.Client.TemplatesHelper.Handle('paginator', (template) =>
         Math.ceil(options.total / options.size)
 
     getUrl = (options, page) ->
-        Helpers.Router.Path options.path, _.extend options.params, {
-            page: parseInt(page)
-        }
+        if options.path
+            return Helpers.Router.Path(options.path, _.extend options.params, {
+                page: parseInt(page)
+            })
+        return null
 
-    template.helpers {
+    template.helpers({
 
         hasPaging: ->
-            pages = getPages @options
+            pages = getPages(@options)
 
-            pages > 1
-
+            return pages > 1
 
         pages: ->
-            pages = getPages @options
+            pages = getPages(@options)
 
             min = @options.page - 3
             min = 1 if min < 1
@@ -25,27 +26,43 @@ Helpers.Client.TemplatesHelper.Handle('paginator', (template) =>
             max = @options.page + 3
             max = pages if max > pages
 
-            (i for i in [min..max])
+            return (i for i in [min..max])
 
         pageUrl: (options) ->
-            getUrl options, @
+            return getUrl(options, @)
 
         previousUrl: ->
-            getUrl @options, @options.page - 1
+            return getUrl(@options, @options.page - 1)
+
+        previousPage: ->
+            return @options.page - 1
 
         nextUrl: ->
-            getUrl @options, @options.page + 1
+            getUrl(@options, @options.page + 1)
+
+        nextPage: ->
+            return @options.page + 1
 
         hasPrevious: ->
-            @options.page > 1
+            return @options.page > 1
 
         hasNext: ->
-            pages = getPages @options
+            pages = getPages(@options)
 
-            @options.page < pages
+            return @options.page < pages
 
         isSelected: (options) ->
-            parseInt(@) is options.page
-    }
+            return parseInt(@) is options.page
+    })
+
+    template.events({
+        'click a': (event, instance) ->
+            if instance.data.options.callback
+
+                page = parseInt($(event.target).attr('data-page') || @)
+
+                instance.data.options.callback(page)
+                event.preventDefault()
+    })
 
 )

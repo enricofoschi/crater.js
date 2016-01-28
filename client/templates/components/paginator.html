@@ -4,7 +4,7 @@
             <ul class="pagination">
                 {{#if hasPrevious }}
                     <li>
-                        <a href="{{previousUrl}}">
+                        <a href="{{previousUrl}}" data-page="{{previousPage}}">
                             &laquo;
                         </a>
                     </li>
@@ -26,7 +26,7 @@
                 {{/each}}
                 {{#if hasNext }}
                     <li>
-                        <a href="{{nextUrl}}">
+                        <a href="{{nextUrl}}" data-page="{{nextPage}}">
                             &raquo;
                         </a>
                     </li>
