@@ -203,11 +203,11 @@ class @BaseCollection extends Minimongoid
     addToSet: (lists) ->
         updateObj = lists
 
-        @constructor._collection.update @_id, {
+        @constructor._collection.update(@_id, {
             $set:
                 updatedAt: new Date()
             $addToSet: updateObj
-        }
+        })
 
     removeFromSet: (lists) ->
         updateObj = lists
