@@ -50,10 +50,11 @@ class @Helpers.Client.Modal
         $modalPrimaryCta.unbind('click').bind('click', options.callback)
         $modal.find('.btn-close').unbind('click').click @Close
 
-        $modalPrimaryCancel.click(->
+        $modalPrimaryCancel.unbind('click').bind('click', ->
             options.cancelCallback $modalBody
 
         ) if options.cancelCallback
+
         $modalPrimaryCta.click(->
             options.ctaCallback $modalBody
         ) if options.ctaCallback
@@ -67,5 +68,17 @@ class @Helpers.Client.Modal
         if options.onRendered
             options.onRendered $modalBody
 
+    @ShowOwn: ($ownModal) =>
+
+        $ownModal.modal({
+            show: true
+            backdrop: 'static'
+            keyboard: true
+        })
+
+        $ownModal.find('.btn-close').unbind('click').bind('click', ->
+            $ownModal.modal('hide')
+        )
+
     @Close: ->
-        $modal.modal 'hide'
+        $modal.modal('hide')
