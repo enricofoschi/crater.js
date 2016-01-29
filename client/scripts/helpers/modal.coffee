@@ -77,8 +77,12 @@ class @Helpers.Client.Modal
         })
 
         $ownModal.find('.btn-close').unbind('click').bind('click', ->
-            $ownModal.modal('hide')
+            Modal.CloseOwn($ownModal)
         )
+
+    @CloseOwn: ($ownModal) =>
+        $ownModal.modal('hide')
+
 
     @Close: ->
         $modal.modal('hide')

@@ -30,3 +30,15 @@ class @Helpers.Client.Animations
                     if callback
                         callback()
             }
+
+    @RemoveWithAnimation: (properties) ->
+        deferred = $.Deferred()
+
+        properties.source.addClass('animated slideOutUp')
+
+        Meteor.setTimeout(->
+            deferred.resolve()
+            properties.source.remove()
+        , 450)
+
+        return deferred.promise()
