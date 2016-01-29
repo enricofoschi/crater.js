@@ -52,76 +52,83 @@ class @Crater.Services.ThirdParties.ElasticSearch extends @Crater.Services.Third
                 logService.Info 'Elasticsearch Service: OK'
                 esInitialized = true
 
-    rebuildIndex: (model) =>
+    rebuildIndex: (models) =>
 
         logService = Crater.Services.Get Services.LOG
         logService.Info 'Rebuilding ElasticSearch Index'
 
-        @clear model.index
+        # Clearing Index
+        cleared = []
 
-        @createIndex model.index, {
-            analysis:
-                filter:
-                    specialchars_filter:
-                        type: 'word_delimiter'
-                        type_table: [
-                            '# => ALPHA'
-                            '@ => ALPHA'
-                        ]
-                analyzer:
-                    specialchars_analyzer:
-                        type: 'custom'
-                        tokenizer: 'whitespace'
-                        filter: [
-                            'lowercase'
-                            'specialchars_filter'
-                        ]
-        }
+        models.forEach (model) =>
+            return if model in cleared
+            cleared.push model
+            @clear model.index
 
-        @setMapping {
-            index: model.index
-            type: model.type
-            mapping: model.mapping
-        }
+        # Pushing Index / Types
+        models.forEach (model) =>
+            @createIndex model.index, {
+                analysis:
+                    filter:
+                        specialchars_filter:
+                            type: 'word_delimiter'
+                            type_table: [
+                                '# => ALPHA'
+                                '@ => ALPHA'
+                            ]
+                    analyzer:
+                        specialchars_analyzer:
+                            type: 'custom'
+                            tokenizer: 'whitespace'
+                            filter: [
+                                'lowercase'
+                                'specialchars_filter'
+                            ]
+            }
 
-        if model.IsUsers
-            # Rebuilding users
-            users = Meteor.users.find(model.UsersFilter || {}).fetch()
+            @setMapping {
+                index: model.index
+                type: model.type
+                mapping: model.mapping
+            }
 
-            @pushUsers users
+            #Filter, prepare and push data into ES
+            data = model.collection.find(model.filters || {}).fetch()
+            @pushToES data, model
+
 
         esInitialized = true
 
-    pushUsers: (users) =>
+
+    pushToES: (data, esModel) =>
         logService = Crater.Services.Get Services.LOG
+        logService.Info 'Preparing data to push into Elastic Search'
 
         docsByIndex = {}
-        for user in users
+
+        for item in data
             try
-                user = MeteorUser.GetDefinedUser user
-                if user.getESObject
-                    userEs = new user.getESObject()
-                    if userEs.esItem
-                        esModel = MeteorUser.GetUserType(user).ESModel
-                        key = esModel.index + ':' + esModel.type
-                        docsByIndex[key] = {
-                            model: esModel
-                            docs: []
-                        } if not docsByIndex[key]
-                        docsByIndex[key].docs.push userEs.esItem
+                item = new esModel(item)
+                key = esModel.index + ':' + esModel.type
+
+                docsByIndex[key] = {
+                    model: esModel
+                    docs: []
+                } if not docsByIndex[key]
+                docsByIndex[key].docs.push item.esItem # push above where you assign it
             catch e
                 _logServices.Error e
                 if Meteor.settings.debug
                     throw e
 
         for own key, value of docsByIndex
+            logService.Info 'Pushing documents'
             @upsert {
                 documents: value.docs
                 index: value.model.index
                 type: value.model.type
                 operation: 'UPSERT'
             }
-
             logService.Info 'Pushed ' + value.docs.length + ' docs'
 
     search: (properties) =>
