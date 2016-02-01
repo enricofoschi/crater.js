@@ -7,6 +7,7 @@ class @StateMachine
     @ACTION_TYPE: {
         EMAIL: 'email'
         EMAILS: 'emails'
+        DO_STUFF: 'do_stuff'
     }
 
     constructor: (@config, @obj) ->
