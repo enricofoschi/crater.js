@@ -8,9 +8,15 @@ class @Crater.Services.Core.StateMachine extends @Crater.Services.Core.Base
         # Going through all state machines
         for classDef in StateMachineDriven
 
+            fields = {}
+            fields.history = 1
+
+            Object.keys(classDef.stateMachineConfig).forEach((key) ->
+                fields[key] = 1
+            )
+
             entities = classDef.find({}, {
-                status: 1
-                history: 1
+                fields: fields
             }).fetch()
 
             # Going through all types of state machine configs
@@ -20,12 +26,12 @@ class @Crater.Services.Core.StateMachine extends @Crater.Services.Core.Base
                 for autoBehavior in (config.auto || [])
 
                     # Filtering by records in this status
-                    records = _.filter entities.clone(), (e) -> e.status in autoBehavior.statuses
+                    records = _.filter entities.clone(), (e) -> e[key] in autoBehavior.statuses
 
                     # Going through each records
                     for record in records
                         try
-                            sm = record.getStateMachine()
+                            sm = record.getStateMachine(key)
                             lastUpdate = sm.getLastUpdateDate()
                             nextAction = null
 
@@ -42,14 +48,14 @@ class @Crater.Services.Core.StateMachine extends @Crater.Services.Core.Base
                                     continue if skip
 
                                     # If the time expiration is gone
-                                    expiration = lastUpdate.addDays action.wait
+                                    expiration = lastUpdate.addDays(action.wait)
 
                                     if (new Date()) - expiration > 0
                                         nextAction = action
                                     break
 
                             if nextAction
-                                @performAction nextAction, classDef.first record._id
+                                @performAction(key, nextAction, classDef.first record._id)
                         catch e
                             console.error e
                             throw e if ServerSettings.debug
@@ -58,15 +64,18 @@ class @Crater.Services.Core.StateMachine extends @Crater.Services.Core.Base
         end = new Date()
         console.log 'State machine time (s):', (end - start) / 1000
 
-    performAction: (action, instance) =>
+    performAction: (key, action, instance) =>
 
-        stateMachine = instance.getStateMachine()
+        stateMachine = instance.getStateMachine(key)
 
-        if action.type is globalContext.StateMachine.ACTION_TYPE.EMAIL
-            @sendEmail action, stateMachine, instance, action.getReceiver(instance), action.template, action.untranslated
-        else if action.type is globalContext.StateMachine.ACTION_TYPE.EMAILS
-            for email in action.emails
-                @sendEmail action, stateMachine, instance, email.getReceiver(instance), email.template, email.untranslated
+        switch action.type
+            when globalContext.StateMachine.ACTION_TYPE.EMAIL
+                @sendEmail(action, stateMachine, instance, action.getReceiver(instance), action.template, action.untranslated)
+            when globalContext.StateMachine.ACTION_TYPE.EMAILS
+                for email in action.emails
+                    @sendEmail(action, stateMachine, instance, email.getReceiver(instance), email.template, email.untranslated)
+            when globalContext.StateMachine.ACTION_TYPE.DO_STUFF
+                action.doStuff(instance)
 
     sendEmail: (action, stateMachine, instance, toUser, template, untranslated) =>
         logService = Crater.Services.Get Services.LOG
@@ -98,4 +107,4 @@ class @Crater.Services.Core.StateMachine extends @Crater.Services.Core.Base
                     ].concat(emailDataAr)
                 }, toUser.email
 
-        stateMachine.addAutoHistory action
+        stateMachine.addAutoHistory(action)
