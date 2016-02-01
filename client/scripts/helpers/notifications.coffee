@@ -114,5 +114,18 @@ class @Helpers.Client.Notifications
                 $('.bootbox .btn-success').click()
                 false
 
+    # Humane JS
+    humaneError = null
+    humaneSuccess = null
+
+    @InitHumane: =>
+        humaneError = humane.spawn({ addnCls: 'humane-libnotify-error', timeout: 3000 })
+        humaneSuccess = humane.spawn({ addnCls: 'humane-flatty-success', timeout: 3000 })
+
+    @SuccessBg: (msg) =>
+        @InitHumane()
+        humaneSuccess(msg)
+
+
 Crater.startup ->
     bootbox.setLocale Helpers.Translation.GetUserLanguage()
