@@ -50,8 +50,10 @@ class @Helpers.Client.Auth
         else
             url = '/'
 
-        url = Helpers.Router.AddParameter url, 'spoofing', 'true'
-        url = Helpers.Router.AddParameter url, 'spoof', user._id
+        url = Helpers.Router.AddParameter(url, 'spoofing', 'true')
+        url = Helpers.Router.AddParameter(url, 'spoof', user._id)
+
+        return url
 
     @IsSpoofing: ->
         Helpers.Router.GetQueryString().spoofing is 'true'
