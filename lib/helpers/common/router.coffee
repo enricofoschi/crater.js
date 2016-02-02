@@ -138,7 +138,7 @@ class @Helpers.Router
             @SetStoredUtmInfo(utmInfoFromUrl)
             utmInfoFromStorage = utmInfoFromUrl
 
-        return utmInfoFromStorage
+        return utmInfoFromStorage || {}
 
     if Meteor.isClient
         updateQueryString()
