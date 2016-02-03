@@ -31,7 +31,7 @@ class @StateMachine
         ar
 
     getCurrentStatusConfig: =>
-        status = _.find @config.statuses, (s) => s.name is @obj[@config.field]
+        return _.find(@config.statuses, (s) => s.name is @obj[@config.field])
 
     canMoveTo: (status) =>
         status in (@getCurrentStatusConfig()?.next || [])
@@ -124,7 +124,7 @@ if Meteor.isServer
                     status: history[history.length - 1].status
                 }
                 updateObj.history[@config.field] = history
-                @obj.update updateObj
+                @obj.update(updateObj)
 
 
 
