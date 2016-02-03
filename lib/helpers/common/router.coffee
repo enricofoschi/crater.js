@@ -155,8 +155,9 @@ class @Helpers.Router
         options.query ||= {}
 
         try
-            if typeof options.query is 'string'
+            if typeof(options.query) is 'string'
                 queryParams = options.query.split '&'
+                options.query = {}
                 for param in queryParams
                     paramParts = param.split '='
                     options.query[paramParts[0]] = paramParts[1] if paramParts.length is 2
@@ -168,6 +169,10 @@ class @Helpers.Router
                     options.query[key] = value
         catch e
             console.log e
+
+        if options.autoLoginFor
+            accountService = Crater.Services.Get Services.ACCOUNT
+            options.query = _.extend(options.query, accountService.getUserAutologinTokenSuffixParams(options.autoLoginFor))
 
         if not route?.path
             return route
