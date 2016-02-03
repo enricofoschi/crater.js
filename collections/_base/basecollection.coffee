@@ -125,7 +125,7 @@ class @BaseCollection extends Minimongoid
         attr ||= attr
         attr.updatedAt = new Date
 
-        if not attr.createdAt
+        if not attr.createdAt and not @createdAt
             attr.createdAt = attr.updatedAt
 
         if not @constructor.schema or partial
@@ -203,11 +203,11 @@ class @BaseCollection extends Minimongoid
     addToSet: (lists) ->
         updateObj = lists
 
-        @constructor._collection.update(@_id, {
+        @constructor._collection.update @_id, {
             $set:
                 updatedAt: new Date()
             $addToSet: updateObj
-        })
+        }
 
     removeFromSet: (lists) ->
         updateObj = lists
@@ -240,6 +240,7 @@ class @BaseCollection extends Minimongoid
     getValidationContext: (name) ->
         if not @constructor.schema
             null
+
         @constructor._collection.simpleSchema().namedContext name
 
     getBaseObject: ->
@@ -340,6 +341,8 @@ class @BaseCollection extends Minimongoid
                 catch e
                     if Meteor.isClient
                         Helpers.Log.Error obj + ' cannot be initialized', e
+
+                    throw e if ServerSettings.debug
 
 
 @StateMachineDriven = []
