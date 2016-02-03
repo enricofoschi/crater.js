@@ -1,6 +1,6 @@
 class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
 
-    MINIMUM_AUTOLOGIN_DAYS = 5
+    MINIMUM_AUTOLOGIN_DAYS = 30
 
     createUserWithEmail: (doc) ->
 
@@ -399,9 +399,9 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
         }
 
     getUserAutologinTokenSuffixParams: (user, durationInDays) =>
-        token = @getUserAutologinToken user, durationInDays
+        token = @getUserAutologinToken(user, durationInDays)
 
-        {
+        return {
             autologin_userid: user._id
             autologin_token: token
         }
@@ -410,7 +410,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
         params = @getUserAutologinTokenSuffixParams user, durationInDays
         'autologin_userid=' + params.autologin_userid + '&autologin_token=' + params.autologin_token
 
-    getUserAutologinToken: (user, durationInDays) ->
+    getUserAutologinToken: (user, durationInDays = MINIMUM_AUTOLOGIN_DAYS) ->
 
         # Disabling ES
         _esStatus = Meteor.settings.elasticsearch?.disable
