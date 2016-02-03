@@ -32,9 +32,9 @@ class @Helpers.Client.Notifications
         callback = (isConfirm) =>
             window.setTimeout =>
                 if isConfirm
-                    callbackSuccess()
+                    callbackSuccess() if callbackSuccess
                 else
-                    callbackCancel()
+                    callbackCancel() if callbackCancel
             , 300
 
         swal {
