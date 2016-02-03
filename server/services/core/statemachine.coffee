@@ -92,7 +92,7 @@ class @Crater.Services.Core.StateMachine extends @Crater.Services.Core.Base
             logService.Error 'Email already sent. Preventing another one from being sent', identifier, toUser.email
         else
             logService.Info 'Sending statemachine reminder', identifier, toUser.email
-            if Meteor.settings.local
+            if Meteor.settings.local and not Meteor.settings.email.localStateMachineSend
                 console.log 'No - local'
             else
                 emailService = Crater.Services.Get Services.EMAIL
