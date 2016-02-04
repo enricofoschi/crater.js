@@ -269,3 +269,13 @@ class @Helpers.Client.DOM
                 $this.parent().prev().toggle()
                 $this.prev().toggle()
                 e.preventDefault()
+
+    @InitTooltips: =>
+        $('.with-tooltip').not('.tooltip-initialized').each(->
+            $this = $ @
+
+            title = $this.attr('title')
+
+            if title
+                $this.addClass('.tooltip-initialized').tooltip()
+        )
