@@ -15,7 +15,7 @@ class @Helpers.Client.Google
                 deferred.resolve()
             placesApiPromise = deferred.promise()
             deferred.then callback
-            $.getScript 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=initGoogleMaps'
+            $.getScript 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=initGoogleMaps&language=' + Helpers.Translation.GetUserLanguage()
 
     @InitLocationAutocomplete: (input, callback, types=['(cities)']) =>
 
