@@ -26,7 +26,7 @@ class @Crater.Services.Core.StateMachine extends @Crater.Services.Core.Base
                 for autoBehavior in (config.auto || [])
 
                     # Filtering by records in this status
-                    records = _.filter entities.clone(), (e) -> e[key] in autoBehavior.statuses
+                    records = entities.clone().filter((e) -> e[key] in autoBehavior.statuses)
 
                     # Going through each records
                     for record in records
@@ -37,7 +37,10 @@ class @Crater.Services.Core.StateMachine extends @Crater.Services.Core.Base
 
                             # Finding next action
                             for action, index in autoBehavior.actions
-                                autoHistory = sm.getAutoHistoryId(action.id)
+
+                                actionId = sm.getAutoActionId(action, record[key])
+
+                                autoHistory = sm.getAutoHistoryId(actionId)
 
                                 # This action was already taken
                                 if autoHistory
@@ -70,19 +73,23 @@ class @Crater.Services.Core.StateMachine extends @Crater.Services.Core.Base
 
         switch action.type
             when globalContext.StateMachine.ACTION_TYPE.EMAIL
-                @sendEmail(action, stateMachine, instance, action.getReceiver(instance), action.template, action.untranslated)
+                @sendEmail(instance[key], action, stateMachine, instance, action.getReceiver(instance), action.template, action.untranslated)
             when globalContext.StateMachine.ACTION_TYPE.EMAILS
                 for email in action.emails
-                    @sendEmail(action, stateMachine, instance, email.getReceiver(instance), email.template, email.untranslated)
+                    @sendEmail(instance[key], action, stateMachine, instance, email.getReceiver(instance), email.template, email.untranslated)
             when globalContext.StateMachine.ACTION_TYPE.DO_STUFF
-                action.doStuff(instance)
 
-    sendEmail: (action, stateMachine, instance, toUser, template, untranslated) =>
+
+    sendEmail: (status, action, stateMachine, instance, toUser, template, untranslated) =>
         logService = Crater.Services.Get Services.LOG
         emailDataAr = instance.toEmailDataForMandrill(toUser)
 
         # Failsafe
         identifier = 'entity_id_' + instance._id + '_' + action.id + '_' + toUser._id
+
+        if action.repeatOnLoop
+            identifier += '_' + stateMachine.getStatusOccurrencesCount(status)
+
         alreadySent = Crater.Collections.Email.first {
             to: toUser.email
             'data.message.global_merge_vars.content': identifier
@@ -107,4 +114,8 @@ class @Crater.Services.Core.StateMachine extends @Crater.Services.Core.Base
                     ].concat(emailDataAr)
                 }, toUser.email
 
-        stateMachine.addAutoHistory(action)
+        stateMachine.addAutoHistory(action, status)
+
+    doStuff: (status, action, stateMachine, instance) =>
+        action.doStuff(instance)
+        stateMachine.addAutoHistory(action, status)

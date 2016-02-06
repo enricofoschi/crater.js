@@ -65,7 +65,7 @@ class @StateMachine
         @obj.history?.auto?[@config.field] || []
 
     getAutoHistoryId: (id) =>
-        _.find @getAutoHistory(), (h) -> h.id is id
+       return @getAutoHistory().find((h) -> h.id is id)
 
 if Meteor.isServer
 
@@ -85,15 +85,45 @@ if Meteor.isServer
 
             @obj.addToSet history
 
-        addAutoHistory: (action) =>
+        getAutoActionId: (action, status) =>
+            actionId = action.id
+
+            if action.repeatOnLoop
+                actionId = actionId += '_' + @getStatusOccurrencesCount(status)
+
+            return actionId
+
+        addAutoHistory: (action, status) =>
             history = {}
+
+            actionId = @getAutoActionId(action, status)
 
             history['history.auto.' + @config.field] = {
                 date: new Date()
-                id: action.id
+                id: actionId
             }
 
             @obj.addToSet history
+
+        getStatusOccurrencesCount: (status) =>
+            return (@obj.history?[@config.field] || []).filter((statusHistory) -> statusHistory.status is status).length
+
+        removeAllAutoActionsForStatus: (status) =>
+
+            if @obj.history?.auto?[@config.field]
+
+                idsForStatus = _.pluck(@config.auto.find((autoStatus) -> autoStatus.statuses.length is 1 and autoStatus.statuses[0] is status)?.actions || [], 'id')
+                console.log(idsForStatus)
+
+
+
+                @obj.history.auto[@config.field] = @obj.history.auto[@config.field].filter((auto) ->
+                    return auto.id not in idsForStatus
+                )
+
+                @obj.update({
+                    history: @obj.history
+                })
 
         updateStatus: (status) =>
 
