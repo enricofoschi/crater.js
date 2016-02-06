@@ -133,6 +133,9 @@ Package.onUse(function(api) {
 		'client/styles/lib/status-line.less',
 		'client/styles/lib/sweetalert.less',
 
+		'client/templates/autoform/af_datetime_proposals_picker.html',
+		'client/templates/autoform/af_datetime_proposals_picker.coffee',
+		'client/templates/autoform/af_datetime_proposals_picker.less',
 		'client/templates/autoform/af_array_field_custom.html',
 		'client/templates/autoform/af_array_field_custom.coffee',
         'client/templates/autoform/af_range_slider.html',
