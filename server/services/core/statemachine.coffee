@@ -78,17 +78,14 @@ class @Crater.Services.Core.StateMachine extends @Crater.Services.Core.Base
                 for email in action.emails
                     @sendEmail(instance[key], action, stateMachine, instance, email.getReceiver(instance), email.template, email.untranslated)
             when globalContext.StateMachine.ACTION_TYPE.DO_STUFF
-
+                @doStuff(instance[key], action, stateMachine, instance)
 
     sendEmail: (status, action, stateMachine, instance, toUser, template, untranslated) =>
         logService = Crater.Services.Get Services.LOG
         emailDataAr = instance.toEmailDataForMandrill(toUser)
 
         # Failsafe
-        identifier = 'entity_id_' + instance._id + '_' + action.id + '_' + toUser._id
-
-        if action.repeatOnLoop
-            identifier += '_' + stateMachine.getStatusOccurrencesCount(status)
+        identifier = 'entity_id_' + instance._id + '_' + stateMachine.getAutoActionId(action, status) + '_' + toUser._id
 
         alreadySent = Crater.Collections.Email.first {
             to: toUser.email
