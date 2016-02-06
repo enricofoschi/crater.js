@@ -1,0 +1,77 @@
+@import '{}/client/styles/_base/mixins.import.less';
+@import '{}/client/styles/_base/variables.import.less';
+
+.af-datetime-proposals-picker {
+    .day-of-week {
+        text-transform: uppercase;
+        font-weight: 700;
+        margin:0 0 5px 0;
+        display: block;
+    }
+
+    .slots
+    {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        > li {
+            display: inline-block;
+            margin: 0 5px 5px 0;
+            padding:6px 10px;
+            border:1px solid #ccc;
+            background: #f0f0f0;
+            .rounded(5px);
+            text-align: center;
+            font-size: 14px;
+            position: relative;
+
+            .time {
+                display: block;
+            }
+
+            &.active {
+                border: 1px dashed @colorSuccess;
+                background: @colorSuccessBg;
+            }
+        }
+    }
+
+    &.editable {
+
+        .slots > li {
+            cursor: pointer;
+
+            &.with-remove {
+                padding-right: 30px;
+
+                &:hover {
+                    background: @colorDangerBg;
+                }
+
+                .remove-container {
+                    position: absolute;
+                    top: 3px;
+                    right: 0;
+                    padding: 5px 5px;
+                    border-left: 1px solid #aaa;
+                    line-height: 16px;
+                    display: inline-block;
+
+                    .icon-added {
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+
+    &.readonly {
+
+        .slots > li {
+            .remove-container {
+                display: none;
+            }
+        }
+    }
+}

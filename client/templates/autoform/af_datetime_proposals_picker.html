@@ -1,0 +1,61 @@
+<template name="afDatetimeProposalsPicker">
+    <div class="af-datetime-proposals-picker {{#if isReadonly}}readonly{{else}}editable{{/if}}" {{this.atts}}>
+        {{#if slots.length}}
+            {{#each slots}}
+                <div class="row">
+                    {{#each this}}
+                        <div class="col-md-4 col-sm-6 bottom10">
+                            <span class="day-of-week">{{day}}</span>
+                            {{#each list}}
+                                <ul class="slots">
+                                    <li class="slot {{#if isSelected}}active{{/if}} {{#if canRemove}}with-remove{{/if}}">
+                                        {{#if canRemove}}
+                                            <span class="remove-container">
+                                                <a class="btn-remove text-danger">
+                                                    <i class="fa fa-times-circle"></i>
+                                                </a>
+                                            </span>
+                                        {{/if}}
+                                        <span class="time">{{startTime}} - {{endTime}}</span>
+                                    </li>
+                                </ul>
+                            {{/each}}
+                        </div>
+                    {{/each}}
+                </div>
+            {{/each}}
+        {{/if}}
+        {{#unless isReadonly}}
+            <div class="add-slot top5">
+                <div class="{{#unless editMode}}hide{{/unless}}">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">
+                                    {{t 'af.datetime_proposals_picker.choose_date'}}
+                                </label>
+                                <div class='input-group date datepicker-container '>
+                                    <input type='text' class="form-control">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-calendar"></span>
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label">
+                                    {{t 'af.datetime_proposals_picker.duration'}}
+                                </label>
+                                <input class="form-control auto-width txt-duration" type="number" step="5" min="5"
+                                       value="60" max="600">
+                            </div>
+                        </div>
+                    </div>
+                    <a class="btn btn-add-proposal btn-sm btn-info">{{t 'af.datetime_proposals_picker.add'}}</a>
+                </div>
+                <a class="{{#if editMode}}hide{{/if}} btn-add-new-proposal text-info">{{t 'af.datetime_proposals_picker.add_new'}}</a>
+            </div>
+        {{/unless}}
+    </div>
+</template>
