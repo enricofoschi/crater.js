@@ -14,26 +14,26 @@ class @Helpers.Client.Loader
 
     @Init: ->
         if not blocker or not blocker.length
-            blocker = $ '.blocker-container'
-            msgContainer = blocker.find '.msg-container'
+            blocker = $('.blocker-container')
+            msgContainer = blocker.find('.msg-container')
 
     @Reset: ->
         activeLoaders = 0
-        @Hide true
+        @Hide(true)
         blocker = null
 
     @Show: (force)  ->
 
         @Init()
 
-        Helpers.Log.Info 'Active Loaders: ' + activeLoaders
-        Helpers.Log.Info 'Loader: ' + blocker.length
+        Helpers.Log.Info('Active Loaders: ' + activeLoaders)
+        Helpers.Log.Info('Loader: ' + blocker.length)
 
         if force
             forced = force
 
         if not activeLoaders and blocker.length
-            Helpers.Log.Info 'Loader On'
+            Helpers.Log.Info('Loader On', activeLoaders)
             blocker.stop(true, false).fadeIn(250)
 
         activeLoaders++
@@ -50,9 +50,10 @@ class @Helpers.Client.Loader
         if activeLoaders > 0
             activeLoaders--
 
+
         if activeLoaders is 0 and blocker?.length
             msgContainer.hide()
-            Helpers.Log.Info 'Loader Off'
+            Helpers.Log.Info('Loader Off', activeLoaders, blocker.is(':visible'))
             blocker.stop(true, false).fadeOut(250)
 
         return
