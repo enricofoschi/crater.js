@@ -270,13 +270,13 @@ class @Helpers.Client.Form
                 if defaultDate < minDate
                     defaultDate = minDate
 
-            properties.target.datetimepicker {
+            dtInitOptions = {
                 stepping: 15
                 minDate: minDate
                 maxDate: properties.maxDate || (new Date).addDays(15)
                 locale: Helpers.Translation.GetUserLanguage()
                 defaultDate: defaultDate
-                format: ServerSettings.dateFormat
+                format: properties.dateFormat || ServerSettings.dateFormat
                 icons:
                     time: 'fa fa-time'
                     date: 'fa fa-calendar'
@@ -290,9 +290,11 @@ class @Helpers.Client.Form
                 sideBySide: true
             }
 
+            properties.target.datetimepicker(dtInitOptions)
 
-            properties.target.find('input').focus ->
+            properties.target.find('input').focus(->
                 $(@).parents('.datepicker-container:first').data('DateTimePicker').show()
+            )
         else
             $input = properties.target.find('input')
 
