@@ -51,7 +51,6 @@ Helpers.Client.TemplatesHelper.Handle('afDatetimeProposalsPicker', (template) =>
                 slot.startDate = moment(slot.date).format('ddd DD MMM YYYY')
                 slot.startTime = moment(slot.date).format('HH:mm')
                 slot.endTime = moment(slot.date.addSeconds(slot.minutes * 60)).format('HH:mm')
-                slot.selected = slot.selected
             )
 
             slotsByDay = _.groupBy(slots, (slot) ->
@@ -73,12 +72,17 @@ Helpers.Client.TemplatesHelper.Handle('afDatetimeProposalsPicker', (template) =>
     })
 
     template.events({
-        'click .slot': (e, instance) ->
+        'click .editable .slot:not(.block)': (e, instance) ->
             slots = _getData(instance)
 
             slot = slots.find((slot) => slot.date is @date and slot.minutes is @minutes)
 
-            slot.available_for = (slot.available_for || []).filter((id) -> id isnt Meteor.userId())
+            userId = Meteor.userId()
+
+            if userId in (slot.available_for || [])
+                slot.available_for = (slot.available_for || []).filter((id) -> id isnt Meteor.userId())
+            else
+                slot.available_for.push(userId)
 
             _setData(instance, slots)
 

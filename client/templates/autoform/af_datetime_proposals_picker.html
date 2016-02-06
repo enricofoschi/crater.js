@@ -8,7 +8,7 @@
                             <span class="day-of-week">{{day}}</span>
                             {{#each list}}
                                 <ul class="slots">
-                                    <li class="slot {{#if isSelected}}active{{/if}} {{#if canRemove}}with-remove{{/if}}">
+                                    <li class="slot {{#if block}}block{{else}}{{#if isSelected}}active{{/if}} {{#if canRemove}}with-remove{{/if}}{{/if}}">
                                         {{#if canRemove}}
                                             <span class="remove-container">
                                                 <a class="btn-remove text-danger">
