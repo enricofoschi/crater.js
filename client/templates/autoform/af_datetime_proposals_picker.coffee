@@ -39,6 +39,10 @@ Helpers.Client.TemplatesHelper.Handle('afDatetimeProposalsPicker', (template) =>
         isSelected: ->
             return Meteor.userId() in (@available_for || [])
 
+        isBlocked: ->
+            blockedFor = (@blocked_for || [])
+            return Meteor.userId() not in blockedFor and blockedFor.length is 1
+
         editMode: ->
             return _editMode.get()
 
@@ -82,6 +86,7 @@ Helpers.Client.TemplatesHelper.Handle('afDatetimeProposalsPicker', (template) =>
             if userId in (slot.available_for || [])
                 slot.available_for = (slot.available_for || []).filter((id) -> id isnt Meteor.userId())
             else
+                slot.blocked_for = (slot.blocked_for || []).filter((id) -> id isnt Meteor.userId())
                 slot.available_for.push(userId)
 
             _setData(instance, slots)
@@ -98,6 +103,7 @@ Helpers.Client.TemplatesHelper.Handle('afDatetimeProposalsPicker', (template) =>
                 minutes: parseInt(instance.find('.txt-duration').value) || 60
                 selected: true
                 available_for: [Meteor.userId()]
+                blocked_for: []
             })
             _setData(instance, slots)
             _editMode.set(false)
