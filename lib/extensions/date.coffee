@@ -24,9 +24,9 @@ Date::toUIFormat = (withTime) ->
     date = moment(@)
 
     if withTime
-        return date.format(ServerSettings.dateFormat + ' HH:mm')
+        return date.format('ddd DD MMM YYYY HH:mm')
     else
-        return date.format(ServerSettings.dateFormat)
+        return date.format('ddd DD MMM YYYY')
 
 Date.ES_FORMAT_KIBANA = 'yyyy/MM/dd HH:mm:ss' # kibana format
 Date.ES_FORMAT_MOMENTJS = 'YYYY/MM/DD HH:mm:ss' # momentjs format
