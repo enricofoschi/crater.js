@@ -130,7 +130,7 @@ if Meteor.isServer
             statusConfig = @getCurrentStatusConfig()
 
             if not (status in (statusConfig.next || []))
-                @_logService.Error 'Cannot update', status, statusConfig
+                @_logService.Error 'Cannot update', @config.field, @obj[@config.field], status, statusConfig, @obj._id
                 throw 'Cannot update'
 
             @addHistory status
