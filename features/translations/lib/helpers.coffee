@@ -123,6 +123,7 @@ class @Helpers.Translation
                 if not translation
                     translatorService = Crater.Services.Get Services.TRANSLATOR
                     translatorService.addEmptyTranslation key, Router.current?()?.route?.getName()
+                    translation = '%#{key}%'
             else
                 translation = ''
         else
