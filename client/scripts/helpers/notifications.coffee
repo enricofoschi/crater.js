@@ -105,6 +105,13 @@ class @Helpers.Client.Notifications
             }
         }
 
+        formRef = $('#' +  randomId)
+
+        properties.default = {} if not properties.default #if there is no default text
+
+        for key, value of properties.default
+            formRef.find('[name="' + key + '"]').val(value)
+
         $('#' + randomId).submit (e) ->
             e.preventDefault()
 
