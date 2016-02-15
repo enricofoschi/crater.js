@@ -131,17 +131,21 @@ if Meteor.isServer
 
             if not (status in (statusConfig.next || []))
                 @_logService.Error 'Cannot update', @config.field, @obj[@config.field], status, statusConfig, @obj._id
-                throw 'Cannot update'
+                throw Error('Cannot update')
 
-            @addHistory status
+            @addHistory(status)
 
             updateObj = {}
             updateObj[@config.field] = status
-            if not @obj.update(updateObj).errors
+            errors = @obj.update(updateObj).errors
+            if not errors
                 statusConfig = @getCurrentStatusConfig()
                 if statusConfig.actions
                     for action in statusConfig.actions
                         action.action @obj
+            else
+                console.error(errors)
+                throw Error(errors)
 
         undo: =>
 
