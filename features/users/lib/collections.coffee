@@ -319,15 +319,15 @@ class @MeteorUser
 # Services
     getSignupType: =>
         if @services?.linkedin?.id
-            'linkedin'
+            return 'linkedin'
         if @services?.xing?.id
-            'xing'
+            return 'xing'
         if @services?.google?.id
-            'google'
+            return 'google'
         if @services?.facebook?.id
-            'facebook'
+            return 'facebook'
         else
-            'email'
+            return 'email'
 
     profileUrlName: =>
         return null if not @url
