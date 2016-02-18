@@ -16,6 +16,8 @@ Helpers.Client.TemplatesHelper.Handle('cookiebar', (template) =>
                     method: 'users.cookiebarShown'
                 }
 
-            $('#cookiebar').animate({'height': 0}, 300)
+            $('#cookiebar').animate({'opacity': 0}, 300,()->
+                $(@).remove()
+            )
     }
 )
