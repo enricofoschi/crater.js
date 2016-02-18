@@ -649,7 +649,7 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
 
         # Elastic Search
         esServices = Crater.Services.Get Services.ELASTIC_SEARCH
-        esServices.pushUsers updatedUsers
+        esServices.pushToES updatedUsers, Feature_Candidate.ElasticSearch
 
         logService.Info 'Uploading', updatedUsers.length, ' to Highrise'
 

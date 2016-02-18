@@ -52,6 +52,18 @@ String::normalize = ->
 String::toHTMLFormat = ->
     @htmlEncode().replace /(?:\r\n|\r|\n)/g, '<br />'
 
+String::smartSubString = (max = 250) ->
+    return @ if @.length <= max
+
+    cut = @substr(0, 250).replace(/\n/g, '. ')
+
+    matches = cut.match(/.*.*?[\s,.]/)
+
+    if matches
+        return matches[0]
+
+    return cut
+
 String::toUrl = ->
     regEx = /^https?:/i
 
