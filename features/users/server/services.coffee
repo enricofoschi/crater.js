@@ -690,12 +690,10 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
                     # Updating location for user
                     if geocodedLocation
 
-                        console.log Helpers.Google.GetLatLonFromLocation(geocodedLocation.geometry.location)
-
                         country = _.find geocodedLocation.address_components || [], (ac) ->
                             'country' in ac.types
 
-                        latLong = Helpers.Google.GetLatLonFromLocation geocodedLocation.geometry.location
+                        latLong = Helpers.Google.GetLatLonFromLocation(geocodedLocation.geometry.location)
 
                         user.update {
                             $set:
