@@ -87,9 +87,18 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
         if foundUser.anonymous
             return false
 
+        updateObj = {
+            password_reset_token: Helpers.Token.GetGuid()
+        }
+
+        if not foundUser.emails
+            updateObj.emails = [{
+                address: foundUser.email
+                verified: true
+            }]
+
         foundUser.update {
-            $set:
-                password_reset_token: Helpers.Token.GetGuid()
+            $set: updateObj
         }
 
         params = {
