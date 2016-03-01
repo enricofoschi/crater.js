@@ -1,7 +1,6 @@
 class @Helpers.Time
 
     @GetYearsDifference: (year, month, day = 1) =>
-        moment = getMoment()
 
         date = new Date(year, month || 0, day)
 
