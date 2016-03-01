@@ -10,6 +10,7 @@ Package.describe({
   documentation: 'README.md'
 });
 
+
 Package.onUse(function(api) {
   api.versionsFrom('1.1.0.2');
 	api.use([
@@ -24,6 +25,8 @@ Package.onUse(function(api) {
 		'mongo',
 		'blaze-html-templates',
 		'jquery',
+		'ejson',
+		'momentjs:moment',
 		'session',
 		'tracker',
 		'accounts-base',
