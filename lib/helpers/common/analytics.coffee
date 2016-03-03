@@ -176,6 +176,9 @@ class @Helpers.Analytics
             @ServerSideTrack event, properties
             analytics.track(event, properties, callback) if analytics
 
+            if dataLayer
+                dataLayer.push({'event': event});
+
             if @HasMixpanel()
                 mixpanel.track event, properties
         catch e

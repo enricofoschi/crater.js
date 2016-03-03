@@ -3,12 +3,16 @@ Accounts.config {
 }
 
 # Building Settings shared with client
+
 clientSettings = {}
+iframeGTM = '<noscript><iframe src="//www.googletagmanager.com/ns.html?id=' + Meteor.settings.GTM + '" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>'
+
 if Meteor.settings.forClient
     for forClient in Meteor.settings.forClient
         clientSettings[forClient] = Meteor.settings[forClient]
 
 Inject.obj 'ServerSettings', clientSettings
+Inject.rawBody('iframeGTM', iframeGTM)
 
 Crater.startup ->
     elasticSearchServices = Crater.Services.Get Services.ELASTIC_SEARCH
