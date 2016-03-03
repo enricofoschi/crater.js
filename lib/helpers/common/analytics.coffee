@@ -148,6 +148,9 @@ class @Helpers.Analytics
         utmInfo = Helpers.Router.GetStoredUtmInfo()
         properties.utm_info = utmInfo if utmInfo
 
+        if not properties.location
+            properties.location = location.href
+
         Helpers.Client.MeteorHelper.CallMethod {
             background: true
             method: 'tracking.track'
