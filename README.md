@@ -22,6 +22,7 @@ It includes a number of client + server packages, helpers and common features.
 * State machine
 * Intercom integration
 * Highrise integration
+* Google Tag Manager
 
 and custom features like:
 
