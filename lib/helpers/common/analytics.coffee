@@ -1,5 +1,7 @@
 class @Helpers.Analytics
 
+    dataLayer = [] #This is for Google Tag Manager
+
     lastTrackedUrl = null
     lastIdentity = null
     isLoggedOut = true
