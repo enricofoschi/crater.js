@@ -24,7 +24,7 @@ String::escapeForRegEx = ->
     @replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
 
 String::normalize = ->
-    @.replace(
+    @replace(
         /Â|À|Å|Ã/g, "A").replace(
         /â|à|å|ã/g, "a").replace(
         /Ä/g, "AE").replace(
@@ -33,6 +33,7 @@ String::normalize = ->
         /ç/g, "c").replace(
         /É|Ê|È|Ë/g, "E").replace(
         /é|ê|è|ë/g, "e").replace(
+        /ğ|ğ/g, "g").replace(
         /Ó|Ô|Ò|Õ|Ø/g, "O").replace(
         /ó|ô|ò|õ/g, "o").replace(
         /Ö/g, "OE").replace(
@@ -48,6 +49,15 @@ String::normalize = ->
         /ý|ÿ/g, "y").replace(
         /Ž/g, "Z").replace(
         /ž/, "z");
+
+    tmpStringArray = []
+    _.each(@, (char) ->
+        # check if ascii
+        if /^([\u0000-\u007F]+)$/.test(char)
+            tmpStringArray.push(char)
+    )
+
+    return tmpStringArray.join('')
 
 String::toHTMLFormat = ->
     @htmlEncode().replace /(?:\r\n|\r|\n)/g, '<br />'
