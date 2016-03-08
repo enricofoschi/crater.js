@@ -46,7 +46,7 @@ class @NamedCollection extends BaseCollection
     matchByName: (name) =>
         @constructor.MatchByName @, name
 
-    update: (attr) =>
+    update: (attr, partial) =>
 
         attr.part_of = attr.part_of.trim().toLowerCase() if attr.part_of
 
@@ -54,7 +54,7 @@ class @NamedCollection extends BaseCollection
             if key.indexOf('name') is 0
                 attr['lc_' + key] = (val || '').toLowerCase().trim()
 
-        super attr
+        super attr, partial
 
     @InitNamedCollection: ->
 
