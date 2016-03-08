@@ -1,13 +1,6 @@
 class @Helpers.Time
 
-    getMoment = ->
-        if Meteor.isClient
-            moment
-        else
-            Meteor.npmRequire 'moment'
-
     @GetYearsDifference: (year, month, day = 1) =>
-        moment = getMoment()
 
         date = new Date(year, month || 0, day)
 
@@ -16,7 +9,6 @@ class @Helpers.Time
         diff
 
     @GetNearestDayOfWeek = (weekDates, retroactive = false, hours = 10) ->
-        moment = getMoment()
 
         nearest = null
         current = moment()
