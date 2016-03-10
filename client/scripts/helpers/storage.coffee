@@ -1,10 +1,10 @@
 class @Helpers.Client.Storage
 
-    @Set: (key, value) ->
-        amplify.store key, value
+    @Set: (key, value, options = null) ->
+        amplify.store key, value, options
 
-    @SetNative: (key, value) ->
-        localStorage.setItem key, value
+    @SetNative: (key, value, options = null) ->
+        localStorage.setItem key, value, options
 
     @GetNative: (key, value) ->
         localStorage.getItem key
@@ -25,7 +25,9 @@ class @Helpers.Client.Storage
             return null
 
     @SetCache: (key, value, seconds) =>
-        @Set key, {
-            expires: (new Date()).addSeconds(seconds).getTime()
+        @Set(key, {
             value: JSON.stringify(value)
-        }
+        },{
+            expires: 1000 * seconds
+        })
+

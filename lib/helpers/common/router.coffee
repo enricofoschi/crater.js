@@ -124,11 +124,17 @@ class @Helpers.Router
             
         r
 
-    @SetStoredUtmInfo: (info) =>
+    @SetStoredUtmInfo: (info, options) =>
         if not info?.source
             info = @GetUtmInfo()
 
-        Helpers.Client.Storage.Set SESSION_KEY_TRACKING, info
+        options ||= {}
+
+        if info.source is 'digest'
+            # digest utm source should expire after 4 hours
+            options.expires = 1000 * 60 * 60 * 36
+
+        Helpers.Client.Storage.Set(SESSION_KEY_TRACKING, info, options)
 
     @GetStoredUtmInfo: =>
         utmInfoFromUrl = @GetUtmInfo()
