@@ -132,7 +132,7 @@ class @Helpers.Router
 
         if info.source is 'digest'
             # digest utm source should expire after 4 hours
-            options.expires = 1000 * 60 * 60 * 4
+            options.expires = 1000 * 60 * 60 * 36
 
         Helpers.Client.Storage.Set(SESSION_KEY_TRACKING, info, options)
 
