@@ -127,7 +127,7 @@ class @BaseCollection extends Minimongoid
 
         if not attr.createdAt and not @createdAt
             attr.createdAt = attr.updatedAt
-
+            
         if not @constructor.schema or partial
 
             for own key, value of attr
