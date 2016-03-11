@@ -136,3 +136,33 @@ class @Crater.Api.Highrise.People extends @Crater.Api.Highrise.Base
                 callback e, null
 
         callback()
+
+
+    MatchPerson: (user, callback) =>
+        xmlParser = Meteor.npmRequire 'xml2js'
+
+        peopleContext = @
+
+        @Call 'get', 'people/search.xml?term=' + encodeURIComponent(user.full_name), {}, (e, r) ->
+            if not e
+                xmlParser.parseString r.content, (e, r) ->
+                    if r.people?.person?
+                        person = r.people?.person[0]
+
+                        console.log 'Found user on highrise ' + user._id + ' (highrise: ' + person.id[0]._ + ')'
+
+                        user.update {
+                            $set:
+                                'platform.highrise.id': person.id[0]._
+                                'platform.highrise.email_id': person['contact-data']?[0]?['email-addresses']?[0]?['email-address']?[0]?.id?[0]?._
+                                'platform.highrise.phone_id': person['contact-data']?[0]?['phone-numbers']?[0]?['phone-number']?[0]?.id?[0]?._
+                            $unset:
+                                'platform.highrise.creating': null
+                        }
+
+                        callback null, person
+                    else
+                        peopleContext.UpdatePerson(user, callback)
+
+            else
+                callback e, null
