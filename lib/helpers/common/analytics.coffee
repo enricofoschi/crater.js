@@ -150,8 +150,6 @@ class @Helpers.Analytics
 
         properties.location ||= location.href
 
-        console.log "before google tm"
-        console.log dataLayer
         dataLayer.push({'event': event}) if dataLayer #Google Tag Manager
 
         Helpers.Client.MeteorHelper.CallMethod {
@@ -170,8 +168,6 @@ class @Helpers.Analytics
         window.mixpanel
 
     @Track: (event, properties, callback) =>
-
-        console.log "inside track"
 
         if not @CanTrack()
             return false
