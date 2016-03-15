@@ -1,7 +1,5 @@
 class @Helpers.Analytics
 
-    dataLayer = [] #This is for Google Tag Manager
-
     lastTrackedUrl = null
     lastIdentity = null
     isLoggedOut = true
@@ -152,6 +150,8 @@ class @Helpers.Analytics
 
         properties.location ||= location.href
 
+        dataLayer.push({'event': event}) if dataLayer #Google Tag Manager
+
         Helpers.Client.MeteorHelper.CallMethod {
             background: true
             method: 'tracking.track'
@@ -177,9 +177,6 @@ class @Helpers.Analytics
         try
             @ServerSideTrack event, properties
             analytics.track(event, properties, callback) if analytics
-
-
-            dataLayer.push({'event': event}) if dataLayer
 
             if @HasMixpanel()
                 mixpanel.track event, properties
