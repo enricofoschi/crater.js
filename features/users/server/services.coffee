@@ -721,6 +721,25 @@ class @Crater.Services.Core.Account extends @Crater.Services.Core.Base
                     'location.geocoded': true
             }
 
+    migrateHighrise: =>
+        users = Meteor.users.find({
+            'platform.highrise.id':
+                $ne: true
+            roles: EMPLOYER_ROLE
+        }, {
+            sort:
+                createdAt: -1
+        }).fetch()
+
+        for user in users
+
+            console.log 'Fixing highrise for: ' + user._id
+            
+            employerUser = new EmployerUser user
+            employerUser.matchHighrise()
+
+
+
 @Services.ACCOUNT =
     key: 'account'
     service: -> new Crater.Services.Core.Account()

@@ -618,6 +618,18 @@ if Meteor.isServer
                 if ServerSettings.debug
                     throw e
 
+
+        matchHighrise: =>
+            try
+                start = new Date()
+                highriseService = Crater.Services.Get Services.HIGHRISE
+                highriseService.matchUser @
+                console.log 'Highrise matching', (new Date() - start) / 1000
+            catch e
+                console.error e
+                if ServerSettings.debug
+                    throw e
+
         getAutologinSuffix: (duration = 10) =>
             accountService = Crater.Services.Get Services.ACCOUNT
             accountService.getUserAutologinTokenSuffix(@, duration)

@@ -13,3 +13,6 @@ class @Crater.Services.ThirdParties.Highrise extends @Crater.Services.ThirdParti
 
     deleteUser: (user, callback) =>
         result = Meteor.wrapAsync(@_peopleAPI.DeletePerson) user
+
+    matchUser: (user, callback) =>
+        result = Meteor.wrapAsync(@_peopleAPI.MatchPerson) user
