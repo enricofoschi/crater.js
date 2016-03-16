@@ -286,4 +286,13 @@ Meteor.methods {
     'users.getIP': ->
         'IP: ' + Helpers.Server.Auth.GetCurrentConnection().clientAddress
 
+    'users.migrateHighrise': ->
+
+        if not Roles.userIsInRole Meteor.userId(), 'admin'
+            throw 'Bad kittydoggy'
+
+        accountService = Crater.Services.Get Services.ACCOUNT
+        accountService.migrateHighrise()
+
+
 }
