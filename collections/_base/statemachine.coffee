@@ -151,18 +151,13 @@ if Meteor.isServer
 
             history = @obj.history[@config.field]
 
+
             if history and history.length > 1 and history[history.length - 1].status is @getStatus()
                 history.pop()
-                updateObj = {
-                    history: {}
-                    status: history[history.length - 1].status
-                }
 
-                for own key, value of @obj.history #avoids to delete other histories
-                    continue if key is @config.field
-                    updateObj.history[key] = value
-
-                updateObj.history[@config.field] = history
+                updateObj = {};
+                updateObj['history.' + @config.field] = history;
+                updateObj[@config.field] = history[history.length - 1].status;
 
                 update = @obj.update(updateObj)
 
