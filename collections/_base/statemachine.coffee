@@ -158,7 +158,7 @@ if Meteor.isServer
                     status: history[history.length - 1].status
                 }
 
-                for own key, value of @obj.history #avoids to delete the others histories
+                for own key, value of @obj.history #avoids to delete other histories
                     continue if key is @config.field
                     updateObj.history[key] = value
 
