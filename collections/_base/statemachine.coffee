@@ -157,8 +157,15 @@ if Meteor.isServer
                     history: {}
                     status: history[history.length - 1].status
                 }
-                updateObj.history[@config.field] = history
-                @obj.update(updateObj)
 
+                for own key, value of @obj.history #avoids to delete the others histories
+                    continue if key is @config.field
+                    updateObj.history[key] = value
+
+                updateObj.history[@config.field] = history
+
+                update = @obj.update(updateObj)
+
+                return !update.errors #if there are no error, return true (success)
 
 
