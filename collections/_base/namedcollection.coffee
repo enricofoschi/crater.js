@@ -12,7 +12,7 @@ class @NamedCollection extends BaseCollection
             'name_' + lang
 
     @firstByName: (name, options) ->
-        name = (name || '').toString().trim().toLowerCase()
+        lcName = (name || '').toString().trim().toLowerCase()
 
         filter = _.extend {
             $or: []
@@ -20,10 +20,17 @@ class @NamedCollection extends BaseCollection
 
         for lang in @langs
 
+            lcLangFilter = {}
+            lcLangFilter['lc_' + getKey(lang)] = lcName
+
+            filter.$or.push lcLangFilter
+
             langFilter = {}
-            langFilter['lc_' + getKey(lang)] = name
+            langFilter[getKey(lang)] = name
 
             filter.$or.push langFilter
+
+        console.log(JSON.stringify(filter, null, 4));
 
         @first filter
 
@@ -68,6 +75,8 @@ class @NamedCollection extends BaseCollection
                 r['lc_' + key] = {
                     type: String
                     optional: true
+                    autoValue: (obj) ->
+                        return obj[key]?.toLowerCase()
                 }
 
             r
