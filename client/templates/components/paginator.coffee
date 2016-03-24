@@ -62,7 +62,7 @@ Helpers.Client.TemplatesHelper.Handle('paginator', (template) =>
                 page = parseInt($(event.target).attr('data-page') || @)
 
                 instance.data.options.callback(page)
-                event.preventDefault()
+                event.preventDefault() if instance.data.options.callbackPreventDefault
     })
 
 )
